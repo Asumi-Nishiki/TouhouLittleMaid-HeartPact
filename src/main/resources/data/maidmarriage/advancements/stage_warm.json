@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:pink_tulip"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.stage_warm.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.stage_warm.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

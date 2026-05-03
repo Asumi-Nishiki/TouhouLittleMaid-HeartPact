@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.example.maidmarriage.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "maidmarriage-refmap.json",
+  "mixins": [
+    "QueryBindingLiftStateMixin",
+    "YsmTlmMolangCompatMixin"
+  ],
+  "client": [
+    "AnimationManagerLiftVehicleMixin",
+    "ConditionalPassengerLiftMixin",
+    "ConditionalVehicleLiftMixin",
+    "EntityMaidRendererLiftPoseMixin",
+    "HardcodedAnimationManagerCarryChildPoseMixin",
+    "HardcodedAnimationManagerHugPoseMixin",
+    "HardcodedAnimationManagerLiftPoseMixin",
+    "PlayerModelHugPoseMixin",
+    "YsmBindingLiftStateMixin",
+    "client.YsmRuntimeHugPoseMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

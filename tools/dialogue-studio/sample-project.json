@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "title": "拥抱基础剧情样例",
+    "version": 1,
+    "lastEdited": "2026-04-18T00:00:00.000Z"
+  },
+  "scenes": [
+    {
+      "id": "hug.default",
+      "speaker": "酒尾狐",
+      "portrait": "textures/gui/smile.png",
+      "hint": "单击对话框可立即显示全部文本，滚轮仍可调整缩放。",
+      "zoom": 104,
+      "dialogue": "就这样安静地抱一会儿吧……现在不用说太多话，也已经很安心了。",
+      "options": [
+        {
+          "id": "hug",
+          "label": "拥抱",
+          "desc": "继续抱着她，不打断此刻的安静。",
+          "action": "hug",
+          "key": "J"
+        },
+        {
+          "id": "kiss",
+          "label": "亲吻",
+          "desc": "轻轻亲近一下，让气氛再靠近一点。",
+          "action": "kiss",
+          "key": "K"
+        },
+        {
+          "id": "pet",
+          "label": "摸头",
+          "desc": "抬手摸摸头，给她一点温柔反馈。",
+          "action": "pet",
+          "key": "L"
+        }
+      ],
+      "actions": [
+        {
+          "id": "look-lock",
+          "type": "camera",
+          "target": "maid",
+          "duration": 350,
+          "payload": {
+            "mode": "lock_look",
+            "keepEyeContact": true
+          }
+        },
+        {
+          "id": "pose-hug",
+          "type": "animation",
+          "target": "maid",
+          "duration": 800,
+          "payload": {
+            "clip": "hug_idle",
+            "layer": "body"
+          }
+        }
+      ]
+    }
+  ]
+}

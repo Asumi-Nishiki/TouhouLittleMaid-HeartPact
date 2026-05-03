@@ -1,0 +1,34 @@
+{
+  "parent": "maidmarriage:root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "maidmarriage:sauce_duck"
+      }
+    },
+    "has_cooked_chicken": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cooked_chicken"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cooked_chicken"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "maidmarriage:sauce_duck"
+    ]
+  }
+}

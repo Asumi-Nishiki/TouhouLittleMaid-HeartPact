@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:first_romance",
+  "display": {
+    "icon": {
+      "item": "minecraft:pink_petals"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.romance_ten.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.romance_ten.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

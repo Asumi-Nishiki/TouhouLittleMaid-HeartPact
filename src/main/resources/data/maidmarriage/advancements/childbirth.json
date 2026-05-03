@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:first_romance",
+  "display": {
+    "icon": {
+      "item": "minecraft:egg"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.childbirth.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.childbirth.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

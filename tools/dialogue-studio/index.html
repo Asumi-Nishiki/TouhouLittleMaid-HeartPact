@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maid Marriage Dialogue Studio</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="studio-shell">
+    <aside class="sidebar">
+        <div class="panel-title">剧情列表</div>
+        <div class="toolbar-row">
+            <button id="new-scene-btn" class="primary-btn">新建</button>
+            <button id="duplicate-scene-btn">复制</button>
+            <button id="delete-scene-btn" class="danger-btn">删除</button>
+        </div>
+        <div id="scene-list" class="scene-list"></div>
+    </aside>
+
+    <main class="workspace">
+        <header class="topbar">
+            <div class="title-group">
+                <h1>剧情编辑器</h1>
+                <p>编辑基础对话框、选项和动作步骤，右侧实时预览。</p>
+            </div>
+            <div class="toolbar-row">
+                <button id="import-btn">导入 JSON</button>
+                <button id="export-btn" class="primary-btn">导出 JSON</button>
+                <button id="reset-btn">重置示例</button>
+                <input id="import-input" type="file" accept=".json" hidden>
+            </div>
+        </header>
+
+        <section class="editor-grid">
+            <section class="editor-panel form-panel">
+                <div class="panel-title">场景属性</div>
+                <label>
+                    场景 ID
+                    <input id="scene-id" type="text" maxlength="64">
+                </label>
+                <label>
+                    说话者
+                    <input id="speaker" type="text" maxlength="64">
+                </label>
+                <label>
+                    头像资源路径
+                    <input id="portrait" type="text" maxlength="256" placeholder="assets/maidmarriage/textures/gui/smile.png">
+                </label>
+                <label>
+                    提示文案
+                    <input id="hint" type="text" maxlength="128">
+                </label>
+                <label>
+                    缩放百分比
+                    <input id="zoom" type="number" min="50" max="200" step="1">
+                </label>
+                <label>
+                    对话正文
+                    <textarea id="dialogue" rows="7"></textarea>
+                </label>
+            </section>
+
+            <section class="editor-panel list-panel">
+                <div class="panel-title">选项列表</div>
+                <div class="toolbar-row">
+                    <button id="add-option-btn" class="primary-btn">添加选项</button>
+                </div>
+                <div id="options-editor" class="editor-stack"></div>
+            </section>
+
+            <section class="editor-panel list-panel">
+                <div class="panel-title">动作步骤</div>
+                <div class="toolbar-row">
+                    <button id="add-action-btn" class="primary-btn">添加动作</button>
+                </div>
+                <div id="actions-editor" class="editor-stack"></div>
+            </section>
+
+            <section class="editor-panel preview-panel">
+                <div class="panel-title">实时预览</div>
+                <div class="preview-stage">
+                    <div id="preview-options" class="preview-options"></div>
+                    <div class="preview-dialogue">
+                        <div class="preview-portrait-shell">
+                            <div id="preview-portrait" class="preview-portrait"></div>
+                        </div>
+                        <div class="preview-dialogue-main">
+                            <div id="preview-speaker" class="preview-speaker"></div>
+                            <div id="preview-text" class="preview-text"></div>
+                            <div class="preview-footer">
+                                <div id="preview-hint" class="preview-hint"></div>
+                                <div class="preview-corner">
+                                    <span id="preview-zoom" class="preview-zoom"></span>
+                                    <span class="preview-icon">◐</span>
+                                    <span class="preview-icon">✕</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-actions-bar">
+                        <div class="panel-subtitle">动作步骤预览</div>
+                        <div id="preview-actions" class="action-chip-list"></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+
+<template id="option-template">
+    <article class="item-card">
+        <div class="item-card-header">
+            <strong>选项</strong>
+            <button data-action="remove" class="danger-btn small-btn">删除</button>
+        </div>
+        <label>标题
+            <input data-field="label" type="text" maxlength="32">
+        </label>
+        <label>描述
+            <input data-field="desc" type="text" maxlength="96">
+        </label>
+        <label>动作类型
+            <select data-field="action">
+                <option value="hug">拥抱</option>
+                <option value="kiss">亲吻</option>
+                <option value="pet">摸头</option>
+                <option value="custom">自定义</option>
+            </select>
+        </label>
+        <label>动作键 / 指令
+            <input data-field="key" type="text" maxlength="64">
+        </label>
+    </article>
+</template>
+
+<template id="action-template">
+    <article class="item-card">
+        <div class="item-card-header">
+            <strong>动作</strong>
+            <button data-action="remove" class="danger-btn small-btn">删除</button>
+        </div>
+        <label>类型
+            <select data-field="type">
+                <option value="animation">动画</option>
+                <option value="camera">镜头</option>
+                <option value="portrait">表情</option>
+                <option value="chat">文本</option>
+                <option value="wait">等待</option>
+                <option value="command">命令</option>
+            </select>
+        </label>
+        <label>目标
+            <input data-field="target" type="text" maxlength="64">
+        </label>
+        <label>持续时间（毫秒）
+            <input data-field="duration" type="number" min="0" max="60000" step="50">
+        </label>
+        <label>参数 JSON
+            <textarea data-field="payload" rows="3"></textarea>
+        </label>
+    </article>
+</template>
+
+<script src="./app.js"></script>
+</body>
+</html>

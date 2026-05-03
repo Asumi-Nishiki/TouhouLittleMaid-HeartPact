@@ -1,0 +1,56 @@
+{
+  "id": "maidmarriage:default",
+  "animations": {
+    "fade_in": {
+      "loop": false,
+      "keyframes": [
+        {
+          "time": 1,
+          "alpha": 0.0,
+          "scale": 0.98,
+          "easing": "linear"
+        },
+        {
+          "time": 10,
+          "alpha": 1.0,
+          "scale": 1.0,
+          "easing": "ease_out_sine"
+        }
+      ]
+    },
+    "slide_up": {
+      "loop": false,
+      "keyframes": [
+        {
+          "time": 1,
+          "yOffset": 2.0,
+          "alpha": 0.0,
+          "easing": "linear"
+        },
+        {
+          "time": 12,
+          "yOffset": 0.0,
+          "alpha": 1.0,
+          "easing": "ease_out_sine"
+        }
+      ]
+    },
+    "soft_bounce": {
+      "loop": false,
+      "keyframes": [
+        {
+          "time": 6,
+          "yOffset": -1.2,
+          "scale": 1.02,
+          "easing": "ease_out_sine"
+        },
+        {
+          "time": 8,
+          "yOffset": 0.0,
+          "scale": 1.0,
+          "easing": "ease_in_out_sine"
+        }
+      ]
+    }
+  }
+}

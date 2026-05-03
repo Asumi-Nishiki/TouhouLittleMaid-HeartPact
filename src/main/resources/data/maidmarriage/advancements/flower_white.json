@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:oxeye_daisy"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.flower_white.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.flower_white.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

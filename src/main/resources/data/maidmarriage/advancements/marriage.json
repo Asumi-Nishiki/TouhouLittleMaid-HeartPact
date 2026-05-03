@@ -1,0 +1,35 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "maidmarriage:proposal_ring"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.marriage.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.marriage.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "maidmarriage:proposal_ring",
+      "maidmarriage:yes_pillow",
+      "maidmarriage:rainbow_bouquet"
+    ]
+  }
+}

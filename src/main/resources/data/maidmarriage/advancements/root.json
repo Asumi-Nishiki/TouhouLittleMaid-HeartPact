@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "maidmarriage:proposal_ring"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.root.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.root.description"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "maidmarriage:rainbow_bouquet"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.flower_rainbow.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.flower_rainbow.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CMC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:cocoa_beans"
+    },
+    "M": {
+      "item": "minecraft:cooked_chicken"
+    }
+  },
+  "result": {
+    "item": "maidmarriage:sauce_duck",
+    "count": 1
+  }
+}

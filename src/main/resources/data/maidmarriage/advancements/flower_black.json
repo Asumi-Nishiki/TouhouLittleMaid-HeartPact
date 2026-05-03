@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:wither_rose"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.flower_black.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.flower_black.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

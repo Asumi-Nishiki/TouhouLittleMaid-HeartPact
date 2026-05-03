@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:orange_tulip"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.flower_orange.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.flower_orange.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

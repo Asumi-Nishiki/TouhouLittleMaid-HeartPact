@@ -1,0 +1,15 @@
+/.gradle
+/build
+/run
+/out
+/bin
+.vscode
+*.iml
+.idea
+/backup
+/mockups
+/tmp_*.json
+/tmp_*.txt
+*.bak
+*.log
+*.zip

@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:stage_close",
+  "display": {
+    "icon": {
+      "item": "minecraft:heart_of_the_sea"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.heart_pact.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.heart_pact.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

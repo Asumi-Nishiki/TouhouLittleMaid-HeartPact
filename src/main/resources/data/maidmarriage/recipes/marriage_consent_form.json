@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "maidmarriage:proposal_ring"
+    }
+  ],
+  "result": {
+    "item": "maidmarriage:marriage_consent_form",
+    "count": 1
+  }
+}

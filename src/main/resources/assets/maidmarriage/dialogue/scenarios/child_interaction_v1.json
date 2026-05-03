@@ -1,0 +1,137 @@
+{
+  "id": "maidmarriage:child_interaction_v1",
+  "theme": "maidmarriage:hug_default",
+  "start": "idle",
+  "animationLibrary": "maidmarriage:default",
+  "portraits": {
+    "maid": {
+      "texture": "maidmarriage:textures/gui/emotion/soft_smile.png",
+      "defaultExpression": "soft_smile",
+      "expressions": {
+        "soft_smile": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "happy": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "shy": "maidmarriage:textures/gui/emotion/hot_smile.png"
+      }
+    }
+  },
+  "nodes": {
+    "idle": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${child_entry_speaker}",
+        "text": "${child_entry_text}",
+        "portrait": "maid",
+        "expression": "soft_smile",
+        "animation": "fade_in"
+      },
+      "choices": [
+        {
+          "id": "pet_head",
+          "title": "摸摸头",
+          "description": "轻轻摸摸她的头，让她安心下来。",
+          "next": "pet_head_intro",
+          "action": "maidmarriage:pet_head"
+        },
+        {
+          "id": "lift",
+          "title": "举高高",
+          "description": "把小女仆举起来，已经举起时会放回地上。",
+          "next": "lift_intro",
+          "action": "maidmarriage:lift_child"
+        },
+        {
+          "id": "carry_child",
+          "title": "让妈妈抱抱",
+          "description": "让她的妈妈把她抱进怀里，已经抱起时会尝试放下。",
+          "next": "carry_intro",
+          "action": "maidmarriage:carry_child"
+        },
+        {
+          "id": "comfort",
+          "title": "陪她说话",
+          "description": "蹲下来陪她聊一小会儿。",
+          "next": "comfort_intro"
+        },
+        {
+          "id": "child_gift",
+          "title": "送她礼物",
+          "description": "挑一份小礼物给她，看看她会不会喜欢。",
+          "next": "idle",
+          "action": "maidmarriage:open_gift_screen"
+        }
+      ]
+    },
+    "pet_head_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "你的手掌轻轻落在她的发顶，她像小动物一样眯起眼睛。",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "soft_bounce"
+        },
+        {
+          "speaker": "${maid}",
+          "text": "嘿嘿……再摸一下也可以哦。",
+          "expression": "happy"
+        }
+      ],
+      "next": "idle"
+    },
+    "lift_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "她下意识抓住你的袖口，随后又开心地晃了晃脚。",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "slide_up"
+        },
+        {
+          "speaker": "${maid}",
+          "text": "哇，好高！我能看到好远好远的地方！",
+          "expression": "happy"
+        }
+      ],
+      "next": "idle"
+    },
+    "carry_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "她的妈妈轻轻靠近，把她稳稳抱在怀里。",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in"
+        },
+        {
+          "speaker": "${maid}",
+          "text": "妈妈抱着的时候，感觉整个人都暖洋洋的。",
+          "expression": "happy"
+        }
+      ],
+      "next": "idle"
+    },
+    "comfort_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "你蹲下来和她保持同样的视线高度，她认真地看着你。",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in"
+        },
+        {
+          "speaker": "${maid}",
+          "text": "只要你在旁边，我就觉得今天也没什么可害怕的。",
+          "expression": "shy"
+        }
+      ],
+      "next": "idle"
+    }
+  }
+}

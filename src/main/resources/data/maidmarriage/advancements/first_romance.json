@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:marriage",
+  "display": {
+    "icon": {
+      "item": "maidmarriage:yes_pillow"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.first_romance.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.first_romance.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "parent": "maidmarriage:stage_warm",
+  "display": {
+    "icon": {
+      "item": "minecraft:peony"
+    },
+    "title": {
+      "translate": "advancements.maidmarriage.stage_close.title"
+    },
+    "description": {
+      "translate": "advancements.maidmarriage.stage_close.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}
