@@ -1,0 +1,14 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "tiab"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "tiab"
+  ]
+}

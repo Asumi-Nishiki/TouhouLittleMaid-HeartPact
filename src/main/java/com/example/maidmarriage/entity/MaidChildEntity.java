@@ -555,6 +555,62 @@ public class MaidChildEntity extends EntityMaid {
         ), true);
     }
 
+    /**
+     * 女仆饰品栏变化后的子代生命周期刷新入口。
+     *
+     * <p>金蒲公英发卡通过女仆饰品栏暂停成长。戴上或摘下时，我们需要立刻把
+     * 服务端 persistentData、TaskData 和客户端同步状态重新对齐，避免 GUI 刚摘下
+     * 发卡后仍显示“成长暂停”，或者普通 EntityMaid 形态的小女仆继续停在旧数据上。
+     */
+    public static void refreshChildLifecycleAfterBaubleChange(EntityMaid maid) {
+        if (maid == null || maid.level().isClientSide || !shouldStayChild(maid)) {
+            return;
+        }
+        if (maid instanceof MaidChildEntity child) {
+            child.syncPersistentGrowthData();
+            child.syncChildStateData(true);
+            return;
+        }
+
+        CompoundTag persistent = maid.getPersistentData();
+        ChildStateData oldState = maid.getData(ModTaskData.CHILD_STATE_DATA);
+        int growthTicks = oldState != null && oldState.child()
+                ? Math.max(0, oldState.growthTicks())
+                : Math.max(0, persistent.getInt(PERSISTENT_GROWTH_TICKS_KEY));
+        GrowthStage stage = resolveGrowthStageByTicks(growthTicks);
+        persistent.putBoolean(PERSISTENT_CHILD_ACTIVE_KEY, true);
+        persistent.putInt(PERSISTENT_GROWTH_TICKS_KEY, growthTicks);
+        persistent.putString(PERSISTENT_GROWTH_STAGE_KEY, stage.name());
+
+        Optional<UUID> mother = oldState != null && oldState.mother().isPresent()
+                ? oldState.mother()
+                : resolveMotherUuid(maid);
+        Optional<UUID> father = oldState != null && oldState.father().isPresent()
+                ? oldState.father()
+                : persistent.hasUUID(PERSISTENT_FATHER_UUID_KEY)
+                ? Optional.of(persistent.getUUID(PERSISTENT_FATHER_UUID_KEY))
+                : Optional.empty();
+        boolean tameInitialized = oldState != null
+                ? oldState.tameInitialized()
+                : persistent.getBoolean(PERSISTENT_TAME_INITIALIZED_KEY);
+        boolean nameConfirmed = oldState != null
+                ? oldState.childNameConfirmed()
+                : persistent.getBoolean(PERSISTENT_CHILD_NAME_CONFIRMED_KEY);
+        Optional<String> customName = oldState != null && oldState.customNameJson().isPresent()
+                ? oldState.customNameJson()
+                : encodeCustomName(maid);
+        applyChildStateData(maid, new ChildStateData(
+                true,
+                growthTicks,
+                stage.name(),
+                mother,
+                father,
+                tameInitialized,
+                nameConfirmed,
+                customName
+        ), true);
+    }
+
     public static void markAsAdult(EntityMaid maid) {
         CompoundTag persistent = maid.getPersistentData();
         /*

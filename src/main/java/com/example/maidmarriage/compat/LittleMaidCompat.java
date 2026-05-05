@@ -1,6 +1,7 @@
 package com.example.maidmarriage.compat;
 
 import com.example.maidmarriage.data.ModTaskData;
+import com.example.maidmarriage.compat.bauble.GrowthPauseHairpinBauble;
 import com.example.maidmarriage.compat.bauble.NoopMaidBauble;
 import com.example.maidmarriage.init.ModItems;
 import com.github.tartaricacid.touhoulittlemaid.api.ILittleMaid;
@@ -39,7 +40,7 @@ public class LittleMaidCompat implements ILittleMaid {
     @Override
     public void bindMaidBauble(BaubleManager manager) {
         manager.bind(ModItems.PROPOSAL_RING, new NoopMaidBauble());
-        manager.bind(ModItems.SUNFLOWER_HAIRPIN, new NoopMaidBauble());
+        manager.bind(ModItems.SUNFLOWER_HAIRPIN, new GrowthPauseHairpinBauble());
     }
 
     @Override

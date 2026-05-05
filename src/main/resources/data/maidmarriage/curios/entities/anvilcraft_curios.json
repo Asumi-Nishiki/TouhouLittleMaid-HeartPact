@@ -1,0 +1,16 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "anvilcraft_curios"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "ionocraft_backpack",
+    "goggles",
+    "charms"
+  ]
+}

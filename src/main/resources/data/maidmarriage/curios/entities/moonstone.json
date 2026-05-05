@@ -1,0 +1,22 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "moonstone"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "nightmare",
+    "medicine",
+    "necora",
+    "nanos",
+    "ncrdna",
+    "dna",
+    "crystal",
+    "stone",
+    "man"
+  ]
+}

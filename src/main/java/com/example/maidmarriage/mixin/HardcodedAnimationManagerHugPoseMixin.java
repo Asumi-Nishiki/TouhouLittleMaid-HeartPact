@@ -11,6 +11,8 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedGeoBone;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedGeoModel;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -179,7 +181,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         AnimatedGeoBone allBody = findBone(model, "AllBody", "allBody", "Body", "body");
         AnimatedGeoBone upBody = findBone(model, "UpBody", "upBody");
         AnimatedGeoBone upperBody = findBone(model, "UpperBody", "upperBody");
-        AnimatedGeoBone head = findBone(model, "Head", "head");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
         AnimatedGeoBone neck = findBone(model, "Neck", "neck");
         AnimatedGeoBone leftShoulder = findBone(model, "LeftShoulder", "leftShoulder", "shoulderLeft", "left_shoulder");
         AnimatedGeoBone rightShoulder = findBone(model, "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
@@ -304,6 +306,28 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         return null;
     }
 
+    private static AnimatedGeoBone findGeckoHeadBone(AnimatedGeoModel model) {
+        /*
+         * GeckoLib 模型包的头骨命名并不完全统一。只找 Head/head 时，
+         * 一些模型会跳过亲吻后的别头覆写，看起来就像“没有反应”。
+         */
+        AnimatedGeoBone exact = findBone(model,
+                "Head", "head",
+                "HeadMain", "headMain", "head_main",
+                "Bip001 Head", "bip001_head",
+                "BoneHead", "boneHead", "bone_head");
+        if (exact != null) {
+            return exact;
+        }
+        for (Map.Entry<String, AnimatedGeoBone> entry : model.bones().entrySet()) {
+            String normalized = entry.getKey().replace("_", "").replace(" ", "").toLowerCase(Locale.ROOT);
+            if (normalized.endsWith("head") || normalized.contains("head")) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
     /**
      * 拥抱内摸头使用新的“轻动作”版本：
      * 只轻微摆头，不再像普通摸头那样明显前倾或大幅左右晃动。
@@ -381,7 +405,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         if (!HugClientState.isPostKissShyTurnActive(maid.getUUID())) {
             return;
         }
-        AnimatedGeoBone head = findBone(model, "Head", "head");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
         if (head == null || PetHeadManager.isPetHeadAnimating(maid)) {
             return;
         }
@@ -398,9 +422,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         float yawOffset = Mth.clamp((headYawDegrees + cueYawDegrees) * Mth.DEG_TO_RAD, -1.49f, 1.49f);
         float pitchOffset = Mth.clamp((headPitchDegrees + cuePitchDegrees) * Mth.DEG_TO_RAD, -0.55f, 0.55f);
         float rollOffset = Mth.clamp(cueRollDegrees * Mth.DEG_TO_RAD, -0.30f, 0.30f);
-        head.setRotationX(pitchOffset);
-        head.setRotationY(yawOffset);
-        head.setRotationZ(-yawOffset * 0.08f + rollOffset);
+        applyGeckoKissHeadRotation(head, pitchOffset, yawOffset, rollOffset, false);
     }
 
     private static void applyGeckoStandaloneHeadCuePose(EntityMaid maid,
@@ -557,7 +579,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         AnimatedGeoBone body = findBone(model, "Body", "body");
         AnimatedGeoBone upperBody = findBone(model, "UpperBody", "upperBody");
         AnimatedGeoBone neck = findBone(model, "Neck", "neck");
-        AnimatedGeoBone head = findBone(model, "Head", "head");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
         AnimatedGeoBone shoulderLeft = findBone(model, "LeftShoulder", "leftShoulder", "shoulderLeft", "left_shoulder");
         AnimatedGeoBone shoulderRight = findBone(model, "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
 
@@ -700,7 +722,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         AnimatedGeoBone upBody = findBone(model, "UpBody", "upBody");
         AnimatedGeoBone upperBody = findBone(model, "UpperBody", "upperBody");
         AnimatedGeoBone neck = findBone(model, "Neck", "neck");
-        AnimatedGeoBone head = findBone(model, "Head", "head");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
         AnimatedGeoBone leftShoulder = findBone(model, "LeftShoulder", "leftShoulder", "shoulderLeft", "left_shoulder");
         AnimatedGeoBone rightShoulder = findBone(model, "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
 
@@ -963,7 +985,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
 
     private static void applyGeckoShyCoverFacePose(AnimatedGeoModel model,
                                                    float progress, boolean huggingBasePoseApplied) {
-        AnimatedGeoBone head = findBone(model, "Head", "head");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
         AnimatedGeoBone leftShoulder = findBone(model, "LeftShoulder", "leftShoulder", "shoulderLeft", "left_shoulder");
         AnimatedGeoBone rightShoulder = findBone(model, "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
         AnimatedGeoBone leftArm = findBone(model, "LeftArm", "leftArm", "armLeft", "ArmLeft", "left_arm");
@@ -1098,8 +1120,23 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         float yawOffset = Mth.clamp((headYawDegrees + cueYawDegrees) * Mth.DEG_TO_RAD, -1.49f, 1.49f);
         float pitchOffset = Mth.clamp((headPitchDegrees + cuePitchDegrees) * Mth.DEG_TO_RAD, -0.55f, 0.55f);
         float rollOffset = Mth.clamp(cueRollDegrees * Mth.DEG_TO_RAD, -0.30f, 0.30f);
-        head.setRotationX(-0.06f + pitchOffset);
-        head.setRotationY(0.14f + yawOffset);
-        head.setRotationZ(0.04f - yawOffset * 0.08f + rollOffset);
+        applyGeckoKissHeadRotation(head, pitchOffset, yawOffset, rollOffset, true);
+    }
+
+    private static void applyGeckoKissHeadRotation(AnimatedGeoBone head,
+                                                   float pitchOffset,
+                                                   float yawOffset,
+                                                   float rollOffset,
+                                                   boolean huggingBasePoseApplied) {
+        /*
+         * 亲吻收尾必须盖过模型包本帧自己的头部动画，否则某些 Gecko 模型会把别头幅度吃掉。
+         * 这里仍保留拥抱姿态的基础角度，只把害羞转头作为最终层叠上去。
+         */
+        float baseX = huggingBasePoseApplied ? -0.06f : 0.0f;
+        float baseY = huggingBasePoseApplied ? 0.14f : 0.0f;
+        float baseZ = huggingBasePoseApplied ? 0.04f : 0.0f;
+        head.setRotationX(baseX + pitchOffset);
+        head.setRotationY(baseY + yawOffset);
+        head.setRotationZ(baseZ - yawOffset * 0.08f + rollOffset);
     }
 }

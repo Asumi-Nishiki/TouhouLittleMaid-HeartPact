@@ -1,0 +1,14 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "more_mod_tetra"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "mmt_emblem"
+  ]
+}

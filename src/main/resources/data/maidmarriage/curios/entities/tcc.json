@@ -1,0 +1,14 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "tcc"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "tcc_slot"
+  ]
+}

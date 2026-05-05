@@ -41,6 +41,7 @@ public final class HugDialogueContextVariables {
      */
     public static void refresh(HugDialogueRuntimeBridge dialogueRuntime,
                                @Nullable UUID targetMaidUuid,
+                               String playerMaidAddressing,
                                String playerChildAddressing,
                                String poolAnchor) {
         if (dialogueRuntime == null) {
@@ -53,6 +54,7 @@ public final class HugDialogueContextVariables {
         String timeOfDay = resolveTimeOfDay(minecraft);
         String weather = resolveWeather(minecraft);
 
+        dialogueRuntime.setVariable("player_maid", safeValue(playerMaidAddressing));
         dialogueRuntime.setVariable("player_child", safeValue(playerChildAddressing));
         dialogueRuntime.setVariable("bloodline_kiss_blocked", Boolean.toString(isBloodlineKissBlocked(minecraft, targetEntity)));
         writeWorldVariables(dialogueRuntime, timeOfDay, weather);
@@ -189,8 +191,8 @@ public final class HugDialogueContextVariables {
         boolean carriedByMother = carrier != null && MaidChildEntity.isMotherOfChild(maid, carrier);
         dialogueRuntime.setVariable("child_carried_by_mother", Boolean.toString(carriedByMother));
         dialogueRuntime.setVariable("child_infant", Boolean.toString(stage == MaidChildEntity.GrowthStage.INFANT));
-        dialogueRuntime.setVariable("child_entry_speaker", safeValue(carriedByMother ? carrier.getDisplayName().getString() : maid.getDisplayName().getString()));
-        dialogueRuntime.setVariable("child_entry_text", pickChildEntryText(playerChildAddressing, carriedByMother, stage));
+        dialogueRuntime.setVariable("child_entry_speaker", safeValue(maid.getDisplayName().getString()));
+        dialogueRuntime.setVariable("child_entry_text", pickChildEntryText(playerChildAddressing, false, stage));
     }
 
     private static boolean hasCarriedUnnamedChild(EntityMaid maid) {
@@ -272,7 +274,7 @@ public final class HugDialogueContextVariables {
             };
         }
         if (stage == MaidChildEntity.GrowthStage.INFANT) {
-            return address + "，她出生第一天还需要妈妈抱着。先让她安心睡一会儿吧。";
+            return "咿呀咿呀咿呀……呜呜呜呜。\n她似乎还不会说话。\n小女仆才刚出生，请不要强制把她放下来。";
         }
         return address + "，今天也要陪我玩吗？我会乖乖听话的！";
     }

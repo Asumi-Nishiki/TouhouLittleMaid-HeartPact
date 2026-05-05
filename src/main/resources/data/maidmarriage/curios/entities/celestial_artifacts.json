@@ -1,0 +1,18 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "celestial_artifacts"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "scroll",
+    "pendant",
+    "heart",
+    "catastrophe",
+    "etching"
+  ]
+}

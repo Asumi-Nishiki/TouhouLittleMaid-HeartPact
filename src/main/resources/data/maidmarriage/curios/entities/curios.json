@@ -1,0 +1,21 @@
+﻿{
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "curio",
+    "back",
+    "belt",
+    "body",
+    "bracelet",
+    "charm",
+    "head",
+    "hands",
+    "necklace",
+    "ring",
+
+    "scroll",
+    "feet",
+    "spellbook"
+  ]
+}

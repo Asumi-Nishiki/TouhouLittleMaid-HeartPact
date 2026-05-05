@@ -78,6 +78,7 @@ public final class MaidWorkManager {
     private static final String TAG_MISSING_MATERIAL_MODE = "maidmarriage_child_missing_material_mode";
     private static final String TAG_LAST_COUNTDOWN_SECOND = "maidmarriage_child_last_countdown_second";
     private static final String TAG_LAST_WORK_TIME_HINT = "maidmarriage_child_last_work_time_hint";
+    private static final String TAG_LAST_WORK_PAUSE_HINT = "maidmarriage_child_last_work_pause_hint";
     private static final String TAG_GENERATED_REWARD = "maidmarriage_generated_reward";
 
     private static final long HINT_COOLDOWN_TICKS = 200L;
@@ -219,29 +220,30 @@ public final class MaidWorkManager {
     private static boolean tryStartActionByTask(ServerLevel level, EntityMaid maid, CompoundTag tag) {
         WorkMode mode = WorkMode.fromTask(maid.getTask()).orElse(null);
         if (mode == null) {
+            clearWorkPauseHint(tag);
             return false;
         }
 
         ServerPlayer owner = getOwner(maid);
         WorkBlockReason blockReason = resolveWorkBlockReason(maid);
         if (blockReason != WorkBlockReason.NONE) {
-            maybeSendCooldownHint(level, owner, tag, blockReason.messageKey, TAG_LAST_WORK_TIME_HINT);
+            maybeSendTaskPauseHint(owner, maid, tag, mode, blockReason.messageKey);
             return false;
         }
         if (!checkFavorabilityGate(owner, maid)) {
             return false;
         }
         if (maid.getScheduleDetail() != Activity.WORK) {
-            maybeSendCooldownHint(level, owner, tag, "message.maidmarriage.child.work.need_work_time", TAG_LAST_WORK_TIME_HINT);
+            maybeSendTaskPauseHint(owner, maid, tag, mode, "message.maidmarriage.child.work.need_work_time");
             return false;
         }
 
         if (mode.actionType == ActionType.EXPLORE && maid.getHealth() < maid.getMaxHealth() * EXPLORE_MIN_HEALTH_RATIO) {
-            maybeSendCooldownHint(level, owner, tag, "message.maidmarriage.child.explore.need_health", TAG_LAST_HEALTH_HINT);
+            maybeSendTaskPauseHint(owner, maid, tag, mode, "message.maidmarriage.child.explore.need_health");
             return false;
         }
         if (mode.actionType == ActionType.EXPLORE && isExhausted(maid)) {
-            maybeSendCooldownHint(level, owner, tag, "message.maidmarriage.child.explore.need_mood", TAG_LAST_WORK_TIME_HINT);
+            maybeSendTaskPauseHint(owner, maid, tag, mode, "message.maidmarriage.child.explore.need_mood");
             return false;
         }
 
@@ -251,6 +253,7 @@ public final class MaidWorkManager {
         }
 
         tag.remove(TAG_MISSING_MATERIAL_MODE);
+        clearWorkPauseHint(tag);
         tag.putString(TAG_ACTION_MODE, mode.key);
         int actionDurationTicks = calculateActionDurationTicks(mode.durationTicks, maid.getFavorability());
         tag.putLong(TAG_ACTION_END, level.getGameTime() + actionDurationTicks);
@@ -401,6 +404,10 @@ public final class MaidWorkManager {
         tag.remove(TAG_LAST_COUNTDOWN_SECOND);
     }
 
+    private static void clearWorkPauseHint(CompoundTag tag) {
+        tag.remove(TAG_LAST_WORK_PAUSE_HINT);
+    }
+
     private static ServerPlayer getOwner(EntityMaid maid) {
         if (maid.getOwner() instanceof ServerPlayer serverPlayer) {
             return serverPlayer;
@@ -491,6 +498,22 @@ public final class MaidWorkManager {
         }
         tag.putLong(hintTag, now);
         owner.sendSystemMessage(DialogueScriptManager.componentForPlayer(owner, key));
+    }
+
+    private static void maybeSendTaskPauseHint(ServerPlayer owner, EntityMaid maid, CompoundTag tag, WorkMode mode, String key) {
+        if (owner == null) {
+            return;
+        }
+        /*
+         * 工作模式会每秒尝试启动一次。这里按“任务 + 阻塞原因”记住已提示状态，
+         * 避免夜间、休息时间或坐下时在聊天框反复刷同一句话。
+         */
+        String hintState = mode.key + "|" + key;
+        if (hintState.equals(tag.getString(TAG_LAST_WORK_PAUSE_HINT))) {
+            return;
+        }
+        tag.putString(TAG_LAST_WORK_PAUSE_HINT, hintState);
+        owner.sendSystemMessage(DialogueScriptManager.componentForPlayer(owner, key, maid.getDisplayName(), mode.display()));
     }
 
     private static void pushActionCountdown(ServerLevel level, EntityMaid maid, CompoundTag tag) {

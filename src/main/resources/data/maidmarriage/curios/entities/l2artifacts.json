@@ -1,0 +1,18 @@
+﻿{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "l2artifacts"
+    }
+  ],
+  "entities": [
+    "maidmarriage:maid_child"
+  ],
+  "slots": [
+    "artifact_head",
+    "artifact_necklace",
+    "artifact_bracelet",
+    "artifact_body",
+    "artifact_belt"
+  ]
+}

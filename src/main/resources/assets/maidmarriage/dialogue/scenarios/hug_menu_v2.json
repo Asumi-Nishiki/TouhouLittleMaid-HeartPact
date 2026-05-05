@@ -171,7 +171,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "${player}……你来啦。她刚才睡了一会儿，现在很乖呢。",
+          "text": "${player_maid}……你来啦。她刚才睡了一会儿，现在很乖呢。",
           "portrait": "maid",
           "expression": "action_touched"
         },
@@ -664,7 +664,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "${player}，她现在还不能走路呢，今天就先让我抱着她吧，等她大一点了再慢慢学着站好。",
+          "text": "${player_maid}，她现在还不能走路呢，今天就先让我抱着她吧，等她大一点了再慢慢学着站好。",
           "portrait": "maid",
           "expression": "action_touched",
           "animation": "fade_in"
@@ -1911,7 +1911,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "今天有点提不起精神……${player}，可以先陪我安静一会儿吗？",
+        "text": "今天有点提不起精神……${player_maid}，可以先陪我安静一会儿吗？",
         "portrait": "maid",
         "expression": "troubled",
         "animation": "fade_in"
@@ -2051,7 +2051,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "外面的雷声好响……${player}，你会不会也觉得有点吵？",
+        "text": "外面的雷声好响……${player_maid}，你会不会也觉得有点吵？",
         "portrait": "maid",
         "expression": "anxious",
         "animation": "fade_in"
@@ -2595,7 +2595,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "早上好，${player}。今天也要一起慢慢开始吗？",
+        "text": "早上好，${player_maid}。今天也要一起慢慢开始吗？",
         "portrait": "maid",
         "expression": "soft_smile",
         "animation": "fade_in"
@@ -2676,7 +2676,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "那今天也请多关照啦，${player}。",
+          "text": "那今天也请多关照啦，${player_maid}。",
           "expression": "action_touched"
         }
       ],
@@ -2731,7 +2731,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "已经这么晚了……${player}，你还不准备休息吗？",
+        "text": "已经这么晚了……${player_maid}，你还不准备休息吗？",
         "portrait": "maid",
         "expression": "shy",
         "animation": "fade_in"
@@ -3549,7 +3549,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "所以谢谢你，${player}。",
+          "text": "所以谢谢你，${player_maid}。",
           "expression": "action_touched"
         }
       ],
@@ -5131,7 +5131,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "${player}，我们还没有完全准备好呢。等表白、好感、誓约条件，还有你副手和我主手的两枚新戒指都准备好之后，再继续这段婚礼吧。已经刻过誓约的戒指不能再用啦。",
+          "text": "${player_maid}，我们还没有完全准备好呢。等表白、好感、誓约条件，还有你副手和我主手的两枚新戒指都准备好之后，再继续这段婚礼吧。已经刻过誓约的戒指不能再用啦。",
           "portrait": "maid",
           "expression": "marriage_shy",
           "animation": "fade_in"

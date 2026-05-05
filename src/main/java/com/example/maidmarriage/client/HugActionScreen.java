@@ -861,6 +861,7 @@ public class HugActionScreen extends Screen {
         HugDialogueContextVariables.refresh(
                 dialogueRuntime,
                 targetMaidUuidForActions(),
+                ModConfigs.resolveMaidAddressing(resolvePlayerName()),
                 ModConfigs.resolveChildMaidAddressing(resolvePlayerName()),
                 dialogueRuntime.currentNodeId()
         );
