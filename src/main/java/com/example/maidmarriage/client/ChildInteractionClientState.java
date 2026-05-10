@@ -3,7 +3,6 @@ package com.example.maidmarriage.client;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 
 /**
  * 小女仆互动会话的轻量客户端状态。
@@ -85,14 +84,6 @@ public final class ChildInteractionClientState {
     }
 
     private static boolean hasEntityWithUuid(Minecraft minecraft, UUID uuid) {
-        if (minecraft == null || minecraft.level == null || uuid == null) {
-            return false;
-        }
-        for (Entity entity : minecraft.level.entitiesForRendering()) {
-            if (uuid.equals(entity.getUUID())) {
-                return true;
-            }
-        }
-        return false;
+        return minecraft != null && minecraft.level != null && ClientEntityLookup.findEntity(uuid) != null;
     }
 }

@@ -251,6 +251,13 @@ public final class RomanceRhythmHud {
         if (!active) {
             return;
         }
+        /*
+         * Forge 会为多个原版 HUD 层分别触发 Post 事件。
+         * 音游面板只需要每帧绘制一次，否则会在同一帧重复绘制整块 UI。
+         */
+        if (!event.getOverlay().id().equals(VanillaGuiOverlay.CROSSHAIR.id())) {
+            return;
+        }
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen != null) {
             return;

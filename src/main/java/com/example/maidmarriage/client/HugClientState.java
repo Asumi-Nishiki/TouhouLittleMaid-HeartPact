@@ -3,7 +3,6 @@ package com.example.maidmarriage.client;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 
 /**
  * 本地亲密交互会话的轻量客户端缓存。
@@ -618,15 +617,7 @@ public final class HugClientState {
      * 因此这里用一次轻量遍历来确认“当前同步目标是否还存在于本地世界”。
      */
     private static boolean hasEntityWithUuid(Minecraft minecraft, UUID uuid) {
-        if (minecraft == null || minecraft.level == null || uuid == null) {
-            return false;
-        }
-        for (Entity entity : minecraft.level.entitiesForRendering()) {
-            if (uuid.equals(entity.getUUID())) {
-                return true;
-            }
-        }
-        return false;
+        return minecraft != null && minecraft.level != null && ClientEntityLookup.findEntity(uuid) != null;
     }
 
     /**

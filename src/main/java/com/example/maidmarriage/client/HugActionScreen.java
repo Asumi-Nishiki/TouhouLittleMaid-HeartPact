@@ -378,9 +378,9 @@ public class HugActionScreen extends Screen {
         renderSceneLine(graphics);
         dialogueBox.render(graphics, this.width, this.height, mouseX, mouseY);
         portrait.render(graphics, this.width, this.height, mouseX, mouseY);
-        options.stream()
-                .sorted(Comparator.comparingInt(component -> component.renderOrder))
-                .forEach(component -> component.render(graphics, this.width, this.height, mouseX, mouseY));
+        for (DialogueOptionComponent option : options) {
+            option.render(graphics, this.width, this.height, mouseX, mouseY);
+        }
         hideButton.render(graphics, this.width, this.height, mouseX, mouseY);
         exitButton.render(graphics, this.width, this.height, mouseX, mouseY);
         renderTopRightStatus(graphics);
@@ -1170,13 +1170,7 @@ public class HugActionScreen extends Screen {
         if (minecraft.level == null || maidUuid == null) {
             return text("ui.maidmarriage.hug_action.maid_fallback").getString();
         }
-        Entity entity = null;
-        for (Entity candidate : minecraft.level.entitiesForRendering()) {
-            if (maidUuid.equals(candidate.getUUID())) {
-                entity = candidate;
-                break;
-            }
-        }
+        Entity entity = ClientEntityLookup.findEntity(maidUuid);
         return entity == null
                 ? text("ui.maidmarriage.hug_action.maid_fallback").getString()
                 : entity.getDisplayName().getString();
@@ -1189,12 +1183,8 @@ public class HugActionScreen extends Screen {
         if (minecraft.level == null || maidUuid == null) {
             return null;
         }
-        for (Entity candidate : minecraft.level.entitiesForRendering()) {
-            if (maidUuid.equals(candidate.getUUID()) && candidate instanceof EntityMaid maid) {
-                return maid;
-            }
-        }
-        return null;
+        Entity entity = ClientEntityLookup.findEntity(maidUuid);
+        return entity instanceof EntityMaid maid ? maid : null;
     }
 
     private String moodLabel(@Nullable EntityMaid maid) {

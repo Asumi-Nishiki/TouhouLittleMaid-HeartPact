@@ -12,25 +12,65 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = MaidMarriageMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class PregnancyDebugOverlay {
+    private static final int CACHE_REFRESH_TICKS = 20;
+    private static long cachedGameTime = Long.MIN_VALUE;
+    private static boolean cachedShowPregnancyDebug;
+    private static List<OverlayLine> cachedLines = List.of();
+    private static BirthWarning cachedBirthWarning;
+
     private PregnancyDebugOverlay() {
     }
 
     @SubscribeEvent
     public static void onRender(RenderGuiOverlayEvent.Post event) {
-        boolean showPregnancyDebug = ModConfigs.showPregnancyDebugCountdown();
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.level == null) {
+        if (!event.getOverlay().id().equals(VanillaGuiOverlay.HOTBAR.id())) {
             return;
         }
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) {
+            resetCache();
+            return;
+        }
+
+        boolean showPregnancyDebug = ModConfigs.showPregnancyDebugCountdown();
+        long now = mc.level.getGameTime();
+        if (shouldRefreshCache(now, showPregnancyDebug)) {
+            refreshCache(mc, now, showPregnancyDebug);
+        }
+
+        if (cachedBirthWarning != null) {
+            cachedBirthWarning.draw(event.getGuiGraphics(), mc);
+        }
+        if (cachedLines.isEmpty()) {
+            return;
+        }
+
+        drawLines(event.getGuiGraphics(), mc, cachedLines);
+    }
+
+    private static boolean shouldRefreshCache(long now, boolean showPregnancyDebug) {
+        return cachedGameTime == Long.MIN_VALUE
+                || now < cachedGameTime
+                || now - cachedGameTime >= CACHE_REFRESH_TICKS
+                || cachedShowPregnancyDebug != showPregnancyDebug;
+    }
+
+    private static void refreshCache(Minecraft mc, long now, boolean showPregnancyDebug) {
+        cachedGameTime = now;
+        cachedShowPregnancyDebug = showPregnancyDebug;
+        cachedBirthWarning = null;
 
         AABB search = mc.player.getBoundingBox().inflate(64.0D);
         List<EntityMaid> maids = mc.level.getEntitiesOfClass(
@@ -38,10 +78,11 @@ public final class PregnancyDebugOverlay {
                 search,
                 maid -> maid.isOwnedBy(mc.player));
         if (maids.isEmpty()) {
+            cachedLines = List.of();
             return;
         }
 
-        renderUpcomingBirthWarning(event.getGuiGraphics(), mc, maids);
+        cachedBirthWarning = collectUpcomingBirthWarning(mc, maids);
 
         List<OverlayLine> lines = new ArrayList<>();
         if (showPregnancyDebug) {
@@ -70,7 +111,6 @@ public final class PregnancyDebugOverlay {
             }
         }
 
-        long now = mc.level.getGameTime();
         for (EntityMaid maid : maids) {
             PregnancyData data = maid.getData(ModTaskData.PREGNANCY_DATA);
             if (data == null || !data.isInPostpartumRecovery(now)) {
@@ -82,22 +122,29 @@ public final class PregnancyDebugOverlay {
             lines.add(new OverlayLine(leftTicks, 0xFFFFD38B, text));
         }
 
-        if (lines.isEmpty()) {
-            return;
-        }
-
         lines.sort(Comparator.comparingLong(OverlayLine::sortTicks).thenComparingInt(OverlayLine::color));
+        cachedLines = List.copyOf(lines);
+    }
+
+    private static void drawLines(GuiGraphics guiGraphics, Minecraft mc, List<OverlayLine> lines) {
         int drawY = 8;
         int maxLines = 8;
         for (int i = 0; i < Math.min(lines.size(), maxLines); i++) {
             OverlayLine line = lines.get(i);
-            event.getGuiGraphics().drawString(mc.font, line.text(), 8, drawY, line.color(), true);
+            guiGraphics.drawString(mc.font, line.text(), 8, drawY, line.color(), true);
             drawY += 10;
         }
         if (lines.size() > maxLines) {
             Component more = Component.literal("... +" + (lines.size() - maxLines));
-            event.getGuiGraphics().drawString(mc.font, more, 8, drawY, 0xFFB8B8B8, true);
+            guiGraphics.drawString(mc.font, more, 8, drawY, 0xFFB8B8B8, true);
         }
+    }
+
+    private static void resetCache() {
+        cachedGameTime = Long.MIN_VALUE;
+        cachedShowPregnancyDebug = false;
+        cachedLines = List.of();
+        cachedBirthWarning = null;
     }
 
     private static String formatSeconds(long totalSeconds) {
@@ -124,13 +171,17 @@ public final class PregnancyDebugOverlay {
     private record OverlayLine(long sortTicks, int color, Component text) {
     }
 
+    private record BirthWarning(Component text) {
+        private void draw(GuiGraphics guiGraphics, Minecraft mc) {
+            int drawX = mc.getWindow().getGuiScaledWidth() - mc.font.width(text) - 8;
+            guiGraphics.drawString(mc.font, text, drawX, 8, 0xFFFF5A5A, true);
+        }
+    }
+
     /**
-     * 在真正临近分娩的一天内，始终在右上角给玩家红色提醒，
-     * 避免只靠左上角调试信息时被忽略。
+     * 每秒缓存一次临近分娩提示，避免 GUI 每一层、每一帧都扫描 64 格内所有女仆。
      */
-    private static void renderUpcomingBirthWarning(net.minecraft.client.gui.GuiGraphics guiGraphics,
-                                                   Minecraft mc,
-                                                   List<EntityMaid> maids) {
+    private static BirthWarning collectUpcomingBirthWarning(Minecraft mc, List<EntityMaid> maids) {
         long minLeftTicks = Long.MAX_VALUE;
         EntityMaid target = null;
         long warningWindowTicks = 24000L;
@@ -148,11 +199,10 @@ public final class PregnancyDebugOverlay {
             }
         }
         if (target == null) {
-            return;
+            return null;
         }
         String timeText = formatSeconds((long) Math.ceil(minLeftTicks / 20.0D));
         Component text = Component.translatable("overlay.maidmarriage.birth_warning", target.getName(), timeText);
-        int drawX = mc.getWindow().getGuiScaledWidth() - mc.font.width(text) - 8;
-        guiGraphics.drawString(mc.font, text, drawX, 8, 0xFFFF5A5A, true);
+        return new BirthWarning(text);
     }
 }
