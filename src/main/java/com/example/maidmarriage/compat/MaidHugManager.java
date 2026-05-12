@@ -182,6 +182,9 @@ public final class MaidHugManager {
         if (session == null) {
             return;
         }
+        if (LapPillowManager.isPlayerInLapPillow(player)) {
+            return;
+        }
 
         EntityMaid maid = findMaidByUuid(player.serverLevel(), session.maidUuid());
         if (!isValidInteractionPair(player, maid, session)) {
@@ -203,6 +206,23 @@ public final class MaidHugManager {
         if (nextHugging) {
             MaidMoodManager.markMeaningfulInteraction(maid);
         }
+    }
+
+    public static void forceStopHugPose(ServerPlayer player, @Nullable EntityMaid maid) {
+        InteractionSession session = PLAYER_TO_SESSION.get(player.getUUID());
+        if (session == null || !session.hugging()) {
+            return;
+        }
+        EntityMaid target = maid != null ? maid : findMaidByUuid(player.serverLevel(), session.maidUuid());
+        if (target == null || !target.getUUID().equals(session.maidUuid())) {
+            return;
+        }
+        /*
+         * 膝枕仍然复用同一份亲密交互会话和 UI。
+         * 进入膝枕前必须先关闭“拥抱姿态层”，否则客户端会继续收到 hugging=true，
+         * 普通模型和 YSM 都可能优先播放拥抱动作，看起来就像膝枕没有切过去。
+         */
+        setHugging(player, target, false, false);
     }
 
     /**
@@ -388,6 +408,16 @@ public final class MaidHugManager {
         EntityMaid maid = findMaidByUuid(player.serverLevel(), session.maidUuid());
         if (!isValidInteractionPair(player, maid, session)) {
             stopInteraction(player, maid, false);
+            return;
+        }
+        /*
+         * 膝枕仍然属于这份亲密交互会话，但姿态控制权要暂时交给 LapPillowManager。
+         *
+         * 如果这里继续执行站立锁位，服务端同一 tick 内就会出现：
+         * HugManager 把女仆拉回站立 -> LapPillowManager 再改回坐姿。
+         * 事件顺序一旦变化，客户端就会抖动或直接看不到膝枕动作。
+         */
+        if (LapPillowManager.isPlayerInLapPillow(player)) {
             return;
         }
 

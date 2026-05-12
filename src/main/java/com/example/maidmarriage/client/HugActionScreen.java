@@ -111,9 +111,36 @@ public class HugActionScreen extends Screen {
      * <p>这一行为保留不动，避免把用户已经习惯的交互打断。
      */
     private static boolean compactMode = false;
+    private static boolean lastRestoreUiKey;
+
+    public static boolean isCompactLookMode() {
+        return compactMode;
+    }
+
+    public static void tickCompactLookHotkey(Minecraft minecraft) {
+        if (minecraft == null || !compactMode) {
+            lastRestoreUiKey = false;
+            return;
+        }
+        long window = minecraft.getWindow().getWindow();
+        boolean restoreUiKey = GLFW.glfwGetKey(window, GLFW.GLFW_KEY_H) == GLFW.GLFW_PRESS;
+        if (restoreUiKey && !lastRestoreUiKey) {
+            restoreFromCompactLookMode(minecraft);
+        }
+        lastRestoreUiKey = restoreUiKey;
+    }
+
+    public static void restoreFromCompactLookMode(Minecraft minecraft) {
+        compactMode = false;
+        if (minecraft != null && minecraft.screen == null
+                && (HugClientState.isLocalPlayerInteracting() || LapPillowClientState.isLocalPlayerActive())) {
+            minecraft.setScreen(new HugActionScreen());
+            minecraft.mouseHandler.releaseMouse();
+        }
+    }
 
     private static final int CAMERA_PANEL_WIDTH = 142;
-    private static final int CAMERA_PANEL_HEIGHT = 74;
+    private static final int CAMERA_PANEL_HEIGHT = 114;
     private static final int CAMERA_PANEL_MARGIN = 8;
     private static final int CAMERA_SLIDER_WIDTH = 74;
     private static final int CAMERA_SLIDER_HEIGHT = 5;
@@ -194,6 +221,7 @@ public class HugActionScreen extends Screen {
      * 一个控制默认缩放，一个控制上下视角偏移。
      */
     private boolean cameraAdjustPanelOpen;
+    private boolean lastLapPillowActive;
 
     /**
      * 当前正在拖动哪个镜头滑块。
@@ -208,6 +236,8 @@ public class HugActionScreen extends Screen {
      */
     private double cameraPanelSnapshotFovScale;
     private float cameraPanelSnapshotPitchOffset;
+    private double cameraPanelSnapshotLapPillowFovScale;
+    private double cameraPanelSnapshotLapPillowHeightOffset;
 
     /**
      * 屏幕左上角短提示文案。
@@ -256,7 +286,11 @@ public class HugActionScreen extends Screen {
 
     @Nullable
     public UUID targetMaidUuidForActions() {
-        return fixedMaidUuid != null ? fixedMaidUuid : HugClientState.getLocalInteractionMaidUuid();
+        if (fixedMaidUuid != null) {
+            return fixedMaidUuid;
+        }
+        UUID interactionMaidUuid = HugClientState.getLocalInteractionMaidUuid();
+        return interactionMaidUuid != null ? interactionMaidUuid : LapPillowClientState.getLocalLapPillowMaidUuid();
     }
 
     /**
@@ -301,6 +335,7 @@ public class HugActionScreen extends Screen {
         this.dialogueRuntime.prepare();
         updateDialogueContextVariables();
         this.dialogueRuntime.start();
+        this.lastLapPillowActive = LapPillowClientState.isLocalPlayerActive();
         HugStoryResumeState.PendingResume pendingResume = HugStoryResumeState.consumeIfMatches(
                 targetMaidUuidForActions(),
                 HUG_SCENARIO_ID
@@ -339,6 +374,12 @@ public class HugActionScreen extends Screen {
         }
 
         // 更新短提示的剩余显示时间。
+        boolean lapPillowActive = LapPillowClientState.isLocalPlayerActive();
+        if (lapPillowActive != lastLapPillowActive) {
+            lastLapPillowActive = lapPillowActive;
+            refreshDialogueState(true);
+        }
+
         if (debugMessageTicks > 0) {
             debugMessageTicks--;
         }
@@ -397,7 +438,7 @@ public class HugActionScreen extends Screen {
 
         // 紧凑模式下，左键任意处点击恢复正常显示。
         if (compactMode) {
-            compactMode = false;
+            setCompactMode(false);
             return true;
         }
 
@@ -409,7 +450,7 @@ public class HugActionScreen extends Screen {
 
         // 点击隐藏按钮：只隐藏 UI，不改变剧情状态。
         if (hideButton.contains(mouseX, mouseY, this.width, this.height)) {
-            compactMode = true;
+            setCompactMode(true);
             return true;
         }
 
@@ -487,8 +528,14 @@ public class HugActionScreen extends Screen {
         if (debugLayout && handleDebugKey(keyCode, modifiers)) {
             return true;
         }
+        if (cameraAdjustPanelOpen && keyCode == GLFW.GLFW_KEY_R) {
+            HugCameraZoom.resetRuntimeDefaults();
+            LapPillowPoseDebug.resetDefaults();
+            showDebugMessage("镜头微调已恢复默认值");
+            return true;
+        }
         if (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_H) {
-            compactMode = !compactMode;
+            setCompactMode(!compactMode);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_ENTER) {
@@ -514,8 +561,29 @@ public class HugActionScreen extends Screen {
         return false;
     }
 
+    private void setCompactMode(boolean enabled) {
+        compactMode = enabled;
+        if (this.minecraft == null) {
+            return;
+        }
+        if (enabled) {
+            cameraAdjustPanelOpen = false;
+            cameraSliderDragTarget = CameraSliderDragTarget.NONE;
+            if (this.minecraft.player != null) {
+                this.minecraft.player.displayClientMessage(Component.literal("已隐藏互动面板。按 H 唤起面板，按 Y 退出膝枕。"), false);
+            }
+            this.minecraft.setScreen(null);
+            this.minecraft.mouseHandler.grabMouse();
+        } else {
+            this.minecraft.mouseHandler.releaseMouse();
+        }
+    }
+
     @Override
     public void onClose() {
+        if (compactMode) {
+            setCompactMode(false);
+        }
         closeCameraAdjustPanelWithoutSaving();
         if (this.minecraft != null && this.minecraft.screen == this) {
             this.minecraft.setScreen(null);
@@ -646,6 +714,10 @@ public class HugActionScreen extends Screen {
                 HugCameraZoom.minHugFovScale(), HugCameraZoom.maxHugFovScale(), HugCameraZoom.zoomLabel());
         renderCameraSlider(graphics, panelX + 8, panelY + 42, "上下", HugCameraZoom.currentCameraPitchOffsetDegrees(),
                 HugCameraZoom.minCameraPitchOffsetDegrees(), HugCameraZoom.maxCameraPitchOffsetDegrees(), HugCameraZoom.pitchOffsetLabel());
+        renderCameraSlider(graphics, panelX + 8, panelY + 61, "膝枕缩放", LapPillowPoseDebug.cameraFovScale(),
+                LapPillowPoseDebug.MIN_CAMERA_FOV_SCALE, LapPillowPoseDebug.MAX_CAMERA_FOV_SCALE, LapPillowPoseDebug.cameraFovLabel());
+        renderCameraSlider(graphics, panelX + 8, panelY + 80, "膝枕高度", LapPillowPoseDebug.cameraHeightOffset(),
+                LapPillowPoseDebug.MIN_CAMERA_HEIGHT_OFFSET, LapPillowPoseDebug.MAX_CAMERA_HEIGHT_OFFSET, LapPillowPoseDebug.cameraHeightLabel());
 
         int saveX = cameraPanelSaveX();
         int saveY = cameraPanelSaveY();
@@ -702,6 +774,18 @@ public class HugActionScreen extends Screen {
             updateCameraSliderValue(mouseX);
             return true;
         }
+        if (isInside(mouseX, mouseY, cameraSliderTrackX(), cameraSliderLapFovTrackY() - 4,
+                CAMERA_SLIDER_WIDTH, CAMERA_SLIDER_HEIGHT + 8)) {
+            cameraSliderDragTarget = CameraSliderDragTarget.LAP_PILLOW_FOV;
+            updateCameraSliderValue(mouseX);
+            return true;
+        }
+        if (isInside(mouseX, mouseY, cameraSliderTrackX(), cameraSliderLapHeightTrackY() - 4,
+                CAMERA_SLIDER_WIDTH, CAMERA_SLIDER_HEIGHT + 8)) {
+            cameraSliderDragTarget = CameraSliderDragTarget.LAP_PILLOW_HEIGHT;
+            updateCameraSliderValue(mouseX);
+            return true;
+        }
 
         return isInside(mouseX, mouseY, cameraPanelX(), cameraPanelY(), CAMERA_PANEL_WIDTH, CAMERA_PANEL_HEIGHT);
     }
@@ -714,6 +798,8 @@ public class HugActionScreen extends Screen {
 
         cameraPanelSnapshotFovScale = HugCameraZoom.currentHugFovScale();
         cameraPanelSnapshotPitchOffset = HugCameraZoom.currentCameraPitchOffsetDegrees();
+        cameraPanelSnapshotLapPillowFovScale = LapPillowPoseDebug.cameraFovScale();
+        cameraPanelSnapshotLapPillowHeightOffset = LapPillowPoseDebug.cameraHeightOffset();
         cameraSliderDragTarget = CameraSliderDragTarget.NONE;
         cameraAdjustPanelOpen = true;
     }
@@ -724,6 +810,8 @@ public class HugActionScreen extends Screen {
         }
         HugCameraZoom.setHugFovScale(cameraPanelSnapshotFovScale);
         HugCameraZoom.setCameraPitchOffsetDegrees(cameraPanelSnapshotPitchOffset);
+        LapPillowPoseDebug.setCameraFovScale(cameraPanelSnapshotLapPillowFovScale);
+        LapPillowPoseDebug.setCameraHeightOffset(cameraPanelSnapshotLapPillowHeightOffset);
         cameraSliderDragTarget = CameraSliderDragTarget.NONE;
         cameraAdjustPanelOpen = false;
     }
@@ -741,6 +829,18 @@ public class HugActionScreen extends Screen {
             float min = HugCameraZoom.minCameraPitchOffsetDegrees();
             float max = HugCameraZoom.maxCameraPitchOffsetDegrees();
             HugCameraZoom.setCameraPitchOffsetDegrees((float) (min + (max - min) * progress));
+            return;
+        }
+        if (cameraSliderDragTarget == CameraSliderDragTarget.LAP_PILLOW_FOV) {
+            double min = LapPillowPoseDebug.MIN_CAMERA_FOV_SCALE;
+            double max = LapPillowPoseDebug.MAX_CAMERA_FOV_SCALE;
+            LapPillowPoseDebug.setCameraFovScale(min + (max - min) * progress);
+            return;
+        }
+        if (cameraSliderDragTarget == CameraSliderDragTarget.LAP_PILLOW_HEIGHT) {
+            double min = LapPillowPoseDebug.MIN_CAMERA_HEIGHT_OFFSET;
+            double max = LapPillowPoseDebug.MAX_CAMERA_HEIGHT_OFFSET;
+            LapPillowPoseDebug.setCameraHeightOffset(min + (max - min) * progress);
         }
     }
 
@@ -782,6 +882,14 @@ public class HugActionScreen extends Screen {
 
     private int cameraSliderPitchTrackY() {
         return cameraPanelY() + 42 + 2;
+    }
+
+    private int cameraSliderLapFovTrackY() {
+        return cameraPanelY() + 61 + 2;
+    }
+
+    private int cameraSliderLapHeightTrackY() {
+        return cameraPanelY() + 80 + 2;
     }
 
     private int cameraPanelSaveX() {
@@ -1225,7 +1333,7 @@ public class HugActionScreen extends Screen {
 
     private boolean isScreenTargetStillValid() {
         if (!childInteractionMode) {
-            return HugClientState.isLocalPlayerInteracting();
+            return HugClientState.isLocalPlayerInteracting() || LapPillowClientState.isLocalPlayerActive();
         }
         return fixedMaidUuid != null
                 && fixedMaidUuid.equals(ChildInteractionClientState.getLocalInteractionMaidUuid())
@@ -1233,7 +1341,7 @@ public class HugActionScreen extends Screen {
     }
 
     private boolean shouldHideVanillaHud() {
-        return childInteractionMode || HugClientState.isLocalPlayerInteracting();
+        return childInteractionMode || HugClientState.isLocalPlayerInteracting() || LapPillowClientState.isLocalPlayerActive();
     }
 
     /**
@@ -1719,6 +1827,8 @@ public class HugActionScreen extends Screen {
     private enum CameraSliderDragTarget {
         NONE,
         ZOOM,
-        PITCH
+        PITCH,
+        LAP_PILLOW_FOV,
+        LAP_PILLOW_HEIGHT
     }
 }

@@ -103,6 +103,9 @@ public final class HugDialogueContextVariables {
             dialogueRuntime.setVariable("marriage_ring_ready", "false");
             dialogueRuntime.setVariable("marriage_commit_ready", "false");
             dialogueRuntime.setVariable("maid_carrying_child", "false");
+            dialogueRuntime.setVariable("lap_pillow_unlocked", "false");
+            dialogueRuntime.setVariable("lap_pillow_active", "false");
+            dialogueRuntime.setVariable("lap_pillow_mood_ok", "true");
             dialogueRuntime.setVariable("carried_child_infant", "false");
             dialogueRuntime.setVariable("carried_child_name_pending", "false");
             dialogueRuntime.setVariable("carried_child_default_named_infant", "false");
@@ -136,10 +139,14 @@ public final class HugDialogueContextVariables {
         dialogueRuntime.setVariable("favorability", Integer.toString(favorability));
         dialogueRuntime.setVariable("favor_pet_unlocked", Boolean.toString(favorability >= RelationshipThresholds.PET_UNLOCK));
         dialogueRuntime.setVariable("favor_hug_unlocked", Boolean.toString(favorability >= RelationshipThresholds.HUG_UNLOCK));
-        dialogueRuntime.setVariable("favor_kiss_unlocked", Boolean.toString(MaidRelationshipManager.isKissUnlocked(maid)));
+        boolean intimateUnlocked = relationStage == RelationStage.DATING || relationStage == RelationStage.MARRIAGE;
+        dialogueRuntime.setVariable("favor_kiss_unlocked", Boolean.toString(intimateUnlocked));
         dialogueRuntime.setVariable("favor_marriage_unlocked", Boolean.toString(favorability >= MaidRelationshipManager.MARRIAGE_UNLOCK_FAVORABILITY));
         dialogueRuntime.setVariable("confession_completed", Boolean.toString(confessionCompleted));
         dialogueRuntime.setVariable("marriage_completed", Boolean.toString(marriageCompleted));
+        dialogueRuntime.setVariable("lap_pillow_unlocked", Boolean.toString(intimateUnlocked));
+        dialogueRuntime.setVariable("lap_pillow_active", Boolean.toString(
+                com.example.maidmarriage.client.LapPillowClientState.isLocalPlayerActiveWith(maid.getUUID())));
         boolean blockedByClientMonogamy = hasOtherLoadedMarriageOnClient(player, maid);
         dialogueRuntime.setVariable("can_show_confession", Boolean.toString(
                 MaidRelationshipManager.canShowConfession(player, maid) && !blockedByClientMonogamy));
@@ -165,8 +172,15 @@ public final class HugDialogueContextVariables {
 
         MaidMoodData.MoodState moodState = MaidMoodManager.state(maid);
         writeMoodVariables(dialogueRuntime, moodState);
+        dialogueRuntime.setVariable("lap_pillow_mood_ok", Boolean.toString(isNormalOrBetter(moodState)));
         writeV4PoolVariables(dialogueRuntime, relationStage, moodState, poolAnchor, timeOfDay,
                 MaidMoodManager.isLongingForInteraction(maid));
+    }
+
+    private static boolean isNormalOrBetter(MaidMoodData.MoodState moodState) {
+        return moodState == MaidMoodData.MoodState.NORMAL
+                || moodState == MaidMoodData.MoodState.HAPPY
+                || moodState == MaidMoodData.MoodState.LOVE;
     }
 
     private static void writeChildInteractionVariables(HugDialogueRuntimeBridge dialogueRuntime,
@@ -377,6 +391,10 @@ public final class HugDialogueContextVariables {
         dialogueRuntime.setVariable("pet_intro_text", HugDialogueTextPools.pickPet(relationStage));
         dialogueRuntime.setVariable("hug_intro_text", HugDialogueTextPools.pickHug(relationStage));
         dialogueRuntime.setVariable("kiss_intro_text", HugDialogueTextPools.pickKiss(relationStage));
+        dialogueRuntime.setVariable("lap_pillow_start_text", pickLapPillowStart());
+        dialogueRuntime.setVariable("lap_pillow_refuse_text", pickLapPillowRefuse());
+        dialogueRuntime.setVariable("lap_pillow_pet_text", pickLapPillowPet());
+        dialogueRuntime.setVariable("lap_pillow_exit_text", pickLapPillowExit());
         dialogueRuntime.setVariable("release_hug_text", HugDialogueTextPools.pickReleaseHug());
         dialogueRuntime.setVariable("low_comfort_text", HugDialogueTextPools.pickLowComfort());
         dialogueRuntime.setVariable("flatter_praise_text", HugDialogueTextPools.pickFlatterPraise());
@@ -394,6 +412,44 @@ public final class HugDialogueContextVariables {
         dialogueRuntime.setVariable("weather_special_topic", Boolean.toString(!weatherSpecialCategory.isBlank()));
         dialogueRuntime.setVariable("chat_topic_weather_special_text",
                 HugDialogueTextPools.pickWeatherSpecialTopic(weatherSpecialCategory, relationStage));
+    }
+
+    private static String pickLapPillowStart() {
+        return switch (ThreadLocalRandom.current().nextInt(5)) {
+            case 0 -> "她轻轻拍了拍自己的膝头，耳尖红了一点，却还是认真看着你：“累了的话……可以靠过来一会儿。”";
+            case 1 -> "你刚低下身，她就小心地扶住你的肩，像是怕你磕到一样，把声音也放得很轻。";
+            case 2 -> "她把裙摆整理好，低头看着你，眼神柔软得像午后的光：“就一会儿哦，不许睡太久。”";
+            case 3 -> "你靠上去的时候，她的手指停在半空，犹豫了一下，最后还是轻轻落在你的发间。";
+            default -> "她让你枕在膝上，低下头看你的时候，连呼吸都像怕把这点安静碰碎。";
+        };
+    }
+
+    private static String pickLapPillowRefuse() {
+        return switch (ThreadLocalRandom.current().nextInt(4)) {
+            case 0 -> "她轻轻避开你的视线：“今天先不要这样……我想先被你好好哄一会儿。”";
+            case 1 -> "她把手放在胸口，声音有些低：“不是讨厌你，只是今天心里有点乱。”";
+            case 2 -> "她抿了抿嘴：“等我心情好一点，再让你靠过来，好吗？”";
+            default -> "她没有生气，只是轻轻摇头。现在比起膝枕，她似乎更想听你慢慢陪她说话。";
+        };
+    }
+
+    private static String pickLapPillowPet() {
+        return switch (ThreadLocalRandom.current().nextInt(5)) {
+            case 0 -> "女仆：“怎么啦，今天很累吗？那就先别逞强了。”\n旁白：她低下身，手掌慢慢落到你的头顶，一下一下轻轻顺着你的头发。";
+            case 1 -> "女仆：“乖啦……我在这里呢。”\n旁白：她的指尖从额前轻轻滑过，动作很慢，像是怕惊扰到你这一点点安心。";
+            case 2 -> "女仆：“偶尔也可以依赖我一下哦。”\n旁白：她有些害羞，却还是认真俯下身，轻轻揉了揉你的发顶。";
+            case 3 -> "女仆：“已经做得很好啦，今天就先休息一会儿吧。”\n旁白：她的手停在你的头侧，温柔地安抚了好几下，声音也跟着放软。";
+            default -> "女仆：“平时总是你照顾我，今天换我哄哄你。”\n旁白：她慢慢伸出手，笨拙又认真地摸着你的头，像把所有心疼都藏进了掌心。";
+        };
+    }
+
+    private static String pickLapPillowExit() {
+        return switch (ThreadLocalRandom.current().nextInt(4)) {
+            case 0 -> "她扶着你慢慢坐起来，手还停在你肩上，像是有点舍不得这一小段安静。";
+            case 1 -> "你起身时，她下意识拉了你一下，又很快松开，脸红着移开目光。";
+            case 2 -> "“休息好了吗？”她轻声问你，眼神里还留着刚才的温柔。";
+            default -> "她替你理了理衣角，像什么都没发生一样，却悄悄弯起了嘴角。";
+        };
     }
 
     private static String idleTextForMood(MaidMoodData.MoodState mood) {

@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "maidmarriage-refmap.json",
   "mixins": [
+    "EntityLapPillowPoseServerGuardMixin",
     "QueryBindingLiftStateMixin",
     "YsmTlmMolangCompatMixin"
   ],
   "client": [
+    "client.CameraLapPillowAccessor",
     "AnimationManagerLiftVehicleMixin",
     "ConditionalPassengerLiftMixin",
     "ConditionalVehicleLiftMixin",
@@ -16,6 +18,11 @@
     "HardcodedAnimationManagerCarryChildPoseMixin",
     "HardcodedAnimationManagerHugPoseMixin",
     "HardcodedAnimationManagerLiftPoseMixin",
+    "client.EntityLapPillowPoseClientGuardMixin",
+    "client.EntityRenderDispatcherLapPillowMixin",
+    "client.LapPillowSeatRenderMixin",
+    "client.LivingEntityLapPillowSleepMixin",
+    "client.PlayerModelLapPillowSleepPoseMixin",
     "PlayerModelHugPoseMixin",
     "YsmBindingLiftStateMixin",
     "client.YsmRuntimeHugPoseMixin"

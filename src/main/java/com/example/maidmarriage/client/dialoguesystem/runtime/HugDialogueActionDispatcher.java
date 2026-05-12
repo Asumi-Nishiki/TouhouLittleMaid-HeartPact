@@ -95,6 +95,18 @@ public final class HugDialogueActionDispatcher {
                 PetHeadClientHandler.triggerCarryChild(minecraft, targetMaidUuid);
                 debug(debugSink, "已执行剧情动作: carry_child_put_down");
             }
+            case "maidmarriage:lap_pillow_start" -> {
+                PetHeadClientHandler.triggerLapPillowStart(minecraft, targetMaidUuid);
+                debug(debugSink, "已执行剧情动作: lap_pillow_start");
+            }
+            case "maidmarriage:lap_pillow_exit" -> {
+                PetHeadClientHandler.triggerLapPillowExit(minecraft);
+                debug(debugSink, "已执行剧情动作: lap_pillow_exit");
+            }
+            case "maidmarriage:lap_pillow_pet_player_head" -> {
+                PetHeadClientHandler.triggerLapPillowPetPlayerHead(minecraft, targetMaidUuid);
+                debug(debugSink, "已执行剧情动作: lap_pillow_pet_player_head");
+            }
             case "maidmarriage:head_lower" -> {
                 executeHeadCue(targetMaidUuid, HugClientState.HeadCueType.LOWER_HEAD, request.params());
                 debug(debugSink, "已执行剧情动作: head_lower");

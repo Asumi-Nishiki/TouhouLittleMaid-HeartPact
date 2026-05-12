@@ -12,6 +12,7 @@ import com.example.maidmarriage.network.payload.ChildInteractionPayload;
 import com.example.maidmarriage.network.payload.DialogueChoiceResultPayload;
 import com.example.maidmarriage.network.payload.HugMaidPayload;
 import com.example.maidmarriage.network.payload.KissMaidPayload;
+import com.example.maidmarriage.network.payload.LapPillowActionPayload;
 import com.example.maidmarriage.network.payload.LiftMaidPayload;
 import com.example.maidmarriage.network.payload.PetHeadPayload;
 import com.example.maidmarriage.network.payload.ToggleHugPosePayload;
@@ -70,6 +71,10 @@ public final class PetHeadClientHandler {
             triggerSeatedPetHeadShortcut(mc);
         }
         if (RhythmKeyMappings.INTERACTION.consumeClick()) {
+            if (HugActionScreen.isCompactLookMode()) {
+                HugActionScreen.restoreFromCompactLookMode(mc);
+                return;
+            }
             triggerUnifiedInteraction(mc);
         }
     }
@@ -248,6 +253,20 @@ public final class PetHeadClientHandler {
 
     public static void triggerCarryChild(Minecraft mc, @Nullable UUID maidUuid) {
         ModNetworking.sendCarryChildMaid(new CarryChildMaidPayload(maidUuid));
+    }
+
+    public static void triggerLapPillowStart(Minecraft mc, @Nullable UUID maidUuid) {
+        ModNetworking.sendLapPillowAction(new LapPillowActionPayload(LapPillowActionPayload.ACTION_START, maidUuid));
+    }
+
+    public static void triggerLapPillowExit(Minecraft mc) {
+        ModNetworking.sendLapPillowAction(new LapPillowActionPayload(LapPillowActionPayload.ACTION_EXIT, null));
+    }
+
+    public static void triggerLapPillowPetPlayerHead(Minecraft mc, @Nullable UUID maidUuid) {
+        UUID targetUuid = maidUuid != null ? maidUuid : LapPillowClientState.getLocalLapPillowMaidUuid();
+        ModNetworking.sendLapPillowAction(new LapPillowActionPayload(LapPillowActionPayload.ACTION_PET_PLAYER_HEAD, targetUuid));
+        LapPillowClientState.predictPetPlayerHead(targetUuid, 96);
     }
 
     @Nullable

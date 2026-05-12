@@ -58,7 +58,12 @@ public final class MaidStoryInteractionManager {
     }
 
     private static void openMarriagePanel(ServerPlayer player, EntityMaid maid) {
-        if (!canCommitMarriage(player, maid) && !MaidRelationshipManager.isMarried(maid)) {
+        if (MaidRelationshipManager.isMarried(maid)) {
+            PENDING_MARRIAGES.remove(player.getUUID());
+            player.sendSystemMessage(Component.literal("你们已经完成婚礼誓约了。"));
+            return;
+        }
+        if (!canCommitMarriage(player, maid)) {
             player.sendSystemMessage(Component.literal("现在还没有准备好进行婚礼誓约。"));
             return;
         }
@@ -90,21 +95,32 @@ public final class MaidStoryInteractionManager {
             player.sendSystemMessage(Component.literal("这枚戒指已经绑定过了，请换一枚新的。"));
             return;
         }
+        // 结婚提交可能被客户端 UI 或剧情动作重复发送；先拿走本次会话，后续重复包就不会再发戒指。
+        if (!PENDING_MARRIAGES.remove(player.getUUID(), pending)) {
+            return;
+        }
+        if (MaidRelationshipManager.isMarried(maid) || !canCommitMarriage(player, maid)) {
+            return;
+        }
+        if (!playerRing.is(ModItems.PROPOSAL_RING.get()) || !maidRing.is(ModItems.PROPOSAL_RING.get())
+                || MarriageEventHandler.isRingUsed(playerRing) || MarriageEventHandler.isRingUsed(maidRing)) {
+            player.sendSystemMessage(Component.literal("戒指状态发生了变化，请重新打开女仆面板确认。"));
+            return;
+        }
 
         MarriageData currentData = maid.getOrCreateData(ModTaskData.MARRIAGE_DATA, MarriageData.EMPTY);
         ItemStack playerVowRing = createVowRing(player, maid);
         ItemStack maidVowRing = createVowRing(player, maid);
         consumePlayerOffhandRing(player);
         consumeMaidMainhandRing(maid);
+        maid.setAndSyncData(ModTaskData.MARRIAGE_DATA, currentData.marry(player.getUUID(), maid.level().getGameTime()));
         givePlayerVowRing(player, playerVowRing);
         MarriageEventHandler.giveRingToMaid(maid, maidVowRing);
-        maid.setAndSyncData(ModTaskData.MARRIAGE_DATA, currentData.marry(player.getUUID(), maid.level().getGameTime()));
         MarriageEventHandler.giveMarriagePillows(player, maid);
         MarriageEventHandler.clearConsentApproval(maid);
         MarriageEventHandler.markPrimaryMaidIfNeeded(player, maid);
         playMarriageEffects(player, maid);
         ModAdvancements.grantMarriage(player);
-        PENDING_MARRIAGES.remove(player.getUUID());
     }
 
     public static boolean canCommitMarriage(Player player, EntityMaid maid) {

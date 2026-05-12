@@ -630,7 +630,10 @@ public final class HugClientState {
         if (minecraft == null) {
             return;
         }
-        if (!isLocalPlayerInteracting()) {
+        if (HugActionScreen.isCompactLookMode()) {
+            return;
+        }
+        if (!isLocalPlayerInteracting() && !LapPillowClientState.isLocalPlayerActive()) {
             /*
              * 这里一定不能把“小女仆互动页”也一起关掉。
              *

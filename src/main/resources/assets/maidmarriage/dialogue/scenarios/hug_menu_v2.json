@@ -113,7 +113,7 @@
           "id": "kiss",
           "title": "亲吻",
           "description": "吻她一下，让心意在唇间轻轻传递。",
-          "condition": "!bloodline_kiss_blocked && favor_kiss_unlocked",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked",
           "next": "kiss_intro",
           "action": "maidmarriage:interaction_kiss"
         },
@@ -121,9 +121,48 @@
           "id": "hug",
           "title": "拥抱",
           "description": "把她抱进怀里，感受彼此的温暖。",
-          "condition": "!hugging && !maid_carrying_child && favor_hug_unlocked",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && favor_hug_unlocked",
           "next": "hug_intro",
           "action": "maidmarriage:hug_toggle"
+        },
+        {
+          "id": "lap_pillow",
+          "title": "膝枕",
+          "description": "枕在她膝上，让她陪你安静休息一会儿。",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && lap_pillow_mood_ok",
+          "next": "lap_pillow_start",
+          "action": "maidmarriage:lap_pillow_start",
+          "expression": "action_touched",
+          "animation": "soft_bounce"
+        },
+        {
+          "id": "lap_pillow_refuse",
+          "title": "想枕在她膝上",
+          "description": "她今天心情不太好，也许需要先被哄一哄。",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && !lap_pillow_mood_ok",
+          "next": "lap_pillow_refuse",
+          "expression": "troubled",
+          "animation": "fade_in"
+        },
+        {
+          "id": "lap_pillow_pet_player_head",
+          "title": "求安慰",
+          "description": "轻轻拜托她摸摸你的头。",
+          "condition": "lap_pillow_active",
+          "next": "lap_pillow_pet",
+          "action": "maidmarriage:lap_pillow_pet_player_head",
+          "expression": "embarrassed_smile",
+          "animation": "soft_bounce"
+        },
+        {
+          "id": "lap_pillow_exit",
+          "title": "先起来",
+          "description": "慢慢从她膝上坐起来。",
+          "condition": "lap_pillow_active",
+          "next": "lap_pillow_exit",
+          "action": "maidmarriage:lap_pillow_exit",
+          "expression": "soft_smile",
+          "animation": "fade_in"
         },
         {
           "id": "release_hug",
@@ -1787,6 +1826,62 @@
           "text": "${hug_intro_text}",
           "portrait": "maid",
           "expression": "action_touched",
+          "animation": "fade_in"
+        }
+      ],
+      "next": "idle_menu"
+    },
+    "lap_pillow_start": {
+      "_comment": "膝枕开始。真正的位置锁定与条件校验由服务端 LapPillowManager 处理，这里只负责剧情反馈。",
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "${lap_pillow_start_text}",
+          "portrait": "maid",
+          "expression": "action_touched",
+          "animation": "fade_in"
+        }
+      ],
+      "next": "idle_menu"
+    },
+    "lap_pillow_refuse": {
+      "_comment": "膝枕心情拒绝。心情低于普通时不进入动作，只提示玩家先陪她恢复心情。",
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "${lap_pillow_refuse_text}",
+          "portrait": "maid",
+          "expression": "troubled",
+          "animation": "fade_in"
+        }
+      ],
+      "next": "idle_menu"
+    },
+    "lap_pillow_pet": {
+      "_comment": "膝枕中让女仆摸玩家头。服务端发 petTicks 同步，客户端动作桥据此叠加手部动作。",
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "${lap_pillow_pet_text}",
+          "portrait": "maid",
+          "expression": "embarrassed_smile",
+          "animation": "fade_in"
+        }
+      ],
+      "next": "idle_menu"
+    },
+    "lap_pillow_exit": {
+      "_comment": "膝枕结束反馈。动作包先请求服务端解除锁位，再回到普通互动菜单。",
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "${lap_pillow_exit_text}",
+          "portrait": "maid",
+          "expression": "soft_smile",
           "animation": "fade_in"
         }
       ],
@@ -4349,7 +4444,7 @@
           "id": "kiss",
           "title": "亲吻",
           "description": "吻她一下，让心意在唇间轻轻传递。",
-          "condition": "!bloodline_kiss_blocked && favor_kiss_unlocked",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked",
           "next": "kiss_intro",
           "action": "maidmarriage:kiss"
         },
@@ -4357,9 +4452,48 @@
           "id": "hug",
           "title": "拥抱",
           "description": "把她抱进怀里，感受彼此的温暖。",
-          "condition": "!hugging && favor_hug_unlocked",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && favor_hug_unlocked",
           "next": "hug_intro",
           "action": "maidmarriage:hug_toggle"
+        },
+        {
+          "id": "lap_pillow",
+          "title": "膝枕",
+          "description": "枕在她膝上，让她陪你安静休息一会儿。",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && lap_pillow_mood_ok",
+          "next": "lap_pillow_start",
+          "action": "maidmarriage:lap_pillow_start",
+          "expression": "action_touched",
+          "animation": "soft_bounce"
+        },
+        {
+          "id": "lap_pillow_refuse",
+          "title": "想枕在她膝上",
+          "description": "她今天心情不太好，也许需要先被哄一哄。",
+          "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && !lap_pillow_mood_ok",
+          "next": "lap_pillow_refuse",
+          "expression": "troubled",
+          "animation": "fade_in"
+        },
+        {
+          "id": "lap_pillow_pet_player_head",
+          "title": "求安慰",
+          "description": "轻轻拜托她摸摸你的头。",
+          "condition": "lap_pillow_active",
+          "next": "lap_pillow_pet",
+          "action": "maidmarriage:lap_pillow_pet_player_head",
+          "expression": "embarrassed_smile",
+          "animation": "soft_bounce"
+        },
+        {
+          "id": "lap_pillow_exit",
+          "title": "先起来",
+          "description": "慢慢从她膝上坐起来。",
+          "condition": "lap_pillow_active",
+          "next": "lap_pillow_exit",
+          "action": "maidmarriage:lap_pillow_exit",
+          "expression": "soft_smile",
+          "animation": "fade_in"
         },
         {
           "id": "release_hug",

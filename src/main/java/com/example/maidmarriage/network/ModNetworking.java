@@ -10,6 +10,7 @@ import com.example.maidmarriage.compat.MaidDialogueInteractionManager;
 import com.example.maidmarriage.compat.MaidLiftManager;
 import com.example.maidmarriage.compat.MaidHugManager;
 import com.example.maidmarriage.compat.MaidKissManager;
+import com.example.maidmarriage.compat.LapPillowManager;
 import com.example.maidmarriage.compat.MaidStoryInteractionManager;
 import com.example.maidmarriage.compat.PetHeadManager;
 import com.example.maidmarriage.compat.RomanceSleepManager;
@@ -26,6 +27,9 @@ import com.example.maidmarriage.network.payload.HugMaidPayload;
 import com.example.maidmarriage.network.payload.HugStateSyncPayload;
 import com.example.maidmarriage.network.payload.KissEffectPayload;
 import com.example.maidmarriage.network.payload.KissMaidPayload;
+import com.example.maidmarriage.network.payload.LapPillowActionPayload;
+import com.example.maidmarriage.network.payload.LapPillowDebugPosePayload;
+import com.example.maidmarriage.network.payload.LapPillowStateSyncPayload;
 import com.example.maidmarriage.network.payload.LiftMaidPayload;
 import com.example.maidmarriage.network.payload.LiftStateSyncPayload;
 import com.example.maidmarriage.network.payload.MaidDebugDataPayload;
@@ -46,7 +50,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class ModNetworking {
-    private static final String PROTOCOL = "15";
+    private static final String PROTOCOL = "19";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MaidMarriageMod.MOD_ID, "main"),
             () -> PROTOCOL,
@@ -250,6 +254,40 @@ public final class ModNetworking {
                 .consumerMainThread((msg, ctx) -> handleCarryChildStateSyncClient(msg))
                 .add();
 
+        CHANNEL.messageBuilder(LapPillowActionPayload.class, ++id, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(LapPillowActionPayload::encode)
+                .decoder(LapPillowActionPayload::decode)
+                .consumerMainThread((msg, ctx) -> {
+                    ServerPlayer sender = ctx.get().getSender();
+                    if (sender != null) {
+                        switch (msg.action()) {
+                            case LapPillowActionPayload.ACTION_START -> LapPillowManager.handleStart(sender, msg.maidUuid());
+                            case LapPillowActionPayload.ACTION_EXIT -> LapPillowManager.handleExit(sender);
+                            case LapPillowActionPayload.ACTION_PET_PLAYER_HEAD -> LapPillowManager.handlePetPlayerHead(sender, msg.maidUuid());
+                            default -> {
+                            }
+                        }
+                    }
+                })
+                .add();
+
+        CHANNEL.messageBuilder(LapPillowStateSyncPayload.class, ++id, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(LapPillowStateSyncPayload::encode)
+                .decoder(LapPillowStateSyncPayload::decode)
+                .consumerMainThread((msg, ctx) -> handleLapPillowStateSyncClient(msg))
+                .add();
+
+        CHANNEL.messageBuilder(LapPillowDebugPosePayload.class, ++id, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(LapPillowDebugPosePayload::encode)
+                .decoder(LapPillowDebugPosePayload::decode)
+                .consumerMainThread((msg, ctx) -> {
+                    ServerPlayer sender = ctx.get().getSender();
+                    if (sender != null) {
+                        LapPillowManager.handleDebugPose(sender, msg.sideOffset(), msg.heightOffset(), msg.forwardOffset(), msg.yawOffset());
+                    }
+                })
+                .add();
+
         CHANNEL.messageBuilder(MaidDebugDataPayload.class, ++id, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(MaidDebugDataPayload::encode)
                 .decoder(MaidDebugDataPayload::decode)
@@ -396,6 +434,20 @@ public final class ModNetworking {
         CHANNEL.sendToServer(payload);
     }
 
+    public static void sendLapPillowAction(LapPillowActionPayload payload) {
+        if (!canSendToServer()) {
+            return;
+        }
+        CHANNEL.sendToServer(payload);
+    }
+
+    public static void sendLapPillowDebugPose(LapPillowDebugPosePayload payload) {
+        if (!canSendToServer()) {
+            return;
+        }
+        CHANNEL.sendToServer(payload);
+    }
+
     public static void sendMaidDebugData(MaidDebugDataPayload payload) {
         if (!canSendToServer()) {
             return;
@@ -426,6 +478,10 @@ public final class ModNetworking {
     }
 
     public static void sendCarryChildState(ServerPlayer player, CarryChildStateSyncPayload payload) {
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), payload);
+    }
+
+    public static void sendLapPillowState(ServerPlayer player, LapPillowStateSyncPayload payload) {
         CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), payload);
     }
 
@@ -492,6 +548,17 @@ public final class ModNetworking {
                         msg.adultUuid(),
                         msg.childUuid(),
                         msg.proxyUuid()
+                ));
+    }
+
+    private static void handleLapPillowStateSyncClient(LapPillowStateSyncPayload msg) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                com.example.maidmarriage.client.LapPillowClientState.handleSync(
+                        msg.playerUuid(),
+                        msg.maidUuid(),
+                        msg.active(),
+                        msg.sleepYaw(),
+                        msg.petTicks()
                 ));
     }
 

@@ -46,6 +46,7 @@ public abstract class HardcodedAnimationManagerCarryChildPoseMixin {
         }
         if (MaidCarryChildManager.isCarriedChild(entityMaid)) {
             applyBedrockCarriedChildPose(models);
+            return;
         }
     }
 
@@ -63,6 +64,7 @@ public abstract class HardcodedAnimationManagerCarryChildPoseMixin {
         }
         if (MaidCarryChildManager.isCarriedChild(entityMaid)) {
             applyGeckoCarriedChildPose(model);
+            return;
         }
     }
 

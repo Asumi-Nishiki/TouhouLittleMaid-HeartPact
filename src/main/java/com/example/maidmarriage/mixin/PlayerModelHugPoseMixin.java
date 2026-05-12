@@ -1,6 +1,8 @@
 package com.example.maidmarriage.mixin;
 
 import com.example.maidmarriage.compat.MaidHugManager;
+import com.example.maidmarriage.client.LapPillowClientState;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -28,6 +30,12 @@ public abstract class PlayerModelHugPoseMixin<T extends LivingEntity> extends Hu
                                            float ageInTicks, float netHeadYaw, float headPitch,
                                            CallbackInfo ci) {
         if (!(entity instanceof Player player)) {
+            return;
+        }
+        if (player instanceof AbstractClientPlayer clientPlayer
+                && LapPillowClientState.isPlayerActive(player)
+                && !LapPillowClientState.shouldUseSleepPoseBridge(clientPlayer)) {
+            applyLapPillowNeutralPose();
             return;
         }
         if (!MaidHugManager.isClientPlayerHugPoseVisible(player)) {
@@ -70,5 +78,31 @@ public abstract class PlayerModelHugPoseMixin<T extends LivingEntity> extends Hu
         float local = (progress - 0.46f) / 0.54f;
         local = Math.max(0.0f, Math.min(1.0f, local));
         return local * local * (3.0f - 2.0f * local);
+    }
+
+    /**
+     * 膝枕睡姿桥未接管时的兜底姿态。
+     * 正常情况下会由 client.PlayerModelLapPillowSleepPoseMixin 接原版睡姿；
+     * 这里仅避免极端情况下跑步/挥手动画残留在横躺身体上。
+     */
+    private void applyLapPillowNeutralPose() {
+        this.head.xRot = 0.0F;
+        this.head.yRot = 0.0F;
+        this.head.zRot = 0.0F;
+        this.body.xRot = 0.0F;
+        this.body.yRot = 0.0F;
+        this.body.zRot = 0.0F;
+        this.rightArm.xRot = 0.0F;
+        this.rightArm.yRot = 0.0F;
+        this.rightArm.zRot = 0.0F;
+        this.leftArm.xRot = 0.0F;
+        this.leftArm.yRot = 0.0F;
+        this.leftArm.zRot = 0.0F;
+        this.rightLeg.xRot = 0.0F;
+        this.rightLeg.yRot = 0.0F;
+        this.rightLeg.zRot = 0.0F;
+        this.leftLeg.xRot = 0.0F;
+        this.leftLeg.yRot = 0.0F;
+        this.leftLeg.zRot = 0.0F;
     }
 }

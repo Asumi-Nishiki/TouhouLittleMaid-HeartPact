@@ -1,7 +1,9 @@
 package com.example.maidmarriage.client;
 
 import com.example.maidmarriage.MaidMarriageMod;
+import com.example.maidmarriage.mixin.client.CameraLapPillowAccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
@@ -106,6 +108,11 @@ public final class HugCameraZoom {
         return MAX_CAMERA_PITCH_OFFSET;
     }
 
+    public static void resetRuntimeDefaults() {
+        setHugFovScale(DEFAULT_HUG_FOV_SCALE);
+        setCameraPitchOffsetDegrees(DEFAULT_CAMERA_PITCH_OFFSET);
+    }
+
     public static boolean savePersistentSettings() {
         return HugCameraSettingsStore.save(new HugCameraSettingsStore.Settings(hugFovScale, cameraPitchOffsetDegrees));
     }
@@ -126,13 +133,16 @@ public final class HugCameraZoom {
         if (!minecraft.options.getCameraType().isFirstPerson()) {
             return;
         }
+        boolean lapPillowActive = LapPillowClientState.isLocalPlayerActive();
         boolean adultInteractionZoomActive = HugClientState.isLocalPlayerInteracting();
         boolean childInteractionZoomActive = ChildInteractionClientState.isLocalPlayerInteracting();
-        if (!adultInteractionZoomActive && !childInteractionZoomActive && clientTick > transientZoomUntilClientTick) {
+        if (!lapPillowActive && !adultInteractionZoomActive && !childInteractionZoomActive && clientTick > transientZoomUntilClientTick) {
             return;
         }
 
-        double scale = adultInteractionZoomActive || childInteractionZoomActive ? hugFovScale : 1.0D;
+        double scale = lapPillowActive
+                ? LapPillowPoseDebug.cameraFovScale()
+                : adultInteractionZoomActive || childInteractionZoomActive ? hugFovScale : 1.0D;
         if (clientTick <= transientZoomUntilClientTick) {
             scale = Math.min(scale, transientZoomScale);
         }
@@ -148,7 +158,13 @@ public final class HugCameraZoom {
         if (!minecraft.options.getCameraType().isFirstPerson()) {
             return;
         }
-        if (!isCameraAdjustmentActive() && clientTick > transientZoomUntilClientTick) {
+        boolean lapPillowActive = LapPillowClientState.isLocalPlayerActive();
+        if (!lapPillowActive && !isCameraAdjustmentActive() && clientTick > transientZoomUntilClientTick) {
+            return;
+        }
+
+        if (lapPillowActive) {
+            applyLapPillowCamera(event, minecraft);
             return;
         }
 
@@ -158,6 +174,29 @@ public final class HugCameraZoom {
          * 用来适配不同模型高低，避免亲吻/拥抱时画面对不到脸。
          */
         event.setPitch(event.getPitch() + cameraPitchOffsetDegrees);
+    }
+
+    /**
+     * 膝枕专用第一人称镜头。
+     *
+     * <p>服务端的 {@code LapPillowManager} 只负责把玩家实体锁到女仆膝边；
+     * 但第一人称相机不会因为 {@code Pose.SLEEPING} 自动表现成“枕在膝上看着她”。
+     * 所以这里在渲染帧里单独覆盖相机角度：不改玩家真实朝向，不影响服务端同步，
+     * 只让本地玩家看到一个侧躺、抬眼看向女仆脸的镜头。
+     */
+    private static void applyLapPillowCamera(ViewportEvent.ComputeCameraAngles event, Minecraft minecraft) {
+        /*
+         * 第一人称膝枕镜头不要自动追女仆。
+         * 自动朝向女仆会让“躺下看天花板”的基准永远带着斜角，调试时会很难判断到底偏在哪里。
+         * 这里保留玩家当前水平朝向，只叠加调试面板里的镜头 yaw，让默认画面更接近平躺后看向正上方。
+         */
+        event.setYaw(event.getYaw() + LapPillowPoseDebug.cameraYawOffset());
+        event.setPitch(LapPillowPoseDebug.cameraPitch() + cameraPitchOffsetDegrees * 0.35F);
+        event.setRoll(LapPillowPoseDebug.cameraRoll());
+        Vec3 position = event.getCamera().getPosition();
+        ((CameraLapPillowAccessor) event.getCamera()).maidmarriage$setPosition(
+                position.add(0.0D, LapPillowPoseDebug.cameraHeightOffset(), 0.0D)
+        );
     }
 
     /**

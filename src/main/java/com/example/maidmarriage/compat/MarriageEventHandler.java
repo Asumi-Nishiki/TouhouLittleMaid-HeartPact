@@ -48,6 +48,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.IItemHandler;
 
 public final class MarriageEventHandler {
     private static final String TAG_PLAYER_PRIMARY_MAID = "maidmarriage_primary_maid";
@@ -1064,6 +1065,10 @@ public final class MarriageEventHandler {
         if (ring.isEmpty()) {
             return;
         }
+        // 婚礼剧情有可能因为客户端重复发包被再次请求；女仆身上已有同一对誓约戒指时不再补发。
+        if (hasSameVowRingInMaidInventory(maid, ring)) {
+            return;
+        }
         if (maid.getMainHandItem().isEmpty()) {
             maid.setItemInHand(InteractionHand.MAIN_HAND, ring);
             return;
@@ -1073,6 +1078,39 @@ public final class MarriageEventHandler {
             ItemEntity drop = new ItemEntity(maid.level(), maid.getX(), maid.getY() + 0.5, maid.getZ(), remaining);
             maid.level().addFreshEntity(drop);
         }
+    }
+
+    private static boolean hasSameVowRingInMaidInventory(EntityMaid maid, ItemStack ring) {
+        if (isSameVowRing(maid.getMainHandItem(), ring) || isSameVowRing(maid.getOffhandItem(), ring)) {
+            return true;
+        }
+        IItemHandler inventory = maid.getAvailableInv(false);
+        if (inventory == null) {
+            return false;
+        }
+        for (int slot = 0; slot < inventory.getSlots(); slot++) {
+            if (isSameVowRing(inventory.getStackInSlot(slot), ring)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSameVowRing(ItemStack existing, ItemStack expected) {
+        if (existing.isEmpty() || expected.isEmpty()
+                || !existing.is(ModItems.PROPOSAL_RING.get()) || !expected.is(ModItems.PROPOSAL_RING.get())) {
+            return false;
+        }
+        CompoundTag existingTag = existing.getTag();
+        CompoundTag expectedTag = expected.getTag();
+        if (existingTag == null || expectedTag == null
+                || !existingTag.getBoolean(TAG_RING_USED) || !expectedTag.getBoolean(TAG_RING_USED)
+                || !existingTag.hasUUID(TAG_RING_PLAYER) || !expectedTag.hasUUID(TAG_RING_PLAYER)
+                || !existingTag.hasUUID(TAG_RING_MAID) || !expectedTag.hasUUID(TAG_RING_MAID)) {
+            return false;
+        }
+        return existingTag.getUUID(TAG_RING_PLAYER).equals(expectedTag.getUUID(TAG_RING_PLAYER))
+                && existingTag.getUUID(TAG_RING_MAID).equals(expectedTag.getUUID(TAG_RING_MAID));
     }
 
     static void giveMarriagePillows(net.minecraft.world.entity.player.Player player, EntityMaid maid) {

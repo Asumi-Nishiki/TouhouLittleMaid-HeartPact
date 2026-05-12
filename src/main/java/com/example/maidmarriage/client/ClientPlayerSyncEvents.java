@@ -18,6 +18,7 @@ public final class ClientPlayerSyncEvents {
 
     @SubscribeEvent
     public static void onClientLogin(ClientPlayerNetworkEvent.LoggingIn event) {
+        LapPillowClientState.clear();
         ModNetworking.sendUpdateMaidAddressing(new UpdateMaidAddressingPayload(
                 ModConfigs.maidAddressing(),
                 ModConfigs.childMaidAddressing()));
@@ -31,6 +32,7 @@ public final class ClientPlayerSyncEvents {
     public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         HugClientState.clear();
         ChildInteractionClientState.clear();
+        LapPillowClientState.clear();
     }
 
     @SubscribeEvent
@@ -41,6 +43,7 @@ public final class ClientPlayerSyncEvents {
         net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
         HugClientState.tick(minecraft);
         ChildInteractionClientState.tick(minecraft);
+        HugActionScreen.tickCompactLookHotkey(minecraft);
         HugClientState.ensureActionScreen(minecraft);
         ChildInteractionClientState.ensureActionScreen(minecraft);
     }

@@ -504,6 +504,7 @@
   "message.maidmarriage.pet_head.too_far": "%s 距离太远了，摸头需要在 %s 格以内。",
   "message.maidmarriage.pet_head.over_pet_penalty": "%s 今天已经被摸得有点不高兴了，好感度-%s。",
   "key.maidmarriage.maid_debug_panel": "女仆调试面板",
+  "key.maidmarriage.lap_pillow_exit": "退出膝枕",
   "ui.maidmarriage.rhythm.hit_key": "判断按键：%s",
   "ui.maidmarriage.rhythm.current_hit_key": "当前判定按键：%s",
   "ui.maidmarriage.gift_screen.title": "赠送礼物",

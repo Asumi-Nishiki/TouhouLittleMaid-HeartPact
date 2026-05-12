@@ -42,6 +42,13 @@ public final class RhythmKeyMappings {
             GLFW.GLFW_KEY_F7,
             "key.categories.maidmarriage"
     );
+    public static final KeyMapping LAP_PILLOW_EXIT = new KeyMapping(
+            "key.maidmarriage.lap_pillow_exit",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Y,
+            "key.categories.maidmarriage"
+    );
 
     private RhythmKeyMappings() {
     }

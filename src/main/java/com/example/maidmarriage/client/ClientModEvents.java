@@ -23,6 +23,7 @@ public final class ClientModEvents {
         EntityRenderers.register(ModEntities.MAID_CHILD.get(), MaidChildRenderer::new);
         EntityRenderers.register(ModEntities.LIFT_PROXY.get(), LiftProxyRenderer::new);
         EntityRenderers.register(ModEntities.MAID_CARRY_PROXY.get(), MaidCarryProxyRenderer::new);
+        EntityRenderers.register(ModEntities.LAP_PILLOW_ANCHOR.get(), LapPillowAnchorRenderer::new);
     }
 
     @SubscribeEvent
@@ -33,5 +34,6 @@ public final class ClientModEvents {
         event.register(RhythmKeyMappings.INTERACTION);
         event.register(RhythmKeyMappings.CARRY_POSE_DEBUG);
         event.register(RhythmKeyMappings.MAID_DEBUG_PANEL);
+        event.register(RhythmKeyMappings.LAP_PILLOW_EXIT);
     }
 }

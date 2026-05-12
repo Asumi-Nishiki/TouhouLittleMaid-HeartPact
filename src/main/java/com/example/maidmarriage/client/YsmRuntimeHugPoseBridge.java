@@ -5,6 +5,7 @@ import com.example.maidmarriage.client.hugui.actions.StoryHeadCuePoseLibrary;
 import com.example.maidmarriage.compat.MaidCarryChildManager;
 import com.example.maidmarriage.compat.MaidHugManager;
 import com.example.maidmarriage.compat.MaidLiftManager;
+import com.example.maidmarriage.compat.LapPillowManager;
 import com.example.maidmarriage.compat.PetHeadManager;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import java.lang.reflect.Method;
@@ -56,6 +57,7 @@ public final class YsmRuntimeHugPoseBridge {
     private enum FixedPoseAction {
         NONE,
         HUG,
+        LAP_PILLOW,
         CARRY_ADULT,
         CARRIED_CHILD
     }
@@ -181,6 +183,7 @@ public final class YsmRuntimeHugPoseBridge {
             boolean applyStandaloneHeadCue = HugClientState.isHeadCueActive(maid.getUUID());
             boolean applyStandaloneShyCoverFace = HugClientState.isShyCoverFaceActive(maid.getUUID());
             boolean applyStandaloneShyPeek = HugClientState.isShyPeekActive(maid.getUUID());
+            boolean applyLapPillowComfort = LapPillowClientState.petPlayerHeadProgress(maid.getUUID()) > 0.0F;
             Player hugPlayer = MaidHugManager.getHugPlayer(maid);
             float hugPoseProgress = MaidHugManager.clientHugPoseProgress(hugPlayer);
             if (action == FixedPoseAction.NONE
@@ -188,7 +191,8 @@ public final class YsmRuntimeHugPoseBridge {
                     && !applyStandaloneShyPose
                     && !applyStandaloneHeadCue
                     && !applyStandaloneShyCoverFace
-                    && !applyStandaloneShyPeek) {
+                    && !applyStandaloneShyPeek
+                    && !applyLapPillowComfort) {
                 return;
             }
 
@@ -205,12 +209,13 @@ public final class YsmRuntimeHugPoseBridge {
             FixedPoseAction effectiveAction = action == FixedPoseAction.NONE && hugPoseProgress > 0.0F
                     ? FixedPoseAction.HUG
                     : action;
-            applyFixedPose(effectiveAction, bones, hugPoseProgress);
+            applyFixedPose(maid, effectiveAction, bones, hugPoseProgress);
             applyHeadCuePose(maid, bones, effectiveAction == FixedPoseAction.HUG);
             applyPostKissShyPose(maid, bones, effectiveAction == FixedPoseAction.HUG);
             applyShyCoverFacePose(maid, bones, effectiveAction == FixedPoseAction.HUG);
             applyShyPeekPose(maid, bones, effectiveAction == FixedPoseAction.HUG);
             applyChestTapPose(maid, bones, effectiveAction == FixedPoseAction.HUG);
+            applyLapPillowComfortPose(maid, bones);
         } catch (Throwable ignored) {
         }
     }
@@ -238,6 +243,11 @@ public final class YsmRuntimeHugPoseBridge {
             return FixedPoseAction.CARRIED_CHILD;
         }
 
+        /*
+         * 膝枕时女仆只使用车万女仆/模型包自己的普通坐姿。
+         * 这里不再返回 LAP_PILLOW，避免额外低头、抬手、折腿等固定骨骼动作覆盖坐姿。
+         */
+
         Player hugPlayer = MaidHugManager.getHugPlayer(maid);
         if (MaidHugManager.isHugState(maid, hugPlayer)) {
             return FixedPoseAction.HUG;
@@ -250,9 +260,12 @@ public final class YsmRuntimeHugPoseBridge {
      *
      * <p>以后新增固定动作时，只需要在这里增加一个 `case`。
      */
-    private static void applyFixedPose(FixedPoseAction action, Map<String, Object> bones, float progress) throws Exception {
+    private static void applyFixedPose(EntityMaid maid, FixedPoseAction action, Map<String, Object> bones, float progress) throws Exception {
         if (action == FixedPoseAction.HUG) {
             applyHugPose(bones, progress);
+            return;
+        }
+        if (action == FixedPoseAction.LAP_PILLOW) {
             return;
         }
         if (action == FixedPoseAction.CARRY_ADULT) {
@@ -322,6 +335,92 @@ public final class YsmRuntimeHugPoseBridge {
         setBoneRotationAny(bones, 0.0f, 0.0f, 0.0f, "LeftFoot", "leftFoot", "footLeft", "left_foot");
         setBoneRotationAny(bones, 0.0f, 0.0f, 0.0f, "RightFoot", "rightFoot", "footRight", "right_foot");
     }
+
+    /**
+     * YSM 膝枕姿态。
+     *
+     * <p>服务端已经把女仆固定为坐姿并让她看向玩家，这里只负责把模型修成更自然的
+     * “坐着低头看你”的姿态。摸头动作是短时叠加：右手从膝边抬起，轻轻落到玩家头顶。
+     */
+    private static void applyLapPillowPose(EntityMaid maid, Map<String, Object> bones) throws Exception {
+        float petProgress = com.example.maidmarriage.client.LapPillowClientState.petPlayerHeadProgress(maid.getUUID());
+        setBoneRotationAny(bones, deg(-3.0f), 0.0f, 0.0f, "AllBody", "allBody", "Body", "body");
+        setBoneRotationAny(bones, deg(8.0f), 0.0f, 0.0f, "UpBody", "upBody");
+        setBoneRotationAny(bones, deg(10.0f), 0.0f, 0.0f, "UpperBody", "upperBody");
+        setBoneRotationAny(bones, deg(24.0f), deg(0.0f), deg(0.0f), "Head", "head");
+        setBoneRotationAny(bones, deg(10.0f), 0.0f, 0.0f, "Neck", "neck");
+
+        setBoneRotationAny(bones, deg(-72.0f), deg(8.0f), deg(-4.0f), "LeftLeg", "leftLeg", "legLeft", "LegLeft", "left_leg");
+        setBoneRotationAny(bones, deg(-72.0f), deg(-8.0f), deg(4.0f), "RightLeg", "rightLeg", "legRight", "LegRight", "right_leg");
+        setBoneRotationAny(bones, deg(82.0f), 0.0f, 0.0f, "LeftLowerLeg", "leftLowerLeg", "legLeft2", "left_lower_leg");
+        setBoneRotationAny(bones, deg(82.0f), 0.0f, 0.0f, "RightLowerLeg", "rightLowerLeg", "legRight2", "right_lower_leg");
+        setBoneRotationAny(bones, deg(-8.0f), 0.0f, 0.0f, "LeftFoot", "leftFoot", "footLeft", "left_foot");
+        setBoneRotationAny(bones, deg(-8.0f), 0.0f, 0.0f, "RightFoot", "rightFoot", "footRight", "right_foot");
+
+        setBoneRotationAny(bones, deg(28.0f), deg(10.0f), deg(-12.0f), "LeftShoulder", "leftShoulder", "shoulderLeft", "left_shoulder");
+        setBoneRotationAny(bones, deg(28.0f), deg(-10.0f), deg(12.0f), "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
+        setBoneRotationAny(bones, deg(48.0f), deg(18.0f), deg(-22.0f), "LeftArm", "leftArm", "armLeft", "ArmLeft", "left_arm");
+        setBoneRotationAny(bones,
+                lerp(deg(42.0f), deg(72.0f), petProgress),
+                lerp(deg(-18.0f), deg(-34.0f), petProgress),
+                lerp(deg(22.0f), deg(8.0f), petProgress),
+                "RightArm", "rightArm", "armRight", "ArmRight", "right_arm");
+        setBoneRotationAny(bones, deg(30.0f), deg(0.0f), deg(8.0f), "LeftForeArm", "leftForeArm", "foreArmLeft", "left_fore_arm", "armLeft2");
+        setBoneRotationAny(bones,
+                lerp(deg(34.0f), deg(88.0f), petProgress),
+                lerp(deg(0.0f), deg(-14.0f), petProgress),
+                lerp(deg(-8.0f), deg(-20.0f), petProgress),
+                "RightForeArm", "rightForeArm", "foreArmRight", "right_fore_arm", "armRight2");
+    }
+
+    /**
+     * YSM 膝枕求安慰动作。
+     *
+     * <p>膝枕基础姿态仍使用模型包自己的普通坐姿；这里只在玩家选择“求安慰”后，
+     * 临时叠加低头、俯身、右手向下伸出摸玩家头的动作。
+     */
+    private static void applyLapPillowComfortPose(EntityMaid maid, Map<String, Object> bones) throws Exception {
+        if (!LapPillowManager.isLapPillowMaid(maid)) {
+            return;
+        }
+        float reach = LapPillowClientState.petPlayerHeadProgress(maid.getUUID());
+        if (reach <= 0.0F) {
+            return;
+        }
+        float raw = LapPillowClientState.petPlayerHeadRawProgress(maid.getUUID());
+        float stroke = raw > 0.30F && raw < 0.82F
+                ? (float) Math.sin((raw - 0.30F) * 32.0F)
+                : 0.0F;
+
+        setBoneRotationAny(bones, deg(4.0F) * reach, 0.0F, 0.0F,
+                "AllBody", "allBody", "Body", "body");
+        setBoneRotationAny(bones, deg(10.0F) * reach, 0.0F, 0.0F,
+                "UpBody", "upBody");
+        setBoneRotationAny(bones, deg(12.0F) * reach, 0.0F, 0.0F,
+                "UpperBody", "upperBody");
+        setBoneRotationAny(bones, deg(-18.0F) * reach, 0.0F, deg(-2.0F) * reach,
+                "Head", "head");
+        setBoneRotationAny(bones, deg(8.0F) * reach, 0.0F, 0.0F,
+                "Neck", "neck");
+
+        /*
+         * 右手是“往下伸到玩家头上”，不是普通站立摸头那种向前抬手。
+         * 因此肩、上臂、前臂都压低，停留段只加很小的轻抚摆动。
+         */
+        setBoneRotationAny(bones, deg(6.0F) * reach, deg(-5.0F) * reach, deg(8.0F) * reach,
+                "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
+        setBoneRotationAny(bones,
+                deg(18.0F + stroke * 2.0F) * reach,
+                deg(-10.0F) * reach,
+                deg(10.0F) * reach,
+                "RightArm", "rightArm", "armRight", "ArmRight", "right_arm");
+        setBoneRotationAny(bones,
+                deg(30.0F + stroke * 4.0F) * reach,
+                deg(-6.0F) * reach,
+                deg(-12.0F) * reach,
+                "RightForeArm", "rightForeArm", "foreArmRight", "right_fore_arm", "armRight2");
+    }
+
 
     /**
      * YSM 拥抱固定姿态。

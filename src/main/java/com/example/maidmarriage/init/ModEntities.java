@@ -1,6 +1,7 @@
 package com.example.maidmarriage.init;
 
 import com.example.maidmarriage.MaidMarriageMod;
+import com.example.maidmarriage.entity.LapPillowAnchorEntity;
 import com.example.maidmarriage.entity.LiftProxyEntity;
 import com.example.maidmarriage.entity.MaidCarryProxyEntity;
 import com.example.maidmarriage.entity.MaidChildEntity;
@@ -45,6 +46,16 @@ public final class ModEntities {
                             .noSave()
                             .noSummon()
                             .build(new ResourceLocation(MaidMarriageMod.MOD_ID, "maid_carry_proxy").toString()));
+
+    public static final RegistryObject<EntityType<LapPillowAnchorEntity>> LAP_PILLOW_ANCHOR =
+            ENTITY_TYPES.register("lap_pillow_anchor", () ->
+                    EntityType.Builder.<LapPillowAnchorEntity>of(LapPillowAnchorEntity::new, MobCategory.MISC)
+                            .sized(0.01F, 0.01F)
+                            .clientTrackingRange(10)
+                            .updateInterval(1)
+                            .noSave()
+                            .noSummon()
+                            .build(new ResourceLocation(MaidMarriageMod.MOD_ID, "lap_pillow_anchor").toString()));
 
     private ModEntities() {
     }

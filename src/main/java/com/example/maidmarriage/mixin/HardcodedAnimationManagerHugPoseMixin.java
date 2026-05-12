@@ -1,10 +1,12 @@
 package com.example.maidmarriage.mixin;
 
-import com.example.maidmarriage.compat.MaidHugManager;
-import com.example.maidmarriage.compat.PetHeadManager;
 import com.example.maidmarriage.client.HugClientState;
+import com.example.maidmarriage.client.LapPillowClientState;
 import com.example.maidmarriage.client.hugui.actions.StoryChestTapPoseLibrary;
 import com.example.maidmarriage.client.hugui.actions.StoryHeadCuePoseLibrary;
+import com.example.maidmarriage.compat.LapPillowManager;
+import com.example.maidmarriage.compat.MaidHugManager;
+import com.example.maidmarriage.compat.PetHeadManager;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.animation.script.ModelRendererWrapper;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -45,6 +47,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
             applyBedrockStandaloneShyCoverFacePose(entityMaid, models);
             applyBedrockShyPeekPose(entityMaid, models, false);
             applyBedrockStandaloneChestTapPose(entityMaid, models);
+            applyBedrockLapPillowComfortPose(entityMaid, models, ageInTicks);
             return;
         }
         applyBedrockHugPose(entityMaid, models, ageInTicks, hugPoseProgress);
@@ -66,6 +69,7 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
             applyGeckoStandaloneShyCoverFacePose(entityMaid, model);
             applyGeckoShyPeekPose(entityMaid, model, false);
             applyGeckoStandaloneChestTapPose(entityMaid, model);
+            applyGeckoLapPillowComfortPose(entityMaid, model, ageInTicks);
             return;
         }
         applyGeckoHugPose(entityMaid, model, ageInTicks, hugPoseProgress);
@@ -352,6 +356,108 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         head.setRotationX(-0.10f + (float) Math.sin(phase * 0.70f) * 0.018f);
         head.setRotationY(0.14f + (float) Math.sin(phase) * 0.12f);
         head.setRotationZ((float) Math.sin(phase) * 0.035f);
+    }
+
+    private static void applyBedrockLapPillowComfortPose(EntityMaid maid,
+                                                         HashMap<String, ModelRendererWrapper> models,
+                                                         float ageInTicks) {
+        if (!LapPillowManager.isLapPillowMaid(maid)) {
+            return;
+        }
+        float reach = LapPillowClientState.petPlayerHeadProgress(maid.getUUID());
+        if (reach <= 0.0F) {
+            return;
+        }
+        float raw = LapPillowClientState.petPlayerHeadRawProgress(maid.getUUID());
+        float stroke = raw > 0.30F && raw < 0.82F ? (float) Math.sin(ageInTicks * 0.42F) : 0.0F;
+
+        ModelRendererWrapper body = models.get("body");
+        ModelRendererWrapper upperBody = models.get("upperBody");
+        ModelRendererWrapper head = models.get("head");
+        ModelRendererWrapper shoulderRight = models.get("shoulderRight");
+        ModelRendererWrapper armRight = models.get("armRight");
+        ModelRendererWrapper armRight2 = models.get("armRight2");
+
+        /*
+         * 和拥抱一样走最终骨骼覆盖层。
+         * 膝枕时女仆仍保持自己的坐姿，只让上半身低下来，右手往玩家头顶方向伸。
+         */
+        if (body != null) {
+            body.setRotateAngleX(deg(4.0F) * reach);
+        }
+        if (upperBody != null) {
+            upperBody.setRotateAngleX(deg(12.0F) * reach);
+        }
+        if (head != null) {
+            head.setRotateAngleX(deg(-18.0F) * reach);
+            head.setRotateAngleZ(deg(2.0F) * reach);
+        }
+        if (shoulderRight != null) {
+            shoulderRight.setRotateAngleX(deg(6.0F) * reach);
+            shoulderRight.setRotateAngleY(deg(5.0F) * reach);
+            shoulderRight.setRotateAngleZ(deg(8.0F) * reach);
+        }
+        if (armRight != null) {
+            armRight.setRotateAngleX(deg(-18.0F + stroke * 2.0F) * reach);
+            armRight.setRotateAngleY(deg(10.0F) * reach);
+            armRight.setRotateAngleZ(deg(10.0F) * reach);
+        }
+        if (armRight2 != null) {
+            armRight2.setRotateAngleX(deg(-30.0F + stroke * 4.0F) * reach);
+            armRight2.setRotateAngleY(deg(-6.0F) * reach);
+            armRight2.setRotateAngleZ(deg(-12.0F) * reach);
+        }
+    }
+
+    private static void applyGeckoLapPillowComfortPose(EntityMaid maid,
+                                                       AnimatedGeoModel model,
+                                                       float ageInTicks) {
+        if (!LapPillowManager.isLapPillowMaid(maid)) {
+            return;
+        }
+        float reach = LapPillowClientState.petPlayerHeadProgress(maid.getUUID());
+        if (reach <= 0.0F) {
+            return;
+        }
+        float raw = LapPillowClientState.petPlayerHeadRawProgress(maid.getUUID());
+        float stroke = raw > 0.30F && raw < 0.82F ? (float) Math.sin(ageInTicks * 0.42F) : 0.0F;
+
+        AnimatedGeoBone allBody = findBone(model, "AllBody", "allBody", "Body", "body");
+        AnimatedGeoBone upBody = findBone(model, "UpBody", "upBody");
+        AnimatedGeoBone upperBody = findBone(model, "UpperBody", "upperBody");
+        AnimatedGeoBone head = findGeckoHeadBone(model);
+        AnimatedGeoBone rightShoulder = findBone(model, "RightShoulder", "rightShoulder", "shoulderRight", "right_shoulder");
+        AnimatedGeoBone rightArm = findBone(model, "RightArm", "rightArm", "armRight", "ArmRight", "right_arm");
+        AnimatedGeoBone rightForeArm = findBone(model, "RightForeArm", "rightForeArm", "foreArmRight", "right_fore_arm");
+
+        if (allBody != null) {
+            allBody.setRotationX(deg(4.0F) * reach);
+        }
+        if (upBody != null) {
+            upBody.setRotationX(deg(10.0F) * reach);
+        }
+        if (upperBody != null) {
+            upperBody.setRotationX(deg(12.0F) * reach);
+        }
+        if (head != null) {
+            head.setRotationX(deg(-18.0F) * reach);
+            head.setRotationZ(deg(-2.0F) * reach);
+        }
+        if (rightShoulder != null) {
+            rightShoulder.setRotationX(deg(6.0F) * reach);
+            rightShoulder.setRotationY(deg(-5.0F) * reach);
+            rightShoulder.setRotationZ(deg(8.0F) * reach);
+        }
+        if (rightArm != null) {
+            rightArm.setRotationX(deg(18.0F + stroke * 2.0F) * reach);
+            rightArm.setRotationY(deg(-10.0F) * reach);
+            rightArm.setRotationZ(deg(10.0F) * reach);
+        }
+        if (rightForeArm != null) {
+            rightForeArm.setRotationX(deg(30.0F + stroke * 4.0F) * reach);
+            rightForeArm.setRotationY(deg(-6.0F) * reach);
+            rightForeArm.setRotationZ(deg(-12.0F) * reach);
+        }
     }
 
     /**
@@ -1053,6 +1159,10 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
 
     private static float lerp(float start, float end, float progress) {
         return start + (end - start) * progress;
+    }
+
+    private static float deg(float degrees) {
+        return degrees * Mth.DEG_TO_RAD;
     }
 
     private static float delayedOpenProgress(float progress) {

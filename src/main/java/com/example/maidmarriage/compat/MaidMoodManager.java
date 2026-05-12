@@ -28,6 +28,7 @@ public final class MaidMoodManager {
     public static final String EVENT_HUG = "hug";
     public static final String EVENT_KISS = "kiss";
     public static final String EVENT_ROMANCE = "romance";
+    public static final String EVENT_LAP_PILLOW = "lap_pillow";
     public static final int LOVE_TEST_VALUE = MaidMoodData.MAX_MOOD;
     /**
      * 正式版固定三天未有效互动进入“忍耐”状态。
