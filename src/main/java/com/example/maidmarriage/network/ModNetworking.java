@@ -558,7 +558,8 @@ public final class ModNetworking {
                         msg.maidUuid(),
                         msg.active(),
                         msg.sleepYaw(),
-                        msg.petTicks()
+                        msg.petTicks(),
+                        msg.recoveryStatus()
                 ));
     }
 

@@ -499,6 +499,7 @@
   "message.maidmarriage.pet_head.over_pet_penalty": "%s is getting annoyed by too many head pats today. Favorability -%s.",
   "key.maidmarriage.maid_debug_panel": "Maid Debug Panel",
   "key.maidmarriage.lap_pillow_exit": "Exit Lap Pillow",
+  "key.maidmarriage.restore_hug_ui": "Restore Interaction UI",
   "ui.maidmarriage.rhythm.hit_key": "Hit key: %s",
   "ui.maidmarriage.rhythm.current_hit_key": "Current hit key: %s",
   "ui.maidmarriage.gift_screen.title": "Give Gift",

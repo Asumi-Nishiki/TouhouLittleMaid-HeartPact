@@ -49,6 +49,13 @@ public final class RhythmKeyMappings {
             GLFW.GLFW_KEY_Y,
             "key.categories.maidmarriage"
     );
+    public static final KeyMapping RESTORE_HUG_UI = new KeyMapping(
+            "key.maidmarriage.restore_hug_ui",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_H,
+            "key.categories.maidmarriage"
+    );
 
     private RhythmKeyMappings() {
     }

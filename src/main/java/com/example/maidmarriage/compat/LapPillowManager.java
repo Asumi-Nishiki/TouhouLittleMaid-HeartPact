@@ -8,11 +8,13 @@ import com.example.maidmarriage.init.ModEntities;
 import com.example.maidmarriage.network.ModNetworking;
 import com.example.maidmarriage.network.payload.LapPillowStateSyncPayload;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +23,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -42,6 +46,16 @@ public final class LapPillowManager {
     private static final int PET_PLAYER_HEAD_TICKS = 96;
     private static final int FAVORABILITY_CAP = RelationshipThresholds.FAVORABILITY_MAX;
     private static final float DEFAULT_SLEEP_YAW_OFFSET = -90.0F;
+    private static final String TAG_DAILY_DAY = "maidmarriage_lap_pillow_day";
+    private static final String TAG_DAILY_HEAL_USED = "maidmarriage_lap_pillow_heal_used";
+    private static final String TAG_DAILY_CLEANSE_USED = "maidmarriage_lap_pillow_cleanse_used";
+    private static final String TAG_DAILY_RESISTANCE_USED = "maidmarriage_lap_pillow_resistance_used";
+    private static final int RESTORE_CHECK_INTERVAL_TICKS = 40;
+    private static final int DATING_HEAL_LIMIT_HP = 20;
+    private static final int MARRIAGE_HEAL_LIMIT_HP = 30;
+    private static final int DAILY_CLEANSE_LIMIT = 3;
+    private static final int DAILY_RESISTANCE_LIMIT = 3;
+    private static final int RESISTANCE_DURATION_TICKS = 50 * 20;
 
     private static final Map<UUID, Session> PLAYER_TO_SESSION = new ConcurrentHashMap<>();
     private static final Map<UUID, UUID> MAID_TO_PLAYER = new ConcurrentHashMap<>();
@@ -169,6 +183,7 @@ public final class LapPillowManager {
             sync(player, maid, anchor, 0);
         }
         maintainPose(player, maid, anchor, session);
+        applyDailyRestoration(player, maid, anchor);
     }
 
     @SubscribeEvent
@@ -383,8 +398,114 @@ public final class LapPillowManager {
                 anchor == null ? null : anchor.getUUID(),
                 maid != null,
                 sleepYaw,
-                petTicks
+                petTicks,
+                computeRecoveryStatus(player, maid)
         ));
+    }
+
+    /**
+     * 膝枕的恢复效果全部由服务端按低频节奏结算。
+     *
+     * <p>这样客户端只负责展示状态，不会因为本地设置、UI 刷新或帧率差异刷出额外治疗。
+     * 这里刻意每 2 秒检查一次，避免长期膝枕时每 tick 遍历药水效果造成无意义开销。
+     */
+    private static void applyDailyRestoration(ServerPlayer player, EntityMaid maid, LapPillowAnchorEntity anchor) {
+        if (player.tickCount % RESTORE_CHECK_INTERVAL_TICKS != 0) {
+            return;
+        }
+        boolean changed = resetDailyCountersIfNeeded(player);
+
+        RelationStage stage = MaidRelationshipManager.resolveStage(maid);
+        int healLimit = healLimitHp(stage);
+        if (healLimit > 0) {
+            changed |= tryHealPlayer(player, healLimit);
+            changed |= tryCleansePlayer(player);
+        }
+        if (stage == RelationStage.MARRIAGE) {
+            changed |= tryGrantResistance(player);
+        }
+        if (changed) {
+            sync(player, maid, anchor, 0);
+        }
+    }
+
+    private static boolean tryHealPlayer(ServerPlayer player, int healLimitHp) {
+        CompoundTag tag = player.getPersistentData();
+        int used = tag.getInt(TAG_DAILY_HEAL_USED);
+        if (used >= healLimitHp || player.getHealth() >= player.getMaxHealth()) {
+            return false;
+        }
+        int healAmount = Math.min(1, healLimitHp - used);
+        player.heal(healAmount);
+        tag.putInt(TAG_DAILY_HEAL_USED, used + healAmount);
+        return true;
+    }
+
+    private static boolean tryCleansePlayer(ServerPlayer player) {
+        CompoundTag tag = player.getPersistentData();
+        int used = tag.getInt(TAG_DAILY_CLEANSE_USED);
+        if (used >= DAILY_CLEANSE_LIMIT) {
+            return false;
+        }
+        boolean removed = false;
+        for (MobEffectInstance effect : new ArrayList<>(player.getActiveEffects())) {
+            if (!effect.getEffect().isBeneficial()) {
+                player.removeEffect(effect.getEffect());
+                removed = true;
+            }
+        }
+        if (removed) {
+            tag.putInt(TAG_DAILY_CLEANSE_USED, used + 1);
+        }
+        return removed;
+    }
+
+    private static boolean tryGrantResistance(ServerPlayer player) {
+        CompoundTag tag = player.getPersistentData();
+        int used = tag.getInt(TAG_DAILY_RESISTANCE_USED);
+        if (used >= DAILY_RESISTANCE_LIMIT || player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+            return false;
+        }
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, RESISTANCE_DURATION_TICKS, 0, false, true, true));
+        tag.putInt(TAG_DAILY_RESISTANCE_USED, used + 1);
+        return true;
+    }
+
+    private static LapPillowStateSyncPayload.RecoveryStatus computeRecoveryStatus(ServerPlayer player,
+                                                                                  @Nullable EntityMaid maid) {
+        resetDailyCountersIfNeeded(player);
+        RelationStage stage = maid == null ? RelationStage.INITIAL : MaidRelationshipManager.resolveStage(maid);
+        return new LapPillowStateSyncPayload.RecoveryStatus(
+                player.getPersistentData().getInt(TAG_DAILY_HEAL_USED),
+                healLimitHp(stage),
+                player.getPersistentData().getInt(TAG_DAILY_CLEANSE_USED),
+                stage == RelationStage.INITIAL ? 0 : DAILY_CLEANSE_LIMIT,
+                player.getPersistentData().getInt(TAG_DAILY_RESISTANCE_USED),
+                stage == RelationStage.MARRIAGE ? DAILY_RESISTANCE_LIMIT : 0
+        );
+    }
+
+    private static int healLimitHp(RelationStage stage) {
+        if (stage == RelationStage.MARRIAGE) {
+            return MARRIAGE_HEAL_LIMIT_HP;
+        }
+        if (stage == RelationStage.DATING) {
+            return DATING_HEAL_LIMIT_HP;
+        }
+        return 0;
+    }
+
+    private static boolean resetDailyCountersIfNeeded(ServerPlayer player) {
+        CompoundTag tag = player.getPersistentData();
+        long day = player.serverLevel().getDayTime() / 24000L;
+        if (tag.contains(TAG_DAILY_DAY) && tag.getLong(TAG_DAILY_DAY) == day) {
+            return false;
+        }
+        tag.putLong(TAG_DAILY_DAY, day);
+        tag.putInt(TAG_DAILY_HEAL_USED, 0);
+        tag.putInt(TAG_DAILY_CLEANSE_USED, 0);
+        tag.putInt(TAG_DAILY_RESISTANCE_USED, 0);
+        return true;
     }
 
     @Nullable

@@ -122,8 +122,7 @@ public class HugActionScreen extends Screen {
             lastRestoreUiKey = false;
             return;
         }
-        long window = minecraft.getWindow().getWindow();
-        boolean restoreUiKey = GLFW.glfwGetKey(window, GLFW.GLFW_KEY_H) == GLFW.GLFW_PRESS;
+        boolean restoreUiKey = RhythmKeyMappings.RESTORE_HUG_UI.isDown();
         if (restoreUiKey && !lastRestoreUiKey) {
             restoreFromCompactLookMode(minecraft);
         }
@@ -570,7 +569,11 @@ public class HugActionScreen extends Screen {
             cameraAdjustPanelOpen = false;
             cameraSliderDragTarget = CameraSliderDragTarget.NONE;
             if (this.minecraft.player != null) {
-                this.minecraft.player.displayClientMessage(Component.literal("已隐藏互动面板。按 H 唤起面板，按 Y 退出膝枕。"), false);
+                String restoreKey = RhythmKeyMappings.boundKeyName(RhythmKeyMappings.RESTORE_HUG_UI);
+                String exitKey = RhythmKeyMappings.boundKeyName(RhythmKeyMappings.LAP_PILLOW_EXIT);
+                this.minecraft.player.displayClientMessage(Component.literal(
+                        "已隐藏互动面板。按 " + restoreKey + " 唤起面板，按 " + exitKey + " 退出膝枕。"
+                ), false);
             }
             this.minecraft.setScreen(null);
             this.minecraft.mouseHandler.grabMouse();
@@ -672,6 +675,40 @@ public class HugActionScreen extends Screen {
 
         graphics.drawString(this.font, relationLine, right - this.font.width(relationLine), top, 0xFFFFEEF8, true);
         graphics.drawString(this.font, moodLine, right - this.font.width(moodLine), top + lineHeight + 2, 0xFFFFEEF8, true);
+        if (LapPillowClientState.isLocalPlayerActive()) {
+            renderLapPillowRecoveryStatus(graphics, right, top + (lineHeight + 2) * 2 + 4);
+        }
+    }
+
+    /**
+     * 膝枕恢复状态只做 UI 展示，真实次数和效果全部以服务端同步为准。
+     */
+    private void renderLapPillowRecoveryStatus(GuiGraphics graphics, int right, int top) {
+        com.example.maidmarriage.network.payload.LapPillowStateSyncPayload.RecoveryStatus status =
+                LapPillowClientState.getLocalRecoveryStatus();
+        int y = top;
+        if (status.healLimitHp() > 0) {
+            Component healLine = Component.literal("膝枕恢复：" + hpToHeartText(status.healUsedHp())
+                    + " / " + hpToHeartText(status.healLimitHp()) + "颗心");
+            graphics.drawString(this.font, healLine, right - this.font.width(healLine), y, 0xFFE8FFF0, true);
+            y += this.font.lineHeight + 2;
+        }
+        if (status.cleanseLimit() > 0) {
+            Component cleanseLine = Component.literal("负面净化：" + status.cleanseUsed() + " / " + status.cleanseLimit());
+            graphics.drawString(this.font, cleanseLine, right - this.font.width(cleanseLine), y, 0xFFE8F4FF, true);
+            y += this.font.lineHeight + 2;
+        }
+        if (status.resistanceLimit() > 0) {
+            Component resistanceLine = Component.literal("抗性守护：" + status.resistanceUsed() + " / " + status.resistanceLimit());
+            graphics.drawString(this.font, resistanceLine, right - this.font.width(resistanceLine), y, 0xFFFFF4D6, true);
+        }
+    }
+
+    private String hpToHeartText(int hp) {
+        if ((hp & 1) == 0) {
+            return Integer.toString(hp / 2);
+        }
+        return String.format(java.util.Locale.ROOT, "%.1f", hp / 2.0F);
     }
 
     /**

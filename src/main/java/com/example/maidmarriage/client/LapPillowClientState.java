@@ -3,6 +3,7 @@ package com.example.maidmarriage.client;
 import com.example.maidmarriage.MaidMarriageMod;
 import com.example.maidmarriage.network.ModNetworking;
 import com.example.maidmarriage.network.payload.LapPillowActionPayload;
+import com.example.maidmarriage.network.payload.LapPillowStateSyncPayload;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +29,7 @@ public final class LapPillowClientState {
     private static final Map<UUID, UUID> PLAYER_TO_MAID = new ConcurrentHashMap<>();
     private static final Map<UUID, UUID> MAID_TO_PLAYER = new ConcurrentHashMap<>();
     private static final Map<UUID, Float> PLAYER_TO_SLEEP_YAW = new ConcurrentHashMap<>();
+    private static final Map<UUID, LapPillowStateSyncPayload.RecoveryStatus> PLAYER_TO_RECOVERY_STATUS = new ConcurrentHashMap<>();
     private static final Map<UUID, Long> MAID_PET_START_TICK = new ConcurrentHashMap<>();
     private static final Map<UUID, Long> MAID_PET_UNTIL_TICK = new ConcurrentHashMap<>();
     public static int renderingDepth = 0;
@@ -36,7 +38,8 @@ public final class LapPillowClientState {
     }
 
     public static void handleSync(UUID playerUuid, @Nullable UUID maidUuid,
-                                  boolean active, float sleepYaw, int petTicks) {
+                                  boolean active, float sleepYaw, int petTicks,
+                                  LapPillowStateSyncPayload.RecoveryStatus recoveryStatus) {
         if (!active || maidUuid == null) {
             UUID oldMaid = PLAYER_TO_MAID.remove(playerUuid);
             if (oldMaid != null) {
@@ -45,12 +48,14 @@ public final class LapPillowClientState {
                 MAID_PET_UNTIL_TICK.remove(oldMaid);
             }
             PLAYER_TO_SLEEP_YAW.remove(playerUuid);
+            PLAYER_TO_RECOVERY_STATUS.remove(playerUuid);
             restoreForcedPoseIfLocal(playerUuid);
             return;
         }
 
         UUID oldMaid = PLAYER_TO_MAID.put(playerUuid, maidUuid);
         PLAYER_TO_SLEEP_YAW.put(playerUuid, sleepYaw);
+        PLAYER_TO_RECOVERY_STATUS.put(playerUuid, recoveryStatus);
         if (oldMaid != null && !oldMaid.equals(maidUuid)) {
             MAID_TO_PLAYER.remove(oldMaid);
             MAID_PET_START_TICK.remove(oldMaid);
@@ -109,6 +114,17 @@ public final class LapPillowClientState {
     public static boolean isLocalPlayerActive() {
         Minecraft minecraft = Minecraft.getInstance();
         return minecraft.player != null && PLAYER_TO_MAID.containsKey(minecraft.player.getUUID());
+    }
+
+    public static LapPillowStateSyncPayload.RecoveryStatus getLocalRecoveryStatus() {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null) {
+            return LapPillowStateSyncPayload.RecoveryStatus.EMPTY;
+        }
+        return PLAYER_TO_RECOVERY_STATUS.getOrDefault(
+                minecraft.player.getUUID(),
+                LapPillowStateSyncPayload.RecoveryStatus.EMPTY
+        );
     }
 
     public static boolean isPlayerActive(Player player) {
@@ -229,6 +245,7 @@ public final class LapPillowClientState {
         PLAYER_TO_MAID.clear();
         MAID_TO_PLAYER.clear();
         PLAYER_TO_SLEEP_YAW.clear();
+        PLAYER_TO_RECOVERY_STATUS.clear();
         MAID_PET_START_TICK.clear();
         MAID_PET_UNTIL_TICK.clear();
         renderingDepth = 0;

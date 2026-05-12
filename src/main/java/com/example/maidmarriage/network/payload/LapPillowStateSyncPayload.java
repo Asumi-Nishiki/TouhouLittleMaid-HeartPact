@@ -16,16 +16,19 @@ public class LapPillowStateSyncPayload {
     private final boolean active;
     private final float sleepYaw;
     private final int petTicks;
+    private final RecoveryStatus recoveryStatus;
 
     public LapPillowStateSyncPayload(UUID playerUuid, @Nullable UUID maidUuid,
                                      @Nullable UUID anchorUuid, boolean active,
-                                     float sleepYaw, int petTicks) {
+                                     float sleepYaw, int petTicks,
+                                     RecoveryStatus recoveryStatus) {
         this.playerUuid = playerUuid;
         this.maidUuid = maidUuid;
         this.anchorUuid = anchorUuid;
         this.active = active;
         this.sleepYaw = sleepYaw;
         this.petTicks = petTicks;
+        this.recoveryStatus = recoveryStatus;
     }
 
     public UUID playerUuid() {
@@ -54,6 +57,10 @@ public class LapPillowStateSyncPayload {
         return petTicks;
     }
 
+    public RecoveryStatus recoveryStatus() {
+        return recoveryStatus;
+    }
+
     public static void encode(LapPillowStateSyncPayload msg, FriendlyByteBuf buf) {
         buf.writeUUID(msg.playerUuid);
         buf.writeBoolean(msg.maidUuid != null);
@@ -67,6 +74,7 @@ public class LapPillowStateSyncPayload {
         buf.writeBoolean(msg.active);
         buf.writeFloat(msg.sleepYaw);
         buf.writeVarInt(msg.petTicks);
+        msg.recoveryStatus.encode(buf);
     }
 
     public static LapPillowStateSyncPayload decode(FriendlyByteBuf buf) {
@@ -76,6 +84,41 @@ public class LapPillowStateSyncPayload {
         boolean active = buf.readBoolean();
         float sleepYaw = buf.readFloat();
         int petTicks = buf.readVarInt();
-        return new LapPillowStateSyncPayload(playerUuid, maidUuid, anchorUuid, active, sleepYaw, petTicks);
+        RecoveryStatus recoveryStatus = RecoveryStatus.decode(buf);
+        return new LapPillowStateSyncPayload(playerUuid, maidUuid, anchorUuid, active, sleepYaw, petTicks, recoveryStatus);
+    }
+
+    /**
+     * 膝枕每日恢复状态。
+     *
+     * <p>单位说明：回血用 HP 计数，2 HP 等于游戏里 1 颗心。
+     */
+    public record RecoveryStatus(int healUsedHp,
+                                 int healLimitHp,
+                                 int cleanseUsed,
+                                 int cleanseLimit,
+                                 int resistanceUsed,
+                                 int resistanceLimit) {
+        public static final RecoveryStatus EMPTY = new RecoveryStatus(0, 0, 0, 0, 0, 0);
+
+        private void encode(FriendlyByteBuf buf) {
+            buf.writeVarInt(healUsedHp);
+            buf.writeVarInt(healLimitHp);
+            buf.writeVarInt(cleanseUsed);
+            buf.writeVarInt(cleanseLimit);
+            buf.writeVarInt(resistanceUsed);
+            buf.writeVarInt(resistanceLimit);
+        }
+
+        private static RecoveryStatus decode(FriendlyByteBuf buf) {
+            return new RecoveryStatus(
+                    buf.readVarInt(),
+                    buf.readVarInt(),
+                    buf.readVarInt(),
+                    buf.readVarInt(),
+                    buf.readVarInt(),
+                    buf.readVarInt()
+            );
+        }
     }
 }

@@ -35,5 +35,6 @@ public final class ClientModEvents {
         event.register(RhythmKeyMappings.CARRY_POSE_DEBUG);
         event.register(RhythmKeyMappings.MAID_DEBUG_PANEL);
         event.register(RhythmKeyMappings.LAP_PILLOW_EXIT);
+        event.register(RhythmKeyMappings.RESTORE_HUG_UI);
     }
 }
