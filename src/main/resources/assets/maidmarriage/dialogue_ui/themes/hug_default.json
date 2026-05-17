@@ -17,7 +17,7 @@
   },
   "dialogBox": {
     "texture": "",
-    "x": -0.5,
+    "x": 0.0,
     "y": 0.0,
     "width": 100.0,
     "height": 40.0,
@@ -63,7 +63,7 @@
     "descriptionSelectedColor": -1
   },
   "controlIcon": {
-    "x": 86.8,
+    "x": 80.2,
     "y": 94.8,
     "width": 4.0,
     "height": 4.0,
@@ -73,10 +73,26 @@
     "backgroundColor": 419430400,
     "hoverColor": 721420288,
     "inset": 2,
-    "gapX": 2.6
+    "gapX": 2.6,
+    "hideX": 82.2,
+    "hideY": 94.3,
+    "hideWidth": 4.0,
+    "hideHeight": 5.0,
+    "voiceX": 86.3,
+    "voiceY": 94.8,
+    "voiceWidth": 4.0,
+    "voiceHeight": 4.5,
+    "exitX": 89.4,
+    "exitY": 94.8,
+    "exitWidth": 5.0,
+    "exitHeight": 4.5,
+    "cameraX": 94.3,
+    "cameraY": 95.3,
+    "cameraWidth": 2.9,
+    "cameraHeight": 4.2
   },
   "zoomLabel": {
-    "x": 75.0,
+    "x": 67.5,
     "y": 95.5,
     "width": 12.0,
     "height": 4.0,

@@ -64,8 +64,8 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
         Player player = MaidHugManager.getHugPlayer(entityMaid);
         float hugPoseProgress = MaidHugManager.clientHugPoseProgress(player);
         if (!MaidHugManager.isHugState(entityMaid, player) && hugPoseProgress <= 0.0F) {
-            applyGeckoStandalonePostKissShyPose(entityMaid, model);
             applyGeckoStandaloneHeadCuePose(entityMaid, model);
+            applyGeckoStandalonePostKissShyPose(entityMaid, model);
             applyGeckoStandaloneShyCoverFacePose(entityMaid, model);
             applyGeckoShyPeekPose(entityMaid, model, false);
             applyGeckoStandaloneChestTapPose(entityMaid, model);
@@ -296,6 +296,9 @@ public abstract class HardcodedAnimationManagerHugPoseMixin {
             skirt.setRotationX(-0.05f * progress);
         }
         applyGeckoHugHeadCuePose(maid, model);
+        if (head != null) {
+            applyGeckoPostKissShyPose(maid, head);
+        }
         applyGeckoShyPeekPose(maid, model, true);
         applyGeckoHugChestTapPose(maid, model);
     }

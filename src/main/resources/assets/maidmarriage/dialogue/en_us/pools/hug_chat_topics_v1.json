@@ -1,0 +1,405 @@
+{
+  "entry_time": {
+    "morning": {
+      "initial": [
+        "Good morning, Master. Seeing you first makes the day feel easier to begin.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Good morning, Master. Seeing you first makes the day feel easier to begin.\nher voice softens at the end."
+      ],
+      "close": [
+        "Good morning, you. Seeing you first makes the day feel easier to begin.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Good morning, you. Seeing you first makes the day feel easier to begin.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Good morning, you. Seeing you first makes the day feel easier to begin.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "day": {
+      "initial": [
+        "This part of the day feels clear. If you want to talk, I am right here.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "This part of the day feels clear. If you want to talk, I am right here.\nher voice softens at the end."
+      ],
+      "close": [
+        "This part of the day feels clear. If you want to talk, I am right here.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "This part of the day feels clear. If you want to talk, I am right here.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "This part of the day feels clear. If you want to talk, I am right here.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "evening": {
+      "initial": [
+        "Evening always makes me want to keep you a little longer.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Evening always makes me want to keep you a little longer.\nher voice softens at the end."
+      ],
+      "close": [
+        "Evening always makes me want to keep you a little longer.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Evening always makes me want to keep you a little longer.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Evening always makes me want to keep you a little longer.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "night": {
+      "initial": [
+        "It is late, Master. If you are still awake, stay with me for a little while.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "It is late, Master. If you are still awake, stay with me for a little while.\nher voice softens at the end."
+      ],
+      "close": [
+        "It is late, you. If you are still awake, stay with me for a little while.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "It is late, you. If you are still awake, stay with me for a little while.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "It is late, you. If you are still awake, stay with me for a little while.\nshe smiles as if the words already belong at home."
+      ]
+    }
+  },
+  "topics": {
+    "life": {
+      "initial": [
+        "Ordinary days are not empty at all. They are where I slowly learn what it means to live beside Master.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Ordinary days are not empty at all. They are where I slowly learn what it means to live beside Master.\nher voice softens at the end."
+      ],
+      "close": [
+        "Ordinary days are not empty at all. They are where I slowly learn what it means to live beside you.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Ordinary days are not empty at all. They are where I slowly learn what it means to live beside you.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Ordinary days are not empty at all. They are where I slowly learn what it means to live beside you.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "heart": {
+      "initial": [
+        "Some feelings take a long time before they can be spoken. If it is you listening, I think I can say a little more.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Some feelings take a long time before they can be spoken. If it is you listening, I think I can say a little more.\nher voice softens at the end."
+      ],
+      "close": [
+        "Some feelings take a long time before they can be spoken. If it is you listening, I think I can say a little more.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Some feelings take a long time before they can be spoken. If it is you listening, I think I can say a little more.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Some feelings take a long time before they can be spoken. If it is you listening, I think I can say a little more.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "rest": {
+      "initial": [
+        "Rest is easy to forget. But when Master asks whether I am tired, something in me finally loosens.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Rest is easy to forget. But when Master asks whether I am tired, something in me finally loosens.\nher voice softens at the end."
+      ],
+      "close": [
+        "Rest is easy to forget. But when you asks whether I am tired, something in me finally loosens.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Rest is easy to forget. But when you asks whether I am tired, something in me finally loosens.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Rest is easy to forget. But when you asks whether I am tired, something in me finally loosens.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "time": {
+      "morning": {
+        "initial": [
+          "Morning has a gentle kind of courage. It makes me want to do today properly with Master.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Morning has a gentle kind of courage. It makes me want to do today properly with Master.\nher voice softens at the end."
+        ],
+        "close": [
+          "Morning has a gentle kind of courage. It makes me want to do today properly with you.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Morning has a gentle kind of courage. It makes me want to do today properly with you.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Morning has a gentle kind of courage. It makes me want to do today properly with you.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "day": {
+        "initial": [
+          "Daylight makes it easier to say simple things. Like how glad I am that you came.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Daylight makes it easier to say simple things. Like how glad I am that you came.\nher voice softens at the end."
+        ],
+        "close": [
+          "Daylight makes it easier to say simple things. Like how glad I am that you came.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Daylight makes it easier to say simple things. Like how glad I am that you came.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Daylight makes it easier to say simple things. Like how glad I am that you came.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "evening": {
+        "initial": [
+          "Evening gathers the day together. When Master is here, it feels like the day can end well.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Evening gathers the day together. When Master is here, it feels like the day can end well.\nher voice softens at the end."
+        ],
+        "close": [
+          "Evening gathers the day together. When you is here, it feels like the day can end well.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Evening gathers the day together. When you is here, it feels like the day can end well.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Evening gathers the day together. When you is here, it feels like the day can end well.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "night": {
+        "initial": [
+          "Night makes people a little more honest. So... I am glad Master came to see me.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Night makes people a little more honest. So... I am glad Master came to see me.\nher voice softens at the end."
+        ],
+        "close": [
+          "Night makes people a little more honest. So... I am glad you came to see me.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Night makes people a little more honest. So... I am glad you came to see me.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Night makes people a little more honest. So... I am glad you came to see me.\nshe smiles as if the words already belong at home."
+        ]
+      }
+    },
+    "depend": {
+      "initial": [
+        "Depending on someone used to feel frightening. Now, if that someone is Master, it feels warm instead.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "Depending on someone used to feel frightening. Now, if that someone is Master, it feels warm instead.\nher voice softens at the end."
+      ],
+      "close": [
+        "Depending on someone used to feel frightening. Now, if that someone is you, it feels warm instead.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "Depending on someone used to feel frightening. Now, if that someone is you, it feels warm instead.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "Depending on someone used to feel frightening. Now, if that someone is you, it feels warm instead.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "future": {
+      "initial": [
+        "When I think about the future now, Master is always standing somewhere in it.\nshe speaks carefully, keeping her posture neat."
+      ],
+      "warm": [
+        "When I think about the future now, Master is always standing somewhere in it.\nher voice softens at the end."
+      ],
+      "close": [
+        "When I think about the future now, you is always standing somewhere in it.\nher ears redden before she looks away."
+      ],
+      "dating": [
+        "When I think about the future now, you is always standing somewhere in it.\nshe says it honestly, then blushes at her own words."
+      ],
+      "marriage": [
+        "When I think about the future now, you is always standing somewhere in it.\nshe smiles as if the words already belong at home."
+      ]
+    },
+    "weather_special": {
+      "nether": {
+        "initial": [
+          "This place is far too hot to call it weather. Still, if you are beside me, I can breathe a little easier.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "This place is far too hot to call it weather. Still, if you are beside me, I can breathe a little easier.\nher voice softens at the end."
+        ],
+        "close": [
+          "This place is far too hot to call it weather. Still, if you are beside me, I can breathe a little easier.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "This place is far too hot to call it weather. Still, if you are beside me, I can breathe a little easier.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "This place is far too hot to call it weather. Still, if you are beside me, I can breathe a little easier.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "end": {
+        "initial": [
+          "The End is so quiet it feels like time has stopped. Holding your hand makes the silence less lonely.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "The End is so quiet it feels like time has stopped. Holding your hand makes the silence less lonely.\nher voice softens at the end."
+        ],
+        "close": [
+          "The End is so quiet it feels like time has stopped. Holding your hand makes the silence less lonely.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "The End is so quiet it feels like time has stopped. Holding your hand makes the silence less lonely.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "The End is so quiet it feels like time has stopped. Holding your hand makes the silence less lonely.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "deep_dark": {
+        "initial": [
+          "This darkness feels like it is listening. Please stay close, just until my heartbeat settles.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "This darkness feels like it is listening. Please stay close, just until my heartbeat settles.\nher voice softens at the end."
+        ],
+        "close": [
+          "This darkness feels like it is listening. Please stay close, just until my heartbeat settles.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "This darkness feels like it is listening. Please stay close, just until my heartbeat settles.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "This darkness feels like it is listening. Please stay close, just until my heartbeat settles.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "lush_caves": {
+        "initial": [
+          "Everything here is soft and green. It makes me want to speak more gently too.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Everything here is soft and green. It makes me want to speak more gently too.\nher voice softens at the end."
+        ],
+        "close": [
+          "Everything here is soft and green. It makes me want to speak more gently too.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Everything here is soft and green. It makes me want to speak more gently too.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Everything here is soft and green. It makes me want to speak more gently too.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "mushroom": {
+        "initial": [
+          "This place is strange, but not unpleasant. With you here, even odd scenery feels like a memory.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "This place is strange, but not unpleasant. With you here, even odd scenery feels like a memory.\nher voice softens at the end."
+        ],
+        "close": [
+          "This place is strange, but not unpleasant. With you here, even odd scenery feels like a memory.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "This place is strange, but not unpleasant. With you here, even odd scenery feels like a memory.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "This place is strange, but not unpleasant. With you here, even odd scenery feels like a memory.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "cherry": {
+        "initial": [
+          "The petals make the air look sweet. If I say this suits being with you, will you laugh?\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "The petals make the air look sweet. If I say this suits being with you, will you laugh?\nher voice softens at the end."
+        ],
+        "close": [
+          "The petals make the air look sweet. If I say this suits being with you, will you laugh?\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "The petals make the air look sweet. If I say this suits being with you, will you laugh?\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "The petals make the air look sweet. If I say this suits being with you, will you laugh?\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "arid": {
+        "initial": [
+          "The air is dry and bright. Stay close, or I might start missing the shade of home.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "The air is dry and bright. Stay close, or I might start missing the shade of home.\nher voice softens at the end."
+        ],
+        "close": [
+          "The air is dry and bright. Stay close, or I might start missing the shade of home.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "The air is dry and bright. Stay close, or I might start missing the shade of home.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "The air is dry and bright. Stay close, or I might start missing the shade of home.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "jungle": {
+        "initial": [
+          "The jungle is noisy, but your voice is still the easiest sound for me to find.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "The jungle is noisy, but your voice is still the easiest sound for me to find.\nher voice softens at the end."
+        ],
+        "close": [
+          "The jungle is noisy, but your voice is still the easiest sound for me to find.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "The jungle is noisy, but your voice is still the easiest sound for me to find.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "The jungle is noisy, but your voice is still the easiest sound for me to find.\nshe smiles as if the words already belong at home."
+        ]
+      },
+      "waterside": {
+        "initial": [
+          "Water makes everything slower. I would not mind staying here with you a little longer.\nshe speaks carefully, keeping her posture neat."
+        ],
+        "warm": [
+          "Water makes everything slower. I would not mind staying here with you a little longer.\nher voice softens at the end."
+        ],
+        "close": [
+          "Water makes everything slower. I would not mind staying here with you a little longer.\nher ears redden before she looks away."
+        ],
+        "dating": [
+          "Water makes everything slower. I would not mind staying here with you a little longer.\nshe says it honestly, then blushes at her own words."
+        ],
+        "marriage": [
+          "Water makes everything slower. I would not mind staying here with you a little longer.\nshe smiles as if the words already belong at home."
+        ]
+      }
+    }
+  },
+  "communication_crank": {
+    "hard": {
+      "initial": [
+        "A crank, Master? You really do know how to say the strangest things with a straight face.\nShe puffs her cheeks, though her eyes are smiling."
+      ],
+      "warm": [
+        "A crank, Master? You really do know how to say the strangest things with a straight face.\nShe puffs her cheeks, though her eyes are smiling."
+      ],
+      "close": [
+        "A crank, you? You really do know how to say the strangest things with a straight face.\nShe puffs her cheeks, though her eyes are smiling."
+      ]
+    },
+    "soft": {
+      "dating": [
+        "If it is you asking, I might even turn the crank for a while. But you have to praise me afterward.\nShe puffs her cheeks, though her eyes are smiling."
+      ],
+      "marriage": [
+        "If it is you asking, I might even turn the crank for a while. But you have to praise me afterward.\nShe puffs her cheeks, though her eyes are smiling."
+      ]
+    }
+  }
+}

@@ -498,8 +498,8 @@ public final class YsmRuntimeHugPoseBridge {
         if (PetHeadManager.isPetHeadAnimating(maid)) {
             return;
         }
-        // YSM 的头部 yaw 轴和东方模型方向相反，亲吻后的别头需要单独反号。
-        float headYawDegrees = -HugClientState.currentPostKissShyYawDegrees(maid.getUUID());
+        // YSM uses its own head yaw convention here; keep the original lightweight head-only overlay.
+        float headYawDegrees = HugClientState.currentPostKissShyYawDegrees(maid.getUUID());
         float headPitchDegrees = HugClientState.currentPostKissShyPitchDegrees(maid.getUUID());
         float cueYawDegrees = HugClientState.currentHeadCueYawDegrees(maid.getUUID());
         float cuePitchDegrees = HugClientState.currentHeadCuePitchDegrees(maid.getUUID());

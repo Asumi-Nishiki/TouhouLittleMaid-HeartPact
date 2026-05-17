@@ -17,11 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Entity.class)
 public abstract class EntityLapPillowPoseServerGuardMixin {
-    @Inject(method = "setForcedPose", at = @At("HEAD"), cancellable = true, require = 0)
-    private void maidmarriage$guardServerForcedPose(Pose pose, CallbackInfo ci) {
-        guardPoseWrite(pose, ci);
-    }
-
     @Inject(method = "setPose(Lnet/minecraft/world/entity/Pose;)V", at = @At("HEAD"), cancellable = true, require = 0)
     private void maidmarriage$guardServerPose(Pose pose, CallbackInfo ci) {
         guardPoseWrite(pose, ci);

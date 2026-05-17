@@ -29,39 +29,39 @@
       "choices": [
         {
           "id": "pet_head",
-          "title": "摸摸头",
-          "description": "轻轻摸摸她的头，让她安心下来。",
+          "title": "頭をなでる",
+          "description": "そっと頭をなでて、安心させてあげる。",
           "next": "pet_head_intro",
           "action": "maidmarriage:pet_head",
           "events": []
         },
         {
           "id": "lift",
-          "title": "举高高",
-          "description": "把小女仆举起来，已经举起时会放回地上。",
+          "title": "高い高いする",
+          "description": "小さなメイドを抱き上げる。すでに抱き上げている時は、そっと地面に戻す。",
           "next": "lift_intro",
           "action": "maidmarriage:lift_child",
           "events": []
         },
         {
           "id": "carry_child",
-          "title": "让妈妈抱抱",
-          "description": "让她的妈妈把她抱进怀里，已经抱起时会尝试放下。",
+          "title": "ママに抱っこしてもらう",
+          "description": "ママに抱っこしてもらう。すでに抱っこ中なら、下ろせるか試す。",
           "next": "carry_intro",
           "action": "maidmarriage:carry_child",
           "events": []
         },
         {
           "id": "comfort",
-          "title": "陪她说话",
-          "description": "蹲下来陪她聊一小会儿。",
+          "title": "そばで話す",
+          "description": "しゃがんで目線を合わせ、少しだけ一緒におしゃべりする。",
           "next": "comfort_intro",
           "events": []
         },
         {
           "id": "child_gift",
-          "title": "送她礼物",
-          "description": "挑一份小礼物给她，看看她会不会喜欢。",
+          "title": "プレゼントを渡す",
+          "description": "小さな贈り物を選んで、喜んでくれるか見てみる。",
           "next": "idle",
           "action": "maidmarriage:open_gift_screen",
           "events": []
@@ -76,7 +76,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你的手掌轻轻落在她的发顶，她像小动物一样眯起眼睛。",
+          "text": "あなたの手のひらが、そっと彼女の髪に降りる。彼女は安心したように、きゅっと目を細めた。",
           "portrait": "maid",
           "expression": "happy",
           "emotion": "happy",
@@ -85,7 +85,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "嘿嘿……再摸一下也可以哦。",
+          "text": "えへへ……もうちょっとだけ、なでてもいいよ？",
           "expression": "happy",
           "emotion": "happy",
           "events": []
@@ -101,7 +101,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她下意识抓住你的袖口，随后又开心地晃了晃脚。",
+          "text": "彼女は思わずあなたの袖をつかみ、それから嬉しそうに足をぱたぱた揺らした。",
           "portrait": "maid",
           "expression": "happy",
           "emotion": "happy",
@@ -110,7 +110,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "哇，好高！我能看到好远好远的地方！",
+          "text": "わあ、高い！　すっごく遠くまで見えるよ！",
           "expression": "happy",
           "emotion": "happy",
           "events": []
@@ -126,7 +126,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她的妈妈轻轻靠近，把她稳稳抱在怀里。",
+          "text": "彼女のママがそっと近づいて、小さな体を大事そうに抱きしめた。",
           "portrait": "maid",
           "expression": "soft_smile",
           "emotion": "gentle",
@@ -135,7 +135,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "妈妈抱着的时候，感觉整个人都暖洋洋的。",
+          "text": "ママに抱っこされると、からだ全部がぽかぽかするの。",
           "expression": "happy",
           "emotion": "happy",
           "events": []
@@ -151,7 +151,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你蹲下来和她保持同样的视线高度，她认真地看着你。",
+          "text": "あなたはしゃがんで、彼女と同じ高さで目を合わせる。彼女はまっすぐにあなたを見つめた。",
           "portrait": "maid",
           "expression": "soft_smile",
           "emotion": "gentle",
@@ -160,7 +160,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "只要你在旁边，我就觉得今天也没什么可害怕的。",
+          "text": "あなたがそばにいてくれるなら、今日はもう、こわくない気がする。",
           "expression": "shy",
           "emotion": "gentle",
           "events": []

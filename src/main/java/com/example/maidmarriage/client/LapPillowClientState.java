@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -87,6 +88,13 @@ public final class LapPillowClientState {
             return;
         }
         if (isLocalPlayerActive()) {
+            if (TweakerooFreecamCompat.isFreecamActive(minecraft)) {
+                ModNetworking.sendLapPillowAction(new LapPillowActionPayload(LapPillowActionPayload.ACTION_EXIT, null));
+                minecraft.player.displayClientMessage(Component.translatable("message.maidmarriage.lap_pillow.freecam_exit"), false);
+                minecraft.player.setForcedPose(null);
+                clear();
+                return;
+            }
             minecraft.player.setForcedPose(Pose.SLEEPING);
             while (RhythmKeyMappings.LAP_PILLOW_EXIT.consumeClick()) {
                 ModNetworking.sendLapPillowAction(new LapPillowActionPayload(LapPillowActionPayload.ACTION_EXIT, null));
@@ -131,6 +139,11 @@ public final class LapPillowClientState {
         return player != null && PLAYER_TO_MAID.containsKey(player.getUUID());
     }
 
+    public static boolean isRealLocalPlayer(AbstractClientPlayer player) {
+        Minecraft minecraft = Minecraft.getInstance();
+        return player != null && minecraft.player == player;
+    }
+
     /**
      * 渲染期睡姿桥。
      *
@@ -140,7 +153,7 @@ public final class LapPillowClientState {
      * 伪装成睡觉状态，从而让玩家模型真正躺下，同时我们的剧情 UI 仍然可以显示。
      */
     public static boolean shouldUseSleepPoseBridge(AbstractClientPlayer player) {
-        return player != null && PLAYER_TO_MAID.containsKey(player.getUUID());
+        return isRealLocalPlayer(player) && PLAYER_TO_MAID.containsKey(player.getUUID());
     }
 
     public static Direction resolveSleepDirection(AbstractClientPlayer player) {

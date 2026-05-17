@@ -29,39 +29,39 @@
       "choices": [
         {
           "id": "pet_head",
-          "title": "摸摸头",
-          "description": "轻轻摸摸她的头，让她安心下来。",
+          "title": "Pat Her Head",
+          "description": "Gently pat her head and help her settle down.",
           "next": "pet_head_intro",
           "action": "maidmarriage:pet_head",
           "events": []
         },
         {
           "id": "lift",
-          "title": "举高高",
-          "description": "把小女仆举起来，已经举起时会放回地上。",
+          "title": "Lift Her Up",
+          "description": "Pick the little maid up high; if she is already up, set her back down.",
           "next": "lift_intro",
           "action": "maidmarriage:lift_child",
           "events": []
         },
         {
           "id": "carry_child",
-          "title": "让妈妈抱抱",
-          "description": "让她的妈妈把她抱进怀里，已经抱起时会尝试放下。",
+          "title": "Let Mom Hold Her",
+          "description": "Ask her mother to hold her close; if she is already being carried, try putting her down.",
           "next": "carry_intro",
           "action": "maidmarriage:carry_child",
           "events": []
         },
         {
           "id": "comfort",
-          "title": "陪她说话",
-          "description": "蹲下来陪她聊一小会儿。",
+          "title": "Talk with Her",
+          "description": "Crouch down and keep her company for a little while.",
           "next": "comfort_intro",
           "events": []
         },
         {
           "id": "child_gift",
-          "title": "送她礼物",
-          "description": "挑一份小礼物给她，看看她会不会喜欢。",
+          "title": "Give Her a Gift",
+          "description": "Pick out a small present and see whether she likes it.",
           "next": "idle",
           "action": "maidmarriage:open_gift_screen",
           "events": []
@@ -76,18 +76,18 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你的手掌轻轻落在她的发顶，她像小动物一样眯起眼睛。",
+          "text": "Your palm comes to rest softly on her hair, and she narrows her eyes as if the touch has made her feel safe.",
           "portrait": "maid",
           "expression": "happy",
-          "emotion": "happy",
+          "emotion": "angry",
           "animation": "soft_bounce",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "嘿嘿……再摸一下也可以哦。",
+          "text": "Hehe... you can pat me a little more, okay?",
           "expression": "happy",
-          "emotion": "happy",
+          "emotion": "tired",
           "events": []
         }
       ],
@@ -101,7 +101,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她下意识抓住你的袖口，随后又开心地晃了晃脚。",
+          "text": "She catches your sleeve without thinking, then happily swings her feet in the air.",
           "portrait": "maid",
           "expression": "happy",
           "emotion": "happy",
@@ -110,7 +110,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "哇，好高！我能看到好远好远的地方！",
+          "text": "Whoa, so high! I can see so, so far from here!",
           "expression": "happy",
           "emotion": "happy",
           "events": []
@@ -126,7 +126,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她的妈妈轻轻靠近，把她稳稳抱在怀里。",
+          "text": "Her mother steps closer and gathers her carefully into a steady embrace.",
           "portrait": "maid",
           "expression": "soft_smile",
           "emotion": "gentle",
@@ -135,7 +135,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "妈妈抱着的时候，感觉整个人都暖洋洋的。",
+          "text": "When Mom holds me, everything feels all warm and cozy.",
           "expression": "happy",
           "emotion": "happy",
           "events": []
@@ -151,16 +151,16 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你蹲下来和她保持同样的视线高度，她认真地看着你。",
+          "text": "You crouch down until your eyes are level with hers, and she looks back at you with serious attention.",
           "portrait": "maid",
           "expression": "soft_smile",
-          "emotion": "gentle",
+          "emotion": "serious",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "只要你在旁边，我就觉得今天也没什么可害怕的。",
+          "text": "When you're beside me, I feel like today won't be scary at all.",
           "expression": "shy",
           "emotion": "gentle",
           "events": []

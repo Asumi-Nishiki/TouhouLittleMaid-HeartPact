@@ -383,35 +383,46 @@ public final class HugDialogueContextVariables {
             return;
         }
         dialogueRuntime.setVariable("v4_pool_anchor", anchor);
-        String entryText = longingForInteraction
-                ? HugDialogueTextPools.pickLongingEntry(relationStage, moodState)
-                : HugDialogueTextPools.pickMixedEntry(relationStage, moodState, timeOfDay);
-        dialogueRuntime.setVariable("entry_text", entryText);
-        dialogueRuntime.setVariable("chat_text", HugDialogueTextPools.pickChat(relationStage, moodState));
-        dialogueRuntime.setVariable("pet_intro_text", HugDialogueTextPools.pickPet(relationStage));
-        dialogueRuntime.setVariable("hug_intro_text", HugDialogueTextPools.pickHug(relationStage));
-        dialogueRuntime.setVariable("kiss_intro_text", HugDialogueTextPools.pickKiss(relationStage));
+        HugDialogueTextPools.PickedLine entryText = longingForInteraction
+                ? HugDialogueTextPools.pickLongingEntryCue(relationStage, moodState)
+                : HugDialogueTextPools.pickMixedEntryCue(relationStage, moodState, timeOfDay);
+        setPickedVariable(dialogueRuntime, "entry_text", entryText);
+        setPickedVariable(dialogueRuntime, "chat_text", HugDialogueTextPools.pickChatCue(relationStage, moodState));
+        setPickedVariable(dialogueRuntime, "pet_intro_text", HugDialogueTextPools.pickPetCue(relationStage));
+        setPickedVariable(dialogueRuntime, "hug_intro_text", HugDialogueTextPools.pickHugCue(relationStage));
+        setPickedVariable(dialogueRuntime, "kiss_intro_text", HugDialogueTextPools.pickKissCue(relationStage));
         dialogueRuntime.setVariable("lap_pillow_start_text", pickLapPillowStart());
         dialogueRuntime.setVariable("lap_pillow_refuse_text", pickLapPillowRefuse());
         dialogueRuntime.setVariable("lap_pillow_pet_text", pickLapPillowPet());
         dialogueRuntime.setVariable("lap_pillow_exit_text", pickLapPillowExit());
-        dialogueRuntime.setVariable("release_hug_text", HugDialogueTextPools.pickReleaseHug());
-        dialogueRuntime.setVariable("low_comfort_text", HugDialogueTextPools.pickLowComfort());
-        dialogueRuntime.setVariable("flatter_praise_text", HugDialogueTextPools.pickFlatterPraise());
-        dialogueRuntime.setVariable("flatter_gift_text", HugDialogueTextPools.pickFlatterGift());
-        dialogueRuntime.setVariable("communication_crank_hard_text", HugDialogueTextPools.pickCommunicationCrankHard(relationStage));
-        dialogueRuntime.setVariable("communication_crank_soft_text", HugDialogueTextPools.pickCommunicationCrankSoft(relationStage));
-        dialogueRuntime.setVariable("chat_topic_life_text", HugDialogueTextPools.pickChatTopic("life", relationStage));
-        dialogueRuntime.setVariable("chat_topic_heart_text", HugDialogueTextPools.pickChatTopic("heart", relationStage));
-        dialogueRuntime.setVariable("chat_topic_rest_text", HugDialogueTextPools.pickChatTopic("rest", relationStage));
-        dialogueRuntime.setVariable("chat_topic_time_text", HugDialogueTextPools.pickTimeTopic(relationStage, timeOfDay));
-        dialogueRuntime.setVariable("chat_topic_depend_text", HugDialogueTextPools.pickChatTopic("depend", relationStage));
-        dialogueRuntime.setVariable("chat_topic_future_text", HugDialogueTextPools.pickChatTopic("future", relationStage));
+        setPickedVariable(dialogueRuntime, "release_hug_text", HugDialogueTextPools.pickReleaseHugCue());
+        setPickedVariable(dialogueRuntime, "low_comfort_text", HugDialogueTextPools.pickLowComfortCue());
+        setPickedVariable(dialogueRuntime, "flatter_praise_text", HugDialogueTextPools.pickFlatterPraiseCue());
+        setPickedVariable(dialogueRuntime, "flatter_gift_text", HugDialogueTextPools.pickFlatterGiftCue());
+        setPickedVariable(dialogueRuntime, "communication_crank_hard_text", HugDialogueTextPools.pickCommunicationCrankHardCue(relationStage));
+        setPickedVariable(dialogueRuntime, "communication_crank_soft_text", HugDialogueTextPools.pickCommunicationCrankSoftCue(relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_life_text", HugDialogueTextPools.pickChatTopicCue("life", relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_heart_text", HugDialogueTextPools.pickChatTopicCue("heart", relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_rest_text", HugDialogueTextPools.pickChatTopicCue("rest", relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_time_text", HugDialogueTextPools.pickTimeTopicCue(relationStage, timeOfDay));
+        setPickedVariable(dialogueRuntime, "chat_topic_depend_text", HugDialogueTextPools.pickChatTopicCue("depend", relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_future_text", HugDialogueTextPools.pickChatTopicCue("future", relationStage));
         String weatherSpecialCategory = resolveWeatherSpecialCategory(Minecraft.getInstance());
         dialogueRuntime.setVariable("weather_special_category", weatherSpecialCategory);
         dialogueRuntime.setVariable("weather_special_topic", Boolean.toString(!weatherSpecialCategory.isBlank()));
-        dialogueRuntime.setVariable("chat_topic_weather_special_text",
-                HugDialogueTextPools.pickWeatherSpecialTopic(weatherSpecialCategory, relationStage));
+        setPickedVariable(dialogueRuntime, "chat_topic_weather_special_text",
+                HugDialogueTextPools.pickWeatherSpecialTopicCue(weatherSpecialCategory, relationStage));
+    }
+
+    private static void setPickedVariable(HugDialogueRuntimeBridge dialogueRuntime,
+                                          String key,
+                                          HugDialogueTextPools.PickedLine pickedLine) {
+        if (dialogueRuntime == null || key == null || key.isBlank()) {
+            return;
+        }
+        HugDialogueTextPools.PickedLine safe = pickedLine == null ? HugDialogueTextPools.PickedLine.empty() : pickedLine;
+        dialogueRuntime.setVariable(key, safe.text());
+        dialogueRuntime.setVariable(key + "_source", safe.source());
     }
 
     private static String pickLapPillowStart() {

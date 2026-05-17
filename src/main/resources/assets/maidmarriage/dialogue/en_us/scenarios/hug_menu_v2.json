@@ -1,5 +1,5 @@
 {
-  "_comment": "拥抱互动主台本。用于成年女仆的亲密互动界面，包含：主菜单、拥抱、亲吻、摸头、聊天分支，以及按天气/时间/好感阶段变化的对白。",
+  "_comment": "Embrace the interactive master script. An intimate interactive interface for adult maids, including: main menu, hugs, kisses, head touches, chat branches, and dialogues that change according to weather/time/favorability stage.",
   "id": "maidmarriage:hug_menu_v2",
   "theme": "maidmarriage:hug_default",
   "start": "idle",
@@ -59,14 +59,14 @@
   "nodes": {
     "_comment_structure": {
       "type": "end",
-      "_comment": "台本分区：idle 是主菜单；kiss/hug/pet_intro 是动作开场对白；chat_topic_router 负责把聊天分到不同主题；chat_stage_* 是按好感阶段拆开的专属对白。",
+      "_comment": "Script partition: idle is the main menu; kiss/hug/pet_intro is the opening dialogue of the action; chat_topic_router is responsible for dividing the chat into different topics; chat_stage_* is the exclusive dialogue divided according to the liking stage.",
       "lines": [],
       "choices": [],
       "branches": [],
       "events": []
     },
     "entry_router": {
-      "_comment": "互动入口路由。妈妈怀里有婴儿阶段且仍叫默认名“小女仆”的孩子时，优先进入取名剧情；如果条件没命中，就正常进入主菜单。",
+      "_comment": "Interactive entry routing. When the mother has a child in the infant stage and is still named \"Little Maid\" by default, priority will be given to entering the naming plot; if the conditions are not met, the main menu will be entered normally.",
       "type": "branch",
       "branches": [
         {
@@ -80,7 +80,7 @@
       "events": []
     },
     "idle": {
-      "_comment": "主交互入口。进入界面后先显示这里。第一句是当前心情下的开场白，然后给出 沟通 / 亲吻 / 拥抱 / 先松开她 / 摸头 等主选项。",
+      "_comment": "Main interactive entrance. After entering the interface, it will be displayed here first. The first sentence is the opening statement based on the current mood, and then the main options are given such as communicating/kissing/hugging/letting go of her first/touching the head.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -94,8 +94,8 @@
       "choices": [
         {
           "id": "communicate",
-          "title": "沟通",
-          "description": "聊聊天、哄哄她。",
+          "title": "Talk",
+          "description": "Chat with her, and gently cheer her up.",
           "next": "communication_menu",
           "expression": "soft_smile",
           "animation": "fade_in",
@@ -103,8 +103,8 @@
         },
         {
           "id": "confession",
-          "title": "表白",
-          "description": "认真回应她的心意，让你们的关系真正往前一步。",
+          "title": "Tell Her Your Feelings",
+          "description": "Say the words you have been holding back.",
           "condition": "!hugging && can_show_confession",
           "next": "confession_intro",
           "expression": "kokuhaku_nervous",
@@ -113,8 +113,8 @@
         },
         {
           "id": "marriage",
-          "title": "结婚",
-          "description": "亲手为她戴上戒指，许下共度一生的誓言。",
+          "title": "Exchange Vows",
+          "description": "Place the ring on her finger yourself, and vow to share your life with her.",
           "condition": "!hugging && can_show_marriage",
           "next": "marriage_intro",
           "expression": "marriage_excited_shy",
@@ -123,8 +123,8 @@
         },
         {
           "id": "action_menu",
-          "title": "行动",
-          "description": "与女仆的互动",
+          "title": "Actions",
+          "description": "Kiss, hug, lap pillow, head pats, and other close actions.",
           "next": "action_menu",
           "expression": "action_shy",
           "animation": "fade_in",
@@ -132,8 +132,8 @@
         },
         {
           "id": "release_carried_child",
-          "title": "放下小女仆",
-          "description": "让她先把怀里的小女仆轻轻放回地上。",
+          "title": "Put the Child Down",
+          "description": "Ask Mom to let the child rest on the ground.",
           "condition": "maid_carrying_child",
           "next": "release_carried_child_router",
           "action": "maidmarriage:carry_child_put_down",
@@ -141,8 +141,8 @@
         },
         {
           "id": "name_carried_child",
-          "title": "看看妈妈怀里的孩子",
-          "description": "她正抱着刚出生的小女仆，似乎有很重要的话想和你说。",
+          "title": "Look at the Child in Her Arms",
+          "description": "She is holding the newborn little maid, as if she has something important to tell you.",
           "condition": "carried_child_default_named_infant",
           "next": "child_name_intro",
           "events": []
@@ -157,7 +157,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "",
-        "text": "想和她做些什么？",
+        "text": "What would you like to do with her?",
         "portrait": "maid",
         "expression": "action_shy",
         "emotion": "shy",
@@ -167,8 +167,8 @@
       "choices": [
         {
           "id": "kiss",
-          "title": "亲吻",
-          "description": "吻她一下，让心意在唇间轻轻传递。",
+          "title": "Kiss",
+          "description": "Kiss her softly, letting your feelings pass between your lips.",
           "condition": "!maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked",
           "next": "kiss_intro",
           "action": "maidmarriage:interaction_kiss",
@@ -176,8 +176,8 @@
         },
         {
           "id": "hug",
-          "title": "拥抱",
-          "description": "把她抱进怀里，感受彼此的温暖。",
+          "title": "Hug",
+          "description": "Hold her close, and feel the warmth between you.",
           "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && favor_hug_unlocked",
           "next": "hug_intro",
           "action": "maidmarriage:hug_toggle",
@@ -185,8 +185,8 @@
         },
         {
           "id": "lap_pillow",
-          "title": "膝枕",
-          "description": "枕在她膝上，让她陪你安静休息一会儿。",
+          "title": "Lap Pillow",
+          "description": "Rest your head on her lap, and let her stay quietly by your side.",
           "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && lap_pillow_mood_ok",
           "next": "lap_pillow_start",
           "action": "maidmarriage:lap_pillow_start",
@@ -196,8 +196,8 @@
         },
         {
           "id": "lap_pillow_refuse",
-          "title": "想枕在她膝上",
-          "description": "她今天心情不太好，也许需要先被哄一哄。",
+          "title": "Rest on Her Lap",
+          "description": "She is not feeling well today. Maybe comfort her first.",
           "condition": "!hugging && !maid_carrying_child && !lap_pillow_active && !bloodline_kiss_blocked && lap_pillow_unlocked && !lap_pillow_mood_ok",
           "next": "lap_pillow_refuse",
           "expression": "troubled",
@@ -206,8 +206,8 @@
         },
         {
           "id": "lap_pillow_pet_player_head",
-          "title": "求安慰",
-          "description": "轻轻拜托她摸摸你的头。",
+          "title": "Ask for Comfort",
+          "description": "Gently ask her to stroke your head.",
           "condition": "lap_pillow_active",
           "next": "lap_pillow_pet",
           "action": "maidmarriage:lap_pillow_pet_player_head",
@@ -217,8 +217,8 @@
         },
         {
           "id": "lap_pillow_exit",
-          "title": "先起来",
-          "description": "慢慢从她膝上坐起来。",
+          "title": "Sit Up",
+          "description": "Slowly sit up from her lap.",
           "condition": "lap_pillow_active",
           "next": "lap_pillow_exit",
           "action": "maidmarriage:lap_pillow_exit",
@@ -228,8 +228,8 @@
         },
         {
           "id": "release_hug",
-          "title": "放开女仆",
-          "description": "慢慢收回手，让她自然地离开怀抱。",
+          "title": "Let Her Go",
+          "description": "Slowly loosen your arms and let her leave the hug naturally.",
           "condition": "hugging",
           "next": "release_hug_result",
           "action": "maidmarriage:hug_end",
@@ -237,8 +237,8 @@
         },
         {
           "id": "pet",
-          "title": "摸头",
-          "description": "摸摸她的头。",
+          "title": "Pat Her Head",
+          "description": "Gently pat her head.",
           "next": "pet_intro",
           "action": "maidmarriage:pet_head",
           "condition": "favor_pet_unlocked",
@@ -246,8 +246,8 @@
         },
         {
           "id": "action_back",
-          "title": "返回",
-          "description": "回到主交互选项。",
+          "title": "Back",
+          "description": "Return to the main interaction options.",
           "next": "idle_menu",
           "expression": "soft_smile",
           "animation": "fade_in",
@@ -259,21 +259,21 @@
       "events": []
     },
     "child_name_intro": {
-      "_comment": "小女仆出生后，妈妈抱着尚未正式命名的孩子时触发。真正改名仍走服务端校验，台本只负责剧情承接和打开命名 UI。",
+      "_comment": "Triggered when the mother holds the yet-to-be-officially-named child after the birth of the little maid. The actual name change still requires server-side verification, and the script is only responsible for taking over the plot and opening the naming UI.",
       "type": "sequence",
       "lines": [
         {
           "speaker": "",
-          "text": "你刚靠近，${maid}便下意识把怀里的小女仆抱得更稳了一些。小家伙睡得很浅，指尖轻轻蜷着，像是抓住了妈妈衣角的一点温度。",
+          "text": "As you step closer, ${maid} instinctively holds the little maid in her arms a little more securely. The child sleeps lightly, tiny fingers curled as if holding on to the last bit of warmth from her mother?s clothes.",
           "portrait": "maid",
           "expression": "soft_smile",
-          "emotion": "gentle",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "${player_maid}……你来啦。她刚才睡了一会儿，现在很乖呢。",
+          "text": "${player_maid}... you came. She slept for a little while just now. She is being very good.",
           "portrait": "maid",
           "expression": "action_touched",
           "emotion": "gentle",
@@ -281,7 +281,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我一直在想，这孩子以后会听见很多人叫她的名字，会因为那个名字回头，会知道自己被我们好好期待过。",
+          "text": "I keep thinking that someday people will call this child by her name. She will turn around when she hears it, and she will know that we waited for her with all our hearts.",
           "portrait": "maid",
           "expression": "shy",
           "emotion": "gentle",
@@ -289,7 +289,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "所以……我们一起给她取一个正式的名字，好吗？",
+          "text": "So... shall we give her a real name together?",
           "portrait": "maid",
           "expression": "embarrassed_smile",
           "emotion": "question",
@@ -302,11 +302,11 @@
       "events": []
     },
     "child_name_choice": {
-      "_comment": "剧情后的命名确认。作为主菜单里的手动入口，允许玩家稍后再取名；真正是否允许命名仍由服务端校验。",
+      "_comment": "Post-plot naming confirmation. As a manual entry in the main menu, players are allowed to name it later; whether naming is actually allowed is still verified by the server.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "你想现在为她取名吗？",
+        "text": "Do you want to name her now?",
         "portrait": "maid",
         "expression": "soft_smile",
         "emotion": "serious",
@@ -316,16 +316,16 @@
       "choices": [
         {
           "id": "child_name_now",
-          "title": "给孩子取名",
-          "description": "给新生的孩子取个名字，只能取一次。",
+          "title": "Name the Child",
+          "description": "Give the newborn child a name. This can only be done once.",
           "next": "idle_menu",
           "action": "maidmarriage:open_child_name_screen",
           "events": []
         },
         {
           "id": "child_name_later",
-          "title": "稍后再说",
-          "description": "先把这件事放一放，等准备好了再和她一起决定。",
+          "title": "Maybe Later",
+          "description": "Leave it for now, and decide with her when you are ready.",
           "next": "idle_menu",
           "expression": "soft_smile",
           "events": []
@@ -336,7 +336,7 @@
       "events": []
     },
     "communication_menu": {
-      "_comment": "沟通总入口。把原本直达的“聊天”扩成一个小分流：正常聊天、讨好她、或者逗她去摇曲柄。",
+      "_comment": "The main entrance to communication. Expand the direct \"chat\" into a small diversion: chat normally, please her, or tease her to crank the crank.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -350,8 +350,8 @@
       "choices": [
         {
           "id": "communicate_chat",
-          "title": "聊天",
-          "description": "慢慢聊聊今天的心情、天气，还有她想说的话。",
+          "title": "Chat",
+          "description": "Talk slowly about today, the weather, and whatever she wants to say.",
           "next": "chat_menu",
           "expression": "soft_smile",
           "animation": "fade_in",
@@ -359,8 +359,8 @@
         },
         {
           "id": "communicate_flatter",
-          "title": "讨好",
-          "description": "哄哄她、送点礼物。",
+          "title": "Pamper Her",
+          "description": "Coax her a little, or prepare a small gift.",
           "next": "flatter_menu",
           "expression": "shy",
           "animation": "soft_bounce",
@@ -368,8 +368,8 @@
         },
         {
           "id": "communicate_joke",
-          "title": "讲笑话",
-          "description": "讲点冷笑话，看看她今天愿不愿意接你这个梗。",
+          "title": "Tell a Joke",
+          "description": "Try a silly joke and see whether she feels like playing along today.",
           "next": "joke_router",
           "expression": "shy",
           "animation": "soft_bounce",
@@ -377,8 +377,8 @@
         },
         {
           "id": "communicate_crank",
-          "title": "去给我摇曲柄",
-          "description": "半认真半逗她一下，看看她会怎么回你。",
+          "title": "Go Turn the Crank",
+          "description": "Half serious, half teasing. See how she answers you.",
           "next": "communication_crank_router",
           "expression": "angry_shy",
           "animation": "soft_bounce",
@@ -386,8 +386,8 @@
         },
         {
           "id": "communicate_back",
-          "title": "先不说了",
-          "description": "回到现在的互动选项。",
+          "title": "Not Now",
+          "description": "Return to the current interaction options.",
           "next": "idle_menu",
           "expression": "soft_smile",
           "events": []
@@ -398,7 +398,7 @@
       "events": []
     },
     "flatter_menu": {
-      "_comment": "讨好分支。这里先只做文本与心情/好感反馈，真正的礼物消耗系统后面再接。",
+      "_comment": "Please branch. Here we will only do text and mood/favor feedback, and the real gift consumption system will come later.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -412,8 +412,8 @@
       "choices": [
         {
           "id": "flatter_praise",
-          "title": "狠狠夸奖",
-          "description": "把她从头到尾夸得没地方躲。",
+          "title": "Praise Her Hard",
+          "description": "Praise her so much she has nowhere to hide.",
           "next": "flatter_praise_result",
           "events": [
             {
@@ -433,16 +433,16 @@
         },
         {
           "id": "flatter_gift",
-          "title": "赠送礼物",
-          "description": "打开礼物面板，挑一份礼物送给她。",
+          "title": "Give a Gift",
+          "description": "Open the gift screen and choose something for her.",
           "next": "idle_menu",
           "action": "maidmarriage:open_gift_screen",
           "events": []
         },
         {
           "id": "flatter_back",
-          "title": "换个话题",
-          "description": "回到沟通入口。",
+          "title": "Another Topic",
+          "description": "Return to talking.",
           "next": "communication_menu",
           "events": []
         }
@@ -551,7 +551,7 @@
       "events": []
     },
     "chat_menu": {
-      "_comment": "聊天二级菜单。这里只负责选聊天方向，不额外弹桥接台词。",
+      "_comment": "Chat secondary menu. Here we are only responsible for choosing the direction of the chat, and no additional bridging lines are played.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -565,8 +565,8 @@
       "choices": [
         {
           "id": "chat_general",
-          "title": "随便聊聊",
-          "description": "挑个话题，慢慢聊点更像日常的话。",
+          "title": "Casual Chat",
+          "description": "Pick a topic and talk about ordinary little things.",
           "next": "chat_general_menu",
           "expression": "knowing",
           "animation": "fade_in",
@@ -574,8 +574,8 @@
         },
         {
           "id": "chat_weather",
-          "title": "天气",
-          "description": "看看今天这种天气，她会想跟你说些什么。",
+          "title": "Weather",
+          "description": "See what she wants to say about today’s weather.",
           "next": "chat_weather_router",
           "expression": "serious",
           "animation": "fade_in",
@@ -583,8 +583,8 @@
         },
         {
           "id": "chat_back",
-          "title": "先不聊这个",
-          "description": "回到沟通入口。",
+          "title": "Not This",
+          "description": "Return to talking.",
           "next": "communication_menu",
           "expression": "soft_smile",
           "events": []
@@ -595,7 +595,7 @@
       "events": []
     },
     "chat_general_menu": {
-      "_comment": "随便聊聊的二级菜单。使用 docs 里的那组日常话题，并按好感阶段决定回答。",
+      "_comment": "Secondary menu for casual chat. Use the set of daily topics in the docs and decide on answers by liking stage.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -609,50 +609,50 @@
       "choices": [
         {
           "id": "chat_topic_life",
-          "title": "生活",
-          "description": "聊聊平平常常的日子。",
+          "title": "Daily Life",
+          "description": "Talk about plain, ordinary days.",
           "next": "chat_topic_life_result",
           "events": []
         },
         {
           "id": "chat_topic_heart",
-          "title": "心事",
-          "description": "让她慢慢说点藏着的话。",
+          "title": "Her Thoughts",
+          "description": "Let her slowly say what she has been keeping inside.",
           "next": "chat_topic_heart_result",
           "events": []
         },
         {
           "id": "chat_topic_rest",
-          "title": "休息",
-          "description": "问问她累不累。",
+          "title": "Rest",
+          "description": "Ask whether she is tired.",
           "next": "chat_topic_rest_result",
           "events": []
         },
         {
           "id": "chat_topic_time",
-          "title": "时间",
-          "description": "看看这个时辰，她会想说些什么。",
+          "title": "Time of Day",
+          "description": "See what this hour makes her want to say.",
           "next": "chat_topic_time_result",
           "events": []
         },
         {
           "id": "chat_topic_depend",
-          "title": "依赖",
-          "description": "聊聊彼此越来越习惯对方的感觉。",
+          "title": "Dependence",
+          "description": "Talk about how naturally you have grown used to each other.",
           "next": "chat_topic_depend_result",
           "events": []
         },
         {
           "id": "chat_topic_future",
-          "title": "以后",
-          "description": "慢慢往前想一点。",
+          "title": "The Future",
+          "description": "Think a little further ahead together.",
           "next": "chat_topic_future_result",
           "events": []
         },
         {
           "id": "chat_general_back",
-          "title": "先换个方向",
-          "description": "回到聊天入口。",
+          "title": "Another Direction",
+          "description": "Return to the chat menu.",
           "next": "chat_menu",
           "events": []
         }
@@ -675,7 +675,7 @@
       "events": []
     },
     "chat_weather_router": {
-      "_comment": "天气聊天专用分流。点进来后自动判断当前天气，不再让玩家手选晴雨雷雪。",
+      "_comment": "Dedicated stream for weather chat. After clicking in, the current weather will be automatically determined, and players will no longer be allowed to manually select whether it will be sunny, rainy, thunderous, or snowy.",
       "type": "branch",
       "branches": [
         {
@@ -701,7 +701,7 @@
       "events": []
     },
     "chat_weather_special": {
-      "_comment": "特殊维度/群系天气话题。用于地狱、末地、深暗之域等不会自然落到普通晴雨雪雷语境里的区域。",
+      "_comment": "Special dimension/meme weather topics. It is used in areas such as hell, the end, and the realm of deep darkness that do not naturally fall into the context of ordinary weather, rain, snow, and thunder.",
       "type": "sequence",
       "lines": [
         {
@@ -882,7 +882,7 @@
       "events": []
     },
     "release_carried_child_router": {
-      "_comment": "放下小女仆后的 UI 反馈路由。婴儿第一天服务端会拒绝放下，这里同步显示拒绝台词，避免误报成功。",
+      "_comment": "UI feedback routing after dropping the maid. The server will refuse to put the baby down on the first day. Here, the refusal lines are displayed simultaneously to avoid false success reports.",
       "type": "branch",
       "branches": [
         {
@@ -900,7 +900,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "${player_maid}，她现在还不能走路呢，今天就先让我抱着她吧，等她大一点了再慢慢学着站好。",
+          "text": "${player_maid}, she still cannot walk yet. Let me hold her for today. When she grows a little bigger, we can slowly teach her to stand.",
           "portrait": "maid",
           "expression": "action_touched",
           "emotion": "gentle",
@@ -909,7 +909,7 @@
         },
         {
           "speaker": "",
-          "text": "她低头轻轻调整了一下怀里的小女仆，小家伙像是听见了熟悉的心跳，又安稳地贴回妈妈怀里。",
+          "text": "She lowers her head and adjusts the little maid in her arms. The child seems to recognize the familiar heartbeat and settles safely against her mother again.",
           "portrait": "maid",
           "expression": "soft_smile",
           "emotion": "gentle",
@@ -926,7 +926,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "嗯……先把她放下来啦。\n她低头确认了一眼怀里的小女仆，动作放得很轻，像是生怕把这点软乎乎的重量惊扰到。",
+          "text": "Mm... I will put her down for a moment.\nShe checks the little maid in her arms and moves gently, as if afraid to disturb that soft little weight.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -1000,44 +1000,44 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "苦力怕遇到什么会震惊？",
+          "text": "What shocks a creeper the most?",
           "portrait": "maid",
           "expression": "knowing",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "是猫吗？",
+          "text": "A cat?",
           "expression": "surprised",
-          "emotion": "surprised",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "不对。是男人。因为 creeper? Awwww man~",
+          "text": "No. A man. Creeper? Aww man.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "So way back in the mine？",
+          "text": "So we back in the mine?",
           "expression": "shocked",
-          "emotion": "surprised",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "Got our pickaxe swinging from side to side——",
+          "text": "Got our pickaxe swinging from side to side-",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……嘶，好老的梗啊。",
+          "text": "...Wow. That joke is ancient.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "events": []
@@ -1069,7 +1069,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你居然还会接这个。也太老了吧，老得${maid}都想笑你了。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1077,7 +1077,7 @@
         },
         {
           "speaker": "",
-          "text": "她本来还绷着脸，结果那句英文一接上，自己先破功了。笑得肩膀一抖一抖的，还伸手轻轻拍了你一下。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "action_flustered",
           "emotion": "teasing",
           "events": []
@@ -1093,15 +1093,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "……你铺垫半天，就是为了把${maid}骗进这个老梗里啊？",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "embarrassed_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她嘴上嫌弃得很认真，眼神却已经飘开了。像是在忍笑，又不想让你发现。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
@@ -1117,7 +1117,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "都这种时候了，你还拿这种老到掉渣的梗来砸${maid}……",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "action_dizzy",
           "emotion": "tired",
           "animation": "fade_in",
@@ -1125,7 +1125,7 @@
         },
         {
           "speaker": "",
-          "text": "她轻轻按了按额角，像被你这句英语梗砸得头都有点晕。可那股闷闷的情绪，还是被你搅散了一点。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "tired",
           "emotion": "tired",
           "events": []
@@ -1154,23 +1154,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么苦力怕总是交不到朋友？",
+          "text": "Why can’t creepers make friends?",
           "portrait": "maid",
           "expression": "knowing",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为它一开口，气氛就炸了。",
+          "text": "Because the moment they open up, the mood explodes.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -1202,7 +1202,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你这个人……怎么能一本正经讲这种笨笑话啊。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1210,7 +1210,7 @@
         },
         {
           "speaker": "",
-          "text": "她捂住嘴笑，眼睛弯起来，明显是被这种过分直白的冷笑话戳中了。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "action_touched",
           "emotion": "teasing",
           "events": []
@@ -1226,15 +1226,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "很冷啦。可是……好像又确实有点好笑。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "embarrassed_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她先皱了下眉，过了两秒自己又破功了，偏过脸去偷偷笑。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
@@ -1250,7 +1250,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "今天就先不炸气氛了啦。我勉强算你过关。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "soft_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1258,7 +1258,7 @@
         },
         {
           "speaker": "",
-          "text": "她低低地说了一句，嘴角却还是轻轻动了下，像被你硬拽回了一点情绪。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "action_touched",
           "emotion": "teasing",
           "events": []
@@ -1287,23 +1287,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "你知道为什么末影人从来不主动借东西吗？",
+          "text": "Why do Endermen never borrow things first?",
           "portrait": "maid",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为你只要看它一眼，它就急了。",
+          "text": "Because one look at them and they get upset.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -1335,7 +1335,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "等等，这个逻辑也太烂了吧……可恶，${maid}居然真的笑了。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "action_flustered",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1343,7 +1343,7 @@
         },
         {
           "speaker": "",
-          "text": "她一边捂脸一边笑，笑完还要抬头瞪你一下，像在怪你害她失守。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "events": []
@@ -1359,15 +1359,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这算什么理由啊……",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "embarrassed_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她话还没说完，尾音就先带了点笑。显然是已经被逗到了。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -1383,7 +1383,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "噗……好吧，今天就当末影人替你救场了。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "soft_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1391,7 +1391,7 @@
         },
         {
           "speaker": "",
-          "text": "她把脸别开一点，没让你看清那一瞬间很浅的笑意。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "action_touched",
           "emotion": "teasing",
           "events": []
@@ -1420,23 +1420,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么地狱门最怕异地恋？",
+          "text": "Why is a Nether portal afraid of long-distance love?",
           "portrait": "maid",
           "expression": "soft_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为一走进去，就总想着另一边的人。",
+          "text": "Because once you step through, you keep thinking about the person on the other side.",
           "expression": "action_touched",
           "emotion": "teasing",
           "events": []
@@ -1468,7 +1468,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "……你突然讲这种，算犯规吧。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1476,7 +1476,7 @@
         },
         {
           "speaker": "",
-          "text": "她本来还想装作平静，结果说到后半句的时候耳朵先红了。低头抿着嘴，怎么都压不住笑。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "events": []
@@ -1492,15 +1492,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "很冷。但是……好像也不完全没有道理。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她轻轻咳了一声，像想把这句直白的话题赶紧糊弄过去。可手指已经绕上了裙边。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "shy",
           "emotion": "teasing",
           "events": []
@@ -1516,7 +1516,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这种时候还讲这个……也太狡猾了吧。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "action_touched",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1524,7 +1524,7 @@
         },
         {
           "speaker": "",
-          "text": "她低低地说了一句，眼神终于没刚才那么沉了。像被你从闷闷的情绪里拉出来了一点。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -1553,37 +1553,37 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么我们在我的世界里找不到 Notch 的弟弟 Him？",
+          "text": "Why can’t we find Notch’s brother Him in Minecraft?",
           "portrait": "maid",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "嗯……好复杂啊。Notch 是创世神吧？那神的弟弟很难找到，不是很正常吗？",
+          "text": "Hmm... that sounds complicated.",
           "expression": "troubled",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为……天机不可泄露。",
+          "text": "Because some secrets of heaven should stay hidden.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么是天机？",
+          "text": "Why heaven?",
           "expression": "shocked",
-          "emotion": "surprised",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "额，这个问题似乎有点不好解释。你张了张嘴，发现自己也不知道该从哪里开始圆。",
+          "text": "You open your mouth, then realize you also have no idea how to explain it.",
           "expression": "action_helpless",
           "emotion": "teasing",
           "events": []
@@ -1615,7 +1615,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "……等一下，${maid}刚刚那么认真帮你想，结果重点居然在这里吗？",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "action_flustered",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1623,7 +1623,7 @@
         },
         {
           "speaker": "",
-          "text": "她愣了两秒，像是真的顺着你的思路走了一圈。反应过来以后，露出了那种想笑又不知道该不该笑你的表情。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
@@ -1639,15 +1639,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "所以你刚刚到底是在讲笑话，还是在骗${maid}陪你一起绕进去啊？",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "knowing",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她看着你卡住的样子，嘴角有点想笑，又不太忍心笑得太明显。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "events": []
@@ -1663,7 +1663,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你自己都解释不清，就不要一脸认真地开头呀……",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "action_helpless",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1671,7 +1671,7 @@
         },
         {
           "speaker": "",
-          "text": "她轻轻叹了口气，倒也没有更低落，只是拿一种“真拿你没办法”的眼神看着你。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -1700,23 +1700,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么僵尸最喜欢下雨天？",
+          "text": "Why do zombies like rainy days?",
           "portrait": "maid",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "因为下雨天就不怕被烧了？",
+          "text": "Because they will not burn?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为这样就不用担心皮肤太干了。",
+          "text": "Because then they do not have to worry about dry skin.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -1748,7 +1748,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "僵尸哪来的皮肤啊喂。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1756,7 +1756,7 @@
         },
         {
           "speaker": "",
-          "text": "她先顺着你的话认真想了一下，反应过来之后直接笑出了声。抬手点了点你，像在嫌你胡扯，又明显被逗到了。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "action_touched",
           "emotion": "teasing",
           "events": []
@@ -1772,15 +1772,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "听起来像硬想出来的。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "knowing",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她抱起手臂看着你，一副“请继续解释”的样子。你们对视了两秒，她先笑场了。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "events": []
@@ -1796,7 +1796,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这个笑话……还是先收起来吧。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "tired",
           "emotion": "tired",
           "animation": "fade_in",
@@ -1804,7 +1804,7 @@
         },
         {
           "speaker": "",
-          "text": "她的语气没什么起伏，像连吐槽都懒得用力了。只是看你的眼神里，多了一点淡淡的无奈。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "action_dejected",
           "emotion": "tired",
           "events": []
@@ -1833,23 +1833,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么村民吵架总吵不起来？",
+          "text": "Why do villagers never really argue?",
           "portrait": "maid",
           "expression": "soft_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为他们只会“哼——”来“哼——”去。",
+          "text": "Because they only go “hmm” back and forth.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -1881,7 +1881,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这根本不算笑话吧……最多算模仿秀。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1889,7 +1889,7 @@
         },
         {
           "speaker": "",
-          "text": "她嘴上否定，结果自己先忍不住学了一声，学完又开始笑。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
@@ -1905,15 +1905,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你刚刚那个声音，学得还挺像。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "embarrassed_smile",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她没被笑话本身打动，倒是被你模仿时那副认真样子弄得有点想笑。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -1929,7 +1929,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "嗯，至少模仿得挺像。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "soft_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -1937,7 +1937,7 @@
         },
         {
           "speaker": "",
-          "text": "她勉强给了你一点面子，表情却明显在说“也就这样”。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "mocking",
           "emotion": "teasing",
           "events": []
@@ -1966,25 +1966,25 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "你知道女仆干得最多的事情是什么吗？",
+          "text": "Do you know what maids are asked to do the most?",
           "portrait": "maid",
           "expression": "knowing",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "收菜的要去摇手柄，挖矿的要去摇手柄，摇手柄的也要去摇手柄，休息的要去摇手柄，不休息的也要去摇手柄，摇完手柄要摇手柄，干得好要摇手柄，干得不好更要摇手柄，打雪仗打中了要去摇手柄，没打中也要摇手柄，吃完饭要去摇手柄，没吃饭也要去摇手柄……",
+          "text": "Turn the crank. Harvesting? Crank. Mining? Crank. Resting? Crank. Not resting? Also crank. At this point even the crank needs a crank.",
           "expression": "action_smug",
-          "emotion": "teasing",
+          "emotion": "tired",
           "events": []
         }
       ],
@@ -2014,7 +2014,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你到底是对摇曲柄有多大执念啦……不对，这个一点都不好笑。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "sulky",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -2022,7 +2022,7 @@
         },
         {
           "speaker": "",
-          "text": "她本来差点被你那串气都不喘的碎碎念逗笑，反应过来内容以后，还是没好气地瞪了你一眼。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "angry_shy",
           "emotion": "teasing",
           "events": []
@@ -2038,15 +2038,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "……你脑子里怕不是少了几颗螺丝哦。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "are_you_stupid",
-          "emotion": "angry",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她抱起手臂看着你，眼神里写满了鄙视。显然这话只会让她想起平时被你折腾。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "mocking",
           "emotion": "teasing",
           "events": []
@@ -2062,7 +2062,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "现在连讲笑话都要把${maid}赶去摇曲柄？你自己去。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "angry",
           "emotion": "angry",
           "animation": "fade_in",
@@ -2070,7 +2070,7 @@
         },
         {
           "speaker": "",
-          "text": "她把脸偏开了，语气一下子冷下来。这个时候提这个，基本只会让她更烦。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "threatening",
           "emotion": "angry",
           "events": []
@@ -2099,23 +2099,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么蜘蛛不怕高？",
+          "text": "Why are spiders not afraid of heights?",
           "portrait": "maid",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么？",
+          "text": "Why?",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为八条腿，摔下来还能分期着陆。",
+          "text": "Eight legs. They can land in installments.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -2147,7 +2147,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你这个说法听起来很痛诶……",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -2155,7 +2155,7 @@
         },
         {
           "speaker": "",
-          "text": "她皱起眉，没笑出来，反而像先替蜘蛛疼了一下。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "troubled",
           "emotion": "question",
           "events": []
@@ -2171,15 +2171,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "不许把这种奇怪画面讲得这么认真。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "sulky",
-          "emotion": "angry",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她往后退了半步，明显不太想顺着你的思路继续想下去。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "troubled",
           "emotion": "question",
           "events": []
@@ -2195,7 +2195,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "够了，换一个。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "angry",
           "emotion": "angry",
           "animation": "fade_in",
@@ -2203,7 +2203,7 @@
         },
         {
           "speaker": "",
-          "text": "她语气都冷了一点，显然已经不想配合这个话题了。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "threatening",
           "emotion": "angry",
           "events": []
@@ -2232,23 +2232,23 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "为什么下界合金从来不怕分手？",
+          "text": "Why is netherite never afraid of a breakup?",
           "portrait": "maid",
           "expression": "serious",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……为什么？",
+          "text": "...Why?",
           "expression": "troubled",
-          "emotion": "question",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "因为它本来就很难处。（很难处理）",
+          "text": "Because it is already hard to handle.",
           "expression": "action_smug",
           "emotion": "teasing",
           "events": []
@@ -2280,7 +2280,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这个谐音也太硬了吧。",
+          "text": "You actually went along with that one. It is so old that {maid} almost wants to laugh at you.",
           "expression": "action_dizzy",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -2288,7 +2288,7 @@
         },
         {
           "speaker": "",
-          "text": "她扶住额头，像是被你这种冷到发亮的脑回路噎住了。",
+          "text": "She tries to keep a straight face, but the punchline breaks through and her shoulders start shaking.",
           "expression": "action_helpless",
           "emotion": "teasing",
           "events": []
@@ -2304,15 +2304,15 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这已经不是冷笑话了，是事故。",
+          "text": "...So all that setup was just to drag {maid} into this silly joke?",
           "expression": "mocking",
-          "emotion": "teasing",
+          "emotion": "tired",
           "animation": "fade_in",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她看着你，眼神里是一种非常诚恳的无语。",
+          "text": "She sounds serious about complaining, yet her eyes have already drifted away as she holds back a smile.",
           "expression": "action_helpless",
           "emotion": "teasing",
           "events": []
@@ -2328,7 +2328,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这个就先别继续了，${maid}现在真的接不住。",
+          "text": "Even now, you are throwing ancient jokes at {maid}...",
           "expression": "tired",
           "emotion": "tired",
           "animation": "fade_in",
@@ -2336,7 +2336,7 @@
         },
         {
           "speaker": "",
-          "text": "她轻轻闭了闭眼，声音低低的。不是发火，更像是在认真告诉你——她现在没有心情陪你胡闹。",
+          "text": "She presses her temple lightly. Still, the heavy mood is stirred loose just a little.",
           "expression": "action_dejected",
           "emotion": "tired",
           "events": []
@@ -2384,7 +2384,7 @@
       "events": []
     },
     "lap_pillow_start": {
-      "_comment": "膝枕开始。真正的位置锁定与条件校验由服务端 LapPillowManager 处理，这里只负责剧情反馈。",
+      "_comment": "Knee pillow to start. The actual position locking and condition verification are handled by the server-side LapPillowManager, which is only responsible for plot feedback.",
       "type": "sequence",
       "lines": [
         {
@@ -2403,7 +2403,7 @@
       "events": []
     },
     "lap_pillow_refuse": {
-      "_comment": "膝枕心情拒绝。心情低于普通时不进入动作，只提示玩家先陪她恢复心情。",
+      "_comment": "Knee pillow mood rejection. When her mood is lower than normal, she will not enter the action, and the player will only be prompted to accompany her to restore her mood.",
       "type": "sequence",
       "lines": [
         {
@@ -2422,7 +2422,7 @@
       "events": []
     },
     "lap_pillow_pet": {
-      "_comment": "膝枕中让女仆摸玩家头。服务端发 petTicks 同步，客户端动作桥据此叠加手部动作。",
+      "_comment": "Let the maid touch the player's head in the lap pillow. The server sends petTicks for synchronization, and the client action bridge superimposes hand movements accordingly.",
       "type": "sequence",
       "lines": [
         {
@@ -2441,7 +2441,7 @@
       "events": []
     },
     "lap_pillow_exit": {
-      "_comment": "膝枕结束反馈。动作包先请求服务端解除锁位，再回到普通互动菜单。",
+      "_comment": "Knee pillow ends feedback. The action package first requests the server to unlock the position, and then returns to the normal interactive menu.",
       "type": "sequence",
       "lines": [
         {
@@ -2460,7 +2460,7 @@
       "events": []
     },
     "pet_intro": {
-      "_comment": "摸头入口。这里按当前好感阶段分流，不同阶段的反应不一样：第一阶段不解，第二阶段害羞，第三阶段喜欢，第四阶段习惯并主动撒娇。",
+      "_comment": "Touch the head entrance. Here are divided according to the current stage of affection. The reactions at different stages are different: the first stage is puzzlement, the second stage is shy, the third stage is like it, and the fourth stage is used to it and actively acts coquettishly.",
       "type": "branch",
       "branches": [
         {
@@ -2554,7 +2554,7 @@
       "events": []
     },
     "chat_topic_router": {
-      "_comment": "聊天总入口。这里不直接显示文本，而是决定这次聊天应该落到哪一类话题：低落安慰、天气话题、早晚问候、阶段专属对白，或者普通日常聊天。",
+      "_comment": "Main entrance to chat. The text is not displayed directly here, but it is decided which type of topic this chat should fall into: depression and comfort, weather topics, morning and evening greetings, stage-specific dialogue, or ordinary daily chat.",
       "type": "branch",
       "branches": [
         {
@@ -2600,11 +2600,11 @@
       "events": []
     },
     "chat_low_mood": {
-      "_comment": "低落心情聊天。适用于女仆今天情绪偏低时的安慰型对话，不强调阶段推进，重点是陪伴和安抚。",
+      "_comment": "Chat when you are down. This is a comforting conversation suitable for the maid when her mood is low today. It does not emphasize stage advancement, but focuses on companionship and comfort.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "今天有点提不起精神……${player_maid}，可以先陪我安静一会儿吗？",
+        "text": "I'm a little down on energy today... ${player_maid}, can you stay quiet with me for a while?",
         "portrait": "maid",
         "expression": "troubled",
         "emotion": "sad",
@@ -2614,8 +2614,8 @@
       "choices": [
         {
           "id": "chat_low_quiet",
-          "title": "安静陪着她",
-          "description": "不追问，只在身边陪她慢慢缓过来。",
+          "title": "Stay Quietly Beside Her",
+          "description": "Do not press her. Just stay nearby until she calms down.",
           "next": "chat_low_quiet_result",
           "events": [
             {
@@ -2633,8 +2633,8 @@
         },
         {
           "id": "chat_low_comfort",
-          "title": "轻声安慰她",
-          "description": "告诉她今天不用勉强自己。",
+          "title": "Comfort Her Softly",
+          "description": "Tell her she does not have to force herself today.",
           "next": "chat_low_comfort_result",
           "events": [
             {
@@ -2652,8 +2652,8 @@
         },
         {
           "id": "chat_low_joke",
-          "title": "逗她开心",
-          "description": "试着讲个玩笑，但她低落时可能接不住。",
+          "title": "Try to Cheer Her Up",
+          "description": "Tell a joke, though she may not be ready for it while down.",
           "next": "chat_low_joke_result",
           "events": [
             {
@@ -2679,7 +2679,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "谢谢……你没有急着让我开心起来，反而让我觉得安心多了。",
+          "text": "low quiet.",
           "expression": "sad",
           "emotion": "sad",
           "animation": "fade_in",
@@ -2687,14 +2687,14 @@
         },
         {
           "speaker": "",
-          "text": "她没有立刻继续说话，只是把呼吸放得很轻。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_dejected",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "有时候不用说很多，能被这样陪着，就已经很好了。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
@@ -2710,7 +2710,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "嗯，我会慢慢调整的。能听见你这么说，心里就没那么乱了。",
+          "text": "low comfort.",
           "expression": "troubled",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -2718,14 +2718,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "今天可能没办法马上打起精神，但我会试着不把坏心情藏起来。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "因为你会认真听我说，对吧？",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -2741,7 +2741,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "噗……虽然有点突然，不过你努力的样子还是很可爱。",
+          "text": "low joke.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -2749,14 +2749,14 @@
         },
         {
           "speaker": "",
-          "text": "她低头笑了一下，原本垂着的肩膀也稍微放松了些。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "下次如果想逗我开心，可以再自然一点哦。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -2769,29 +2769,29 @@
     },
     "_comment_weather_group": {
       "type": "end",
-      "_comment": "下面是共享聊天话题：天气与时段。所有阶段都可能进入这些话题，但同一个回答会因为当前好感阶段不同而出现不同语气。",
+      "_comment": "The following is a shared chat topic: weather and time of day. These topics may be entered into at all stages, but the same answer will have different tones depending on the current favorability stage.",
       "lines": [],
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_thunder": {
-      "_comment": "雷雨天聊天。主题是害怕、陪伴和安全感。所有阶段都能触发。",
+      "_comment": "Chatting during thunderstorms. The themes are fear, companionship and security. All stages can be triggered.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "外面的雷声好响……${player_maid}，你会不会也觉得有点吵？",
+        "text": "The thunder outside is so loud... ${player_maid}, do you think it's a bit noisy too?",
         "portrait": "maid",
         "expression": "anxious",
-        "emotion": "question",
+        "emotion": "tired",
         "animation": "fade_in",
         "events": []
       },
       "choices": [
         {
           "id": "chat_thunder_stay",
-          "title": "我会陪着你",
-          "description": "让她知道雷雨过去前你不会离开。",
+          "title": "I’ll Stay with You",
+          "description": "Let her know you will not leave before the storm passes.",
           "next": "chat_thunder_stay_result",
           "events": [
             {
@@ -2809,8 +2809,8 @@
         },
         {
           "id": "chat_thunder_listen",
-          "title": "一起听雨声",
-          "description": "把可怕的雷雨变成两个人的背景音。",
+          "title": "Listen to the Rain Together",
+          "description": "Turn the frightening storm into background sound for two.",
           "next": "chat_thunder_listen_result",
           "events": [
             {
@@ -2828,8 +2828,8 @@
         },
         {
           "id": "chat_thunder_tease",
-          "title": "雷声也怕你",
-          "description": "用轻松的话题缓和气氛。",
+          "title": "Even Thunder Fears You",
+          "description": "Use something light to ease the mood.",
           "next": "chat_thunder_tease_result",
           "events": [
             {
@@ -2855,7 +2855,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "那我就稍微靠近一点点……只是一点点哦。",
+          "text": "thunder stay.",
           "expression": "anxious",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -2863,14 +2863,14 @@
         },
         {
           "speaker": "",
-          "text": "窗外的雷声滚过去时，她下意识看了你一眼。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "troubled",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "有你在旁边的话，好像连雷雨都不会那么吓人了。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -2886,7 +2886,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这样听起来，好像也没那么可怕了。因为旁边有你的声音。",
+          "text": "thunder listen.",
           "expression": "serious",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -2894,14 +2894,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "雨声、雷声，还有你的呼吸声……混在一起反而有点安心。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她小心地把视线移向窗外，像是在重新认识这场雷雨。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "shy",
           "emotion": "gentle",
           "events": []
@@ -2917,7 +2917,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "哪有雷声会怕我的啦……不过被你这么一说，确实没那么紧张了。",
+          "text": "thunder tease.",
           "expression": "sulky",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -2925,14 +2925,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "你总是能把奇怪的话说得很认真。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "但是……这种认真，我并不讨厌。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "teasing",
           "events": []
@@ -2944,11 +2944,11 @@
       "events": []
     },
     "chat_rain": {
-      "_comment": "下雨天聊天。主题偏温柔、照顾和雨天回忆。所有阶段都能触发。",
+      "_comment": "Chat on a rainy day. The themes are tenderness, care and memories of rainy days. All stages can be triggered.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "下雨的时候，屋檐和窗边都会变得很安静呢。",
+        "text": "When it rains, the eaves and windows become very quiet.",
         "portrait": "maid",
         "expression": "serious",
         "emotion": "serious",
@@ -2958,8 +2958,8 @@
       "choices": [
         {
           "id": "chat_rain_warm",
-          "title": "给她递热饮",
-          "description": "雨天就该让手心和心情都暖起来。",
+          "title": "Offer a Hot Drink",
+          "description": "Rainy days should warm both hands and hearts.",
           "next": "chat_rain_warm_result",
           "events": [
             {
@@ -2977,8 +2977,8 @@
         },
         {
           "id": "chat_rain_memory",
-          "title": "聊雨天回忆",
-          "description": "问问她有没有喜欢的雨天记忆。",
+          "title": "Rainy Memories",
+          "description": "Ask whether she has a rainy day she likes.",
           "next": "chat_rain_memory_result",
           "events": [
             {
@@ -2996,8 +2996,8 @@
         },
         {
           "id": "chat_rain_work",
-          "title": "提醒别淋雨",
-          "description": "认真叮嘱她今天不要在外面逞强。",
+          "title": "Don’t Get Soaked",
+          "description": "Seriously remind her not to overdo it outside.",
           "next": "chat_rain_work_result",
           "events": [
             {
@@ -3023,7 +3023,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "热热的……谢谢。雨天收到这种照顾，会让人记很久的。",
+          "text": "rain warm.",
           "expression": "action_touched",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3031,14 +3031,14 @@
         },
         {
           "speaker": "",
-          "text": "她捧着热饮，指尖慢慢暖了起来。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果以后每个雨天都能这样，也许我会开始期待下雨。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "shy",
           "emotion": "happy",
           "events": []
@@ -3054,7 +3054,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "以前只是觉得雨声很远，现在会觉得它像是在提醒我，有人陪着我。",
+          "text": "rain memory.",
           "expression": "serious",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3062,14 +3062,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "有些记忆不是因为事情特别大才重要。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "而是因为那时候身边刚好有想记住的人。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
@@ -3085,7 +3085,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "知道啦，我会小心的。你这么认真叮嘱，我也不好意思不听。",
+          "text": "rain work.",
           "expression": "serious",
           "emotion": "normal",
           "animation": "fade_in",
@@ -3093,14 +3093,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "不过你也一样，别只顾着提醒我，自己却淋得湿漉漉的。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "要是感冒了，我可是会生气的。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -3112,11 +3112,11 @@
       "events": []
     },
     "chat_clear": {
-      "_comment": "晴天聊天。主题偏轻松、出门、晒太阳和天气很好的普通日常。",
+      "_comment": "Chat on a sunny day. The theme is more relaxed, about going out, sunbathing, and ordinary daily life when the weather is nice.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "今天天气很好呢。光是这样看着外面，心情都会跟着亮一点。",
+        "text": "The weather is very good today. Just looking outside like this makes my mood brighter.",
         "portrait": "maid",
         "expression": "${entry_expression}",
         "emotion": "happy",
@@ -3126,8 +3126,8 @@
       "choices": [
         {
           "id": "chat_clear_walk",
-          "title": "陪她晒晒太阳",
-          "description": "难得天气这么好，和她一起在亮堂堂的空气里待一会儿。",
+          "title": "Soak Up the Sun",
+          "description": "Stay with her for a while in the bright air.",
           "next": "chat_clear_walk_result",
           "events": [
             {
@@ -3145,8 +3145,8 @@
         },
         {
           "id": "chat_clear_view",
-          "title": "聊聊今天的天色",
-          "description": "顺着天气，说点轻松又慢悠悠的话。",
+          "title": "Talk About the Sky",
+          "description": "Follow the weather into something light and slow.",
           "next": "chat_clear_view_result",
           "events": [
             {
@@ -3164,8 +3164,8 @@
         },
         {
           "id": "chat_clear_outing",
-          "title": "问她想不想出门",
-          "description": "这种天气要是一起走走，好像什么都能说得轻一点。",
+          "title": "Ask About Going Out",
+          "description": "On a day like this, even a walk together feels easier.",
           "next": "chat_clear_outing_result",
           "events": [
             {
@@ -3191,7 +3191,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "晒到太阳的时候，会觉得整个人都慢慢暖起来了。",
+          "text": "clear walk.",
           "expression": "soft_smile",
           "emotion": "happy",
           "animation": "fade_in",
@@ -3199,14 +3199,14 @@
         },
         {
           "speaker": "",
-          "text": "她抬手挡了一下落下来的光，眼睛轻轻眯起来，神情柔和得像被天气也一起安抚了。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果是和你一起，这种普通的好天气都会显得特别值得记住。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "happy",
           "events": []
@@ -3222,7 +3222,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这种亮堂堂的天气，会让人连心里的念头都变得轻一些。",
+          "text": "clear view.",
           "expression": "serious",
           "emotion": "normal",
           "animation": "fade_in",
@@ -3230,14 +3230,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "有时候其实不是天气让人高兴，而是刚好有人能一起看着它。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她说完就朝窗外看去。阳光落在她脸侧，把那点轻轻的笑意也照得很清楚。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "happy",
           "events": []
@@ -3253,7 +3253,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这种天气要是能一起出去走走，心情大概会更好吧。",
+          "text": "clear outing.",
           "expression": "soft_smile",
           "emotion": "happy",
           "animation": "fade_in",
@@ -3261,14 +3261,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "也不用去多远的地方。只要慢慢走着，好像就已经很不错了。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "而且……天气这么好，不拿来和你一起用掉，总觉得有点可惜。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "wink",
           "emotion": "happy",
           "events": []
@@ -3280,11 +3280,11 @@
       "events": []
     },
     "chat_snow": {
-      "_comment": "雪天聊天。主题偏安静、靠近、冷空气和想待在一起的感觉。",
+      "_comment": "Chatting on a snowy day. The themes tend to be quiet, close, cold air and the feeling of wanting to be together.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "下雪的时候，外面会安静得像连声音都被盖住了一层。",
+        "text": "When it snows, it's so quiet outside that even the sounds are muffled.",
         "portrait": "maid",
         "expression": "serious",
         "emotion": "serious",
@@ -3294,8 +3294,8 @@
       "choices": [
         {
           "id": "chat_snow_warm",
-          "title": "让她别冻着",
-          "description": "雪天最适合把叮嘱说得再细一点。",
+          "title": "Keep Her Warm",
+          "description": "Snowy days are made for careful reminders.",
           "next": "chat_snow_warm_result",
           "events": [
             {
@@ -3313,8 +3313,8 @@
         },
         {
           "id": "chat_snow_view",
-          "title": "陪她看雪",
-          "description": "一起看看窗外，把雪天过得慢一点。",
+          "title": "Watch the Snow",
+          "description": "Look outside together and let the day slow down.",
           "next": "chat_snow_view_result",
           "events": [
             {
@@ -3332,8 +3332,8 @@
         },
         {
           "id": "chat_snow_home",
-          "title": "说今天适合待在一起",
-          "description": "雪天会让人更想把时间留在屋里和身边的人一起过。",
+          "title": "Stay In Together",
+          "description": "Snow makes home feel even warmer with someone beside you.",
           "next": "chat_snow_home_result",
           "events": [
             {
@@ -3359,7 +3359,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "知道啦，{maid}会注意保暖的。雪天逞强的话，手脚一下子就会冷掉呢。",
+          "text": "snow warm.",
           "expression": "serious",
           "emotion": "normal",
           "animation": "fade_in",
@@ -3367,14 +3367,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "被你这样认真提醒的时候，会让人觉得冬天好像也没那么冷了。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她低头轻轻哈了口气，指尖缩了缩，神情却比刚才柔和了很多。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "shy",
           "emotion": "gentle",
           "events": []
@@ -3390,7 +3390,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "雪落下来的时候，好像连时间都会跟着变慢一点。",
+          "text": "snow view.",
           "expression": "serious",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3398,14 +3398,14 @@
         },
         {
           "speaker": "",
-          "text": "她安静看着外面，睫毛都像被窗边的白光映得柔和起来。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果这种时候你也在旁边，{maid}就会觉得这场雪很好看。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -3421,7 +3421,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这种天气确实会让人更想待在屋里呢。",
+          "text": "snow home.",
           "expression": "soft_smile",
           "emotion": "normal",
           "animation": "fade_in",
@@ -3429,14 +3429,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "外面冷一点，屋里反而会显得更暖。要是你也在，这种感觉就更明显了。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以今天慢一点也没关系。雪天本来就适合把时间留给重要的人呀。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
@@ -3448,11 +3448,11 @@
       "events": []
     },
     "chat_morning": {
-      "_comment": "早晨聊天。主题是认真说早安、问今天计划、提醒不要太累。所有阶段都能触发。",
+      "_comment": "Chat in the morning. The theme is to say good morning seriously, ask about today's plans, and remind not to be too tired. All stages can be triggered.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "早上好，${player_maid}。今天也要一起慢慢开始吗？",
+        "text": "Good morning, ${player_maid}. Do you want to start slowly together today?",
         "portrait": "maid",
         "expression": "soft_smile",
         "emotion": "normal",
@@ -3462,8 +3462,8 @@
       "choices": [
         {
           "id": "chat_morning_greet",
-          "title": "认真说早安",
-          "description": "用最普通但最稳定的方式开始一天。",
+          "title": "Say Good Morning",
+          "description": "Begin the day in the simplest, steadiest way.",
           "next": "chat_morning_greet_result",
           "events": [
             {
@@ -3481,8 +3481,8 @@
         },
         {
           "id": "chat_morning_plan",
-          "title": "问今天计划",
-          "description": "让她说说今天想做的事情。",
+          "title": "Ask Today’s Plans",
+          "description": "Let her talk about what she wants to do today.",
           "next": "chat_morning_plan_result",
           "events": [
             {
@@ -3500,8 +3500,8 @@
         },
         {
           "id": "chat_morning_busy",
-          "title": "提醒别太累",
-          "description": "如果今天要忙，也希望她照顾好自己。",
+          "title": "Don’t Overwork",
+          "description": "If today will be busy, you still want her to care for herself.",
           "next": "chat_morning_busy_result",
           "events": [
             {
@@ -3527,7 +3527,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "早安。明明只是两个字，从你嘴里说出来就会变得很可靠。",
+          "text": "morning greet.",
           "expression": "soft_smile",
           "emotion": "happy",
           "animation": "fade_in",
@@ -3535,14 +3535,14 @@
         },
         {
           "speaker": "",
-          "text": "清晨的光落在她脸侧，她的语气也比平时轻快一些。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那今天也请多关照啦，${player_maid}。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "happy",
           "events": []
@@ -3558,7 +3558,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "如果可以的话，我想先把房间整理好，然后……再和你多待一会儿。",
+          "text": "morning plan.",
           "expression": "serious",
           "emotion": "normal",
           "animation": "fade_in",
@@ -3566,14 +3566,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "不是偷懒哦，只是如果能提前把事情做好，就能留下更多时间。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "更多和你一起的时间。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -3589,7 +3589,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "嗯，我不会勉强自己的。你也是，不许偷偷把疲惫藏起来。",
+          "text": "morning busy.",
           "expression": "serious",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3597,14 +3597,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "如果今天会很忙，那我们就约好晚上再好好说话。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不许忘记哦，我会记着的。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
@@ -3616,11 +3616,11 @@
       "events": []
     },
     "chat_night": {
-      "_comment": "夜晚聊天。主题是晚安、陪伴和更容易害羞的夜间气氛。所有阶段都能触发。",
+      "_comment": "Chatting at night. The theme is good night, companionship and a more shy nighttime atmosphere. All stages can be triggered.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "已经这么晚了……${player_maid}，你还不准备休息吗？",
+        "text": "It's so late... ${player_maid}, aren't you ready to rest?",
         "portrait": "maid",
         "expression": "shy",
         "emotion": "gentle",
@@ -3630,8 +3630,8 @@
       "choices": [
         {
           "id": "chat_night_rest",
-          "title": "劝她早点休息",
-          "description": "夜晚最适合把疲惫交给睡意。",
+          "title": "Tell Her to Rest",
+          "description": "Night is the time to hand tiredness over to sleep.",
           "next": "chat_night_rest_result",
           "events": [
             {
@@ -3649,8 +3649,8 @@
         },
         {
           "id": "chat_night_company",
-          "title": "再陪她一会儿",
-          "description": "如果她还睡不着，就多留一会儿。",
+          "title": "Stay a Little Longer",
+          "description": "If she cannot sleep yet, stay with her a while.",
           "next": "chat_night_company_result",
           "events": [
             {
@@ -3668,8 +3668,8 @@
         },
         {
           "id": "chat_night_tease",
-          "title": "说晚安前想你",
-          "description": "把晚安说得稍微直白一点。",
+          "title": "Say You’ll Miss Her",
+          "description": "Make good night a little more honest.",
           "next": "chat_night_tease_result",
           "events": [
             {
@@ -3695,7 +3695,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "那你也要早点睡。晚安的时候，要记得把我也放进梦里一点点。",
+          "text": "night rest.",
           "expression": "tired",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3703,14 +3703,14 @@
         },
         {
           "speaker": "",
-          "text": "她说完后像是自己也觉得害羞，轻轻移开了视线。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "只是一点点就好……太多的话，我会不好意思的。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
@@ -3726,7 +3726,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "再一会儿就好。只要你在旁边，夜晚就不会显得太长。",
+          "text": "night company.",
           "expression": "shy",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3734,14 +3734,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我不会一直任性的，真的。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "只是现在，还想多听你说几句话。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
@@ -3757,7 +3757,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "突然说这种话太犯规了……我会真的睡不着的。",
+          "text": "night tease.",
           "expression": "sulky",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -3765,14 +3765,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "你明明知道我晚上比较容易胡思乱想。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "要负责哦，至少要认真跟我说晚安。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "events": []
@@ -3785,18 +3785,18 @@
     },
     "_comment_stage_group": {
       "type": "end",
-      "_comment": "下面是按好感阶段拆开的专属聊天。只有到达对应好感度后，聊天才会进入这些阶段特化对白。",
+      "_comment": "Below are the exclusive chats broken down by favorability stage. Only after reaching the corresponding favorability level, the chat will enter these stages with specialized dialogue.",
       "lines": [],
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_stage_warm": {
-      "_comment": "第一阶段专属聊天，好感度 32~63。这个阶段已经能摸头，关系开始升温，但整体还是慢热、试探和一点点靠近。",
+      "_comment": "Exclusive chat in the first stage, favorability level 32~63. At this stage, we can touch each other, and the relationship is beginning to heat up, but overall it is still slow, tentative, and getting closer.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "最近和你说话的时候，好像没有以前那么紧张了。",
+        "text": "When I talk to you recently, I don’t seem as nervous as before.",
         "portrait": "maid",
         "expression": "embarrassed_smile",
         "emotion": "happy",
@@ -3806,8 +3806,8 @@
       "choices": [
         {
           "id": "chat_stage_warm_pet",
-          "title": "夸她很努力",
-          "description": "认可她日常里的小小进步。",
+          "title": "Praise Her Effort",
+          "description": "Notice the little progress she makes every day.",
           "next": "chat_stage_warm_pet_result",
           "events": [
             {
@@ -3825,8 +3825,8 @@
         },
         {
           "id": "chat_stage_warm_space",
-          "title": "给她一点空间",
-          "description": "关系刚变近时，也尊重她的节奏。",
+          "title": "Give Her Space",
+          "description": "When you have just grown closer, respect her pace.",
           "next": "chat_stage_warm_space_result",
           "events": [
             {
@@ -3844,8 +3844,8 @@
         },
         {
           "id": "chat_stage_warm_direct",
-          "title": "说想更了解她",
-          "description": "坦率表达想继续靠近。",
+          "title": "Know Her Better",
+          "description": "Honestly say you want to come closer.",
           "next": "chat_stage_warm_direct_result",
           "events": [
             {
@@ -3871,7 +3871,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "努力是应该的吧。被你专门说出来，反而让我有点不知道该怎么回答。",
+          "text": "stage warm pet.",
           "expression": "embarrassed_smile",
           "emotion": "shy",
           "animation": "fade_in",
@@ -3879,21 +3879,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "不过……谢谢。我会把这句话当成今天的奖励。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "下次如果我做得更好，你也可以再这样告诉我。只、只是鼓励而已哦。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_shy",
           "emotion": "shy",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第一阶段 32~63：被夸努力。她会认真接受夸奖，但还不太会撒娇，反应偏克制和一点点不知所措。",
+      "_comment": "The first stage 32~63: Being praised for hard work. She will accept compliments seriously, but she is not very good at acting coquettishly, and her reactions are restrained and a little overwhelmed.",
       "choices": [],
       "branches": [],
       "events": []
@@ -3903,7 +3903,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你愿意等我慢慢适应吗？这样的话……我会轻松很多。",
+          "text": "stage warm space.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -3911,21 +3911,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我不是讨厌靠近，只是有时候不知道该怎么回应你的好意。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "troubled",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以先这样就好。等我准备好了，我会自己往前走一点的。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第一阶段 32~63：给她空间。她会觉得被尊重，比直接靠近更容易放松。",
+      "_comment": "Stage 1 32~63: Give her space. She will feel respected and more relaxed than if she were approached directly.",
       "choices": [],
       "branches": [],
       "events": []
@@ -3935,7 +3935,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "想了解我吗？这个说法……听起来很正式。",
+          "text": "stage warm direct.",
           "expression": "embarrassed_smile",
           "emotion": "question",
           "animation": "fade_in",
@@ -3943,31 +3943,31 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我可能不是很会讲自己的事，也不一定每次都能说得很有趣。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "serious",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "但如果是你问的话，我可以试着一点点告诉你。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_shy",
           "emotion": "gentle",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第一阶段 32~63：想更了解她。她会把这句话听得很认真，但还会有点防备和害羞。",
+      "_comment": "The first stage 32~63: Want to know her better. She will listen very carefully, but will also be a little defensive and shy.",
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_stage_close": {
-      "_comment": "第二阶段专属聊天，好感度 64~127。这个阶段已经能拥抱，关系明显更亲近，台词会更依赖、更想靠近。",
+      "_comment": "In the second stage, exclusive chat, the favorability level is 64~127. At this stage, I can already hug, the relationship is obviously closer, and the lines will be more dependent and want to be closer.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "拥抱之后才发现，原来人的心跳真的会互相传过去。",
+        "text": "After hugging, I discovered that people's heartbeats really can be transmitted to each other.",
         "portrait": "maid",
         "expression": "action_shy",
         "emotion": "gentle",
@@ -3977,8 +3977,8 @@
       "choices": [
         {
           "id": "chat_stage_close_hold",
-          "title": "说她可以依靠你",
-          "description": "让她知道拥抱不是一时兴起。",
+          "title": "She Can Rely on You",
+          "description": "Let her know the hug is not just a whim.",
           "next": "chat_stage_close_hold_result",
           "events": [
             {
@@ -3996,8 +3996,8 @@
         },
         {
           "id": "chat_stage_close_shy",
-          "title": "问她会不会害羞",
-          "description": "轻轻逗她一下，看她的反应。",
+          "title": "Ask If She’s Shy",
+          "description": "Tease her gently and watch her reaction.",
           "next": "chat_stage_close_shy_result",
           "events": [
             {
@@ -4015,8 +4015,8 @@
         },
         {
           "id": "chat_stage_close_future",
-          "title": "约定下次也抱抱",
-          "description": "把这份亲近变成两个人的小约定。",
+          "title": "Promise Another Hug",
+          "description": "Turn this closeness into a small promise.",
           "next": "chat_stage_close_future_result",
           "events": [
             {
@@ -4042,7 +4042,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "可以依靠你……这种话不要说得太突然，我会当真的。",
+          "text": "stage close hold.",
           "expression": "action_shy",
           "emotion": "shy",
           "animation": "fade_in",
@@ -4050,21 +4050,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "累的时候想靠近你，开心的时候也想先告诉你。这样会不会太任性？",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "hot_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果你说不介意，那我可能真的会越来越依赖你。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第二阶段 64~127：可以依靠你。已经能拥抱，但她还会嘴硬，害羞里带一点依赖。",
+      "_comment": "Second stage 64~127: I can rely on you. She can already hug, but she can still be tough-talking, shy and a little dependent.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4074,7 +4074,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "当、当然会害羞啊。你为什么能这么自然地问出来？",
+          "text": "stage close shy.",
           "expression": "action_flustered",
           "emotion": "shy",
           "animation": "fade_in",
@@ -4082,21 +4082,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "被你看着的时候，我连手该放哪里都要想一下。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不过你要是笑得太开心，我就真的不理你了。大概。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "sulky",
           "emotion": "teasing",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第二阶段 64~127：问她会不会害羞。她已经很明显会害羞，但仍然想维持一点正经。",
+      "_comment": "Second stage 64~127: Ask her if she will be shy. She's already clearly shy, but still trying to maintain a modicum of decency.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4106,7 +4106,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "下次也可以吗？我是说……如果你也愿意的话。",
+          "text": "stage close future.",
           "expression": "shy",
           "emotion": "shy",
           "animation": "fade_in",
@@ -4114,31 +4114,31 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我不会每次都主动说想要拥抱，所以你要稍微懂一点。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "约好了哦。不要让我一个人记得。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第二阶段 64~127：约定下次也抱抱。她开始期待下次，但表达方式还比较含蓄。",
+      "_comment": "The second stage 64~127: Promise to hug next time. She began to look forward to the next time, but her expression was more reserved.",
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_stage_dating": {
-      "_comment": "第三阶段专属聊天，好感度 128~197。这个阶段进入交往期，已经能亲吻，台词会更直球、更害羞，也更像恋人之间的对话。",
+      "_comment": "In the third stage, exclusive chat, the favorability level is 128~197. At this stage, you have entered the dating stage, you can already kiss, and your lines will be more direct, shy, and more like a conversation between lovers.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "交往之后，好像连普通的对话都会变得不太普通。",
+        "text": "After dating, it seems that even ordinary conversations become less ordinary.",
         "portrait": "maid",
         "expression": "hot_smile",
         "emotion": "happy",
@@ -4148,8 +4148,8 @@
       "choices": [
         {
           "id": "chat_stage_dating_date",
-          "title": "约一次散步",
-          "description": "不一定要远行，只要两个人一起走。",
+          "title": "Invite Her for a Walk",
+          "description": "It does not have to be far, as long as you walk together.",
           "next": "chat_stage_dating_date_result",
           "events": [
             {
@@ -4167,8 +4167,8 @@
         },
         {
           "id": "chat_stage_dating_call",
-          "title": "叫她的名字",
-          "description": "用更亲近的语气认真叫她。",
+          "title": "Say Her Name",
+          "description": "Call her name with a more intimate voice.",
           "next": "chat_stage_dating_call_result",
           "events": [
             {
@@ -4186,8 +4186,8 @@
         },
         {
           "id": "chat_stage_dating_promise",
-          "title": "说会认真对待她",
-          "description": "把关系说清楚，让她安心。",
+          "title": "Take Her Seriously",
+          "description": "Make the relationship clear so she can feel safe.",
           "next": "chat_stage_dating_promise_result",
           "events": [
             {
@@ -4213,7 +4213,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "散步吗？如果是约会的话，我会想提前整理一下头发。",
+          "text": "stage dating date.",
           "expression": "hot_smile",
           "emotion": "happy",
           "animation": "fade_in",
@@ -4221,21 +4221,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "不用去很远的地方，只要能慢慢走、慢慢说话就好。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不过……牵手这件事，你可以主动一点。我会假装只是顺路。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "wink",
           "emotion": "happy",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第三阶段 128~197：交往期约散步。她已经明确期待约会，会主动提出小小亲密。",
+      "_comment": "The third stage 128~197: Take a walk during the relationship. She has made it clear that she is looking forward to the date and will initiate a little intimacy.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4245,7 +4245,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你刚才叫我的方式……和平时有点不一样。",
+          "text": "stage dating call.",
           "expression": "embarrassed_smile",
           "emotion": "shy",
           "animation": "fade_in",
@@ -4253,21 +4253,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我明明听过很多次自己的名字，可从你嘴里说出来就会变得很奇怪。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不是讨厌。是……还想再听一次。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_shy",
           "emotion": "shy",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第三阶段 128~197：叫她名字。她会因为恋人语气而害羞，也会想听更多。",
+      "_comment": "The third stage 128~197: Call her name. She will be shy because of her lover's tone and want to hear more.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4277,7 +4277,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你突然这么认真，我会不知道该把眼睛放在哪里。",
+          "text": "stage dating promise.",
           "expression": "embarrassed_smile",
           "emotion": "shy",
           "animation": "fade_in",
@@ -4285,31 +4285,31 @@
         },
         {
           "speaker": "${maid}",
-          "text": "可是我听见了，也记住了。你说会认真对待我。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那我也会认真喜欢你。说出来还是很害羞，但这是我的回答。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "hot_smile",
           "emotion": "shy",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第三阶段 128~197：认真承诺。她已经喜欢玩家，所以会认真回应，但仍然带害羞。",
+      "_comment": "The third stage 128~197: Serious commitment. She already likes the player, so she responds seriously, but is still shy.",
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_stage_marriage": {
-      "_comment": "第四阶段专属聊天，好感度 198 及以上。这个阶段偏婚后/长期关系语气，重点是共同生活、承诺和稳定的亲密感。",
+      "_comment": "The fourth stage is exclusive chat, with a favorability score of 198 and above. This stage favors a post-marital/long-term relationship tone, with an emphasis on living together, commitment, and stable intimacy.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "走到现在这一步，回头看好像每一天都变得很珍贵。",
+        "text": "Having reached this point, looking back, every day seems precious.",
         "portrait": "maid",
         "expression": "action_touched",
         "emotion": "serious",
@@ -4319,8 +4319,8 @@
       "choices": [
         {
           "id": "chat_stage_marriage_home",
-          "title": "聊未来的家",
-          "description": "想象以后一起生活的细节。",
+          "title": "Talk About Home",
+          "description": "Imagine the details of the life you will share.",
           "next": "chat_stage_marriage_home_result",
           "events": [
             {
@@ -4338,8 +4338,8 @@
         },
         {
           "id": "chat_stage_marriage_ring",
-          "title": "提到重要承诺",
-          "description": "把快要说出口的话先认真铺垫。",
+          "title": "Mention the Promise",
+          "description": "Settle your heart before saying something important.",
           "next": "chat_stage_marriage_ring_result",
           "events": [
             {
@@ -4357,8 +4357,8 @@
         },
         {
           "id": "chat_stage_marriage_daily",
-          "title": "珍惜今天",
-          "description": "不急着跳到未来，先把今天过好。",
+          "title": "Treasure Today",
+          "description": "Do not rush into the future. First, live today well.",
           "next": "chat_stage_marriage_daily_result",
           "events": [
             {
@@ -4384,7 +4384,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "如果是和你一起生活，我想把每个角落都收拾得暖暖的。",
+          "text": "stage marriage home.",
           "expression": "action_touched",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -4392,21 +4392,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "早晨有你，晚上也有你，中间那些琐碎的小事就不会只是琐碎了。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "soft_smile",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不过打扫高处的时候还是要你来。谁让这是我们的家呢。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第四阶段 198+：聊未来的家。婚后/长期关系语气，重点是安心、日常和共同生活。",
+      "_comment": "Stage 4 198+: Talk about future home. Marriage/long-term relationship tone, with emphasis on peace of mind, routine, and living together.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4416,7 +4416,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "承诺这种东西，我以前会觉得离自己很远。",
+          "text": "stage marriage ring.",
           "expression": "serious",
           "emotion": "normal",
           "animation": "fade_in",
@@ -4424,21 +4424,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "可是如果对象是你，我就会想把它放在每天都能看见的地方。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以不要只说一次。以后也要一直让我听见，好吗？",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "shy",
           "emotion": "shy",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第四阶段 198+：重要承诺。她不再只是害羞，而是会认真把未来放进话里。",
+      "_comment": "Stage 4 198+: Important Commitments. She is no longer just shy, but will seriously put the future into her words.",
       "choices": [],
       "branches": [],
       "events": []
@@ -4448,7 +4448,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "今天也很普通，但如果和你一起过，就会变得很重要。",
+          "text": "stage marriage daily.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -4456,42 +4456,42 @@
         },
         {
           "speaker": "${maid}",
-          "text": "我想把这种普通的日子攒起来，攒到以后回头看时全都是你。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "action_touched",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以今天也请多陪我一点。不是请求，是家人的优先事项。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         }
       ],
       "next": "idle_menu",
-      "_comment": "第四阶段 198+：珍惜今天。长期关系的可爱日常，不是轰轰烈烈，而是稳定地互相偏爱。",
+      "_comment": "Stage 4 198+: Cherish today. The lovely day-to-day life of a long-term relationship is not about drama but about a steady preference for each other.",
       "choices": [],
       "branches": [],
       "events": []
     },
     "chat_daily": {
-      "_comment": "普通日常聊天兜底。当前面没有命中特殊天气、特殊时段或阶段专属话题时，就会走这里。",
+      "_comment": "Ordinary daily chatting. When there is no special weather, special time period or stage-specific topic hit before, this is the place to go.",
       "type": "choice",
       "prompt": {
         "speaker": "${maid}",
-        "text": "今天想聊什么？如果只是闲聊，我也很愿意听你说。",
+        "text": "What do you want to talk about today? If it's just a small talk, I'd love to hear what you have to say.",
         "portrait": "maid",
         "expression": "knowing",
-        "emotion": "teasing",
+        "emotion": "tired",
         "animation": "fade_in",
         "events": []
       },
       "choices": [
         {
           "id": "chat_daily_praise",
-          "title": "夸她今天很可爱",
-          "description": "直接但有效的夸奖。",
+          "title": "Tell Her She’s Cute",
+          "description": "Direct, simple, and very effective.",
           "next": "chat_daily_praise_result",
           "events": [
             {
@@ -4509,8 +4509,8 @@
         },
         {
           "id": "chat_daily_work",
-          "title": "问她累不累",
-          "description": "关心她今天有没有好好休息。",
+          "title": "Ask If She’s Tired",
+          "description": "Care whether she has rested enough today.",
           "next": "chat_daily_work_result",
           "events": [
             {
@@ -4528,8 +4528,8 @@
         },
         {
           "id": "chat_daily_quiet",
-          "title": "一起发呆",
-          "description": "什么都不做，只共享一小段时间。",
+          "title": "Space Out Together",
+          "description": "Do nothing, and share a small piece of time.",
           "next": "chat_daily_quiet_result",
           "events": [
             {
@@ -4547,8 +4547,8 @@
         },
         {
           "id": "chat_daily_tease",
-          "title": "轻轻逗她",
-          "description": "气氛好时可以让她害羞一下。",
+          "title": "Tease Her Gently",
+          "description": "When the mood is good, let her blush a little.",
           "next": "chat_daily_tease_result",
           "events": [
             {
@@ -4574,7 +4574,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "突、突然这么说……我会不好意思的。不过，可以再说一次吗？",
+          "text": "daily praise.",
           "expression": "hot_smile",
           "emotion": "happy",
           "animation": "fade_in",
@@ -4582,14 +4582,14 @@
         },
         {
           "speaker": "",
-          "text": "她像是想装作平静，却忍不住偷偷看你的反应。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "embarrassed_smile",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果你是真心这么觉得的话，我会努力记住今天的。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "happy",
           "events": []
@@ -4605,7 +4605,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "有一点点累，但听见你问我，就觉得今天也被好好放在心上了。",
+          "text": "daily work.",
           "expression": "tired",
           "emotion": "tired",
           "animation": "fade_in",
@@ -4613,14 +4613,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "其实只要有人注意到“我累了”，疲惫就会轻很多。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "troubled",
           "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以谢谢你，${player_maid}。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "happy",
           "events": []
@@ -4636,7 +4636,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "这样安静待着也很好。不是每句话都要说出口，心情也能传过去。",
+          "text": "daily quiet.",
           "expression": "soft_smile",
           "emotion": "gentle",
           "animation": "fade_in",
@@ -4644,14 +4644,14 @@
         },
         {
           "speaker": "",
-          "text": "两个人之间短暂地安静下来，只剩下很轻的呼吸声。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "serious",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果是和你一起发呆，我好像也不会觉得浪费时间。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "action_touched",
           "emotion": "normal",
           "events": []
@@ -4667,7 +4667,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "你又故意这样……再这样我就真的不理你三秒钟。",
+          "text": "daily tease.",
           "expression": "sulky",
           "emotion": "teasing",
           "animation": "fade_in",
@@ -4675,14 +4675,14 @@
         },
         {
           "speaker": "",
-          "text": "她认真地移开视线，却在第二秒就偷偷看了回来。",
+          "text": "She listens quietly, and the tension in her shoulders eases little by little.",
           "expression": "knowing",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……三秒太久了，算了，这次先原谅你。",
+          "text": "Some conversations do not need to be dramatic. Being heard is already enough.",
           "expression": "hot_smile",
           "emotion": "teasing",
           "events": []
@@ -4694,12 +4694,12 @@
       "events": []
     },
     "confession_intro": {
-      "_comment": "独立把心意告诉她剧情入口。",
+      "_comment": "Tell her your feelings independently at the plot entrance.",
       "type": "sequence",
       "lines": [
         {
           "speaker": "",
-          "text": "不知怎的，女仆在你面前变得扭扭捏捏，脸蛋微红，似乎有话要对你说。",
+          "text": "For some reason, your maid grows shy in front of you. Her cheeks are faintly red, and it seems there is something she has been trying to say.",
           "portrait": "maid",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
@@ -4708,21 +4708,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "那个……主人……",
+          "text": "Um... Master...",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "我……我有话要对你说！是很重要的事情！",
+          "text": "I... I have something to tell you! Something really important!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "说完，她低下了头，两只狐耳娇柔不安地微颤着，双手紧攥着裙边……",
+          "text": "After saying that, she lowers her head. Her fox ears tremble uneasily, and both hands clutch the edge of her skirt...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": [
@@ -4757,16 +4757,16 @@
       "choices": [
         {
           "id": "confession_wait",
-          "title": "嗯，我在听。你慢慢说吧。",
-          "description": "安安静静等她把心意说完。",
+          "title": "I’m Listening. Take Your Time.",
+          "description": "Quietly wait for her to finish saying what is in her heart.",
           "next": "confession_branch_wait",
           "expression": "kokuhaku_nervous",
           "events": []
         },
         {
           "id": "confession_guess",
-          "title": "难道……你想说的和我心里想的一样吗？",
-          "description": "先一步把那份暧昧点破。",
+          "title": "Is It... What I’m Thinking Too?",
+          "description": "Break the softness between you one step early.",
           "next": "confession_branch_guess",
           "expression": "kokuhaku_surprised",
           "events": []
@@ -4781,7 +4781,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "重、重要到这种程度吗……",
+          "text": "I-it is that important...?",
           "portrait": "maid",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
@@ -4789,14 +4789,14 @@
         },
         {
           "speaker": "",
-          "text": "她抿了抿唇，明明紧张得呼吸都轻了，却还是努力站直了一点，像怕自己漏听了你任何一个字。",
+          "text": "She presses her lips together. Her breathing is light with nerves, but she still straightens herself, afraid to miss even one word.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那……我会认真听的。主人，你说吧。",
+          "text": "Then... I will listen properly. Master, please say it.",
           "expression": "kokuhaku_confess",
           "emotion": "normal",
           "events": []
@@ -4812,7 +4812,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "诶？为什么还要先答应这个呀……",
+          "text": "Eh? Why do I have to agree first...?",
           "portrait": "maid",
           "expression": "kokuhaku_surprised",
           "emotion": "surprised",
@@ -4820,7 +4820,7 @@
         },
         {
           "speaker": "",
-          "text": "她下意识抬头看你，眼睛里全是慌乱。看了两秒，又自己先红了脸，把视线匆匆躲开。",
+          "text": "She looks up at you in panic, then reddens and quickly looks away.",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": [
@@ -4841,7 +4841,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "……好啦。{maid}不躲。主人你、不许故意欺负{maid}哦。",
+          "text": "...Fine. {maid} will not run. Master, you are not allowed to bully {maid} on purpose.",
           "expression": "kokuhaku_shy",
           "emotion": "teasing",
           "events": []
@@ -4857,7 +4857,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她深吸一口气，把手从脸上拿开，眼睛红红的却紧紧盯着你。",
+          "text": "She takes a deep breath and lowers her hands from her face. Her eyes are red, but she keeps them fixed on you.",
           "portrait": "maid",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
@@ -4875,226 +4875,226 @@
         },
         {
           "speaker": "${maid}",
-          "text": "主人你得听我来说一遍！这、这种事应该由我先说才对！",
+          "text": "Master, you have to let me say it properly! S-something like this should be said by me first!",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人，我喜欢你。",
+          "text": "Master, I love you.",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不是……不是那种对主人的喜欢……",
+          "text": "Not... not the kind of love a maid has for her master...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "是想和主人一直在一起的喜欢……是想成为主人恋人的喜欢！",
+          "text": "I mean the kind of love that wants to stay with Master forever... the kind that wants to be your lover!",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "说完，她整个人像泄了气一样，耳朵耷拉下来，脸红得仿佛快要冒烟。",
+          "text": "The moment she finishes, all the strength seems to leave her. Her ears droop, and her face turns so red it looks ready to steam.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "咕呜——总算说出来了……好害羞啊……",
+          "text": "Uu... I finally said it... this is so embarrassing...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人你知道吗，我早就想对你说了，只是一直没找到机会……",
+          "text": "Master, do you know? I have wanted to tell you for so long. I just never found the right moment...",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}一直一直，非常喜欢主人，而且是越来越喜欢！",
+          "text": "{maid} has always, always loved Master. And every day, {maid} loves you even more!",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "从魂符里被召唤、缔结契约，从好不容易见到主人，主人还送人家小蛋糕的第一面起，我就喜欢上了！",
+          "text": "From the day I was summoned from the soul spell, from the day we made our contract, from the first time I finally saw Master and you gave me that little cake... I already loved you!",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "angry",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她越说越快，像是怕一停下来，就再也没勇气说出下一句了。",
+          "text": "She speaks faster and faster, as if stopping for even a second would make her lose the courage to continue.",
           "expression": "kokuhaku_confess",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人一直都对{maid}很好……虽然有时候经常不在……",
+          "text": "Master has always been so kind to {maid}... even if you are often away...",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人有好吃的总是让给我，自己啃腐肉。",
+          "text": "Whenever there is something good to eat, Master gives it to me and gnaws on rotten flesh instead.",
           "expression": "kokuhaku_confess",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人有好装备的时候，总是让我先穿上。",
+          "text": "Whenever there is good equipment, Master always lets me wear it first.",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "我受伤的时候，主人比我还着急，满背包找食物和药水喂给我……",
+          "text": "When I get hurt, Master panics even more than I do, searching the whole backpack for food and potions to feed me...",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她一连说了好多好多，仿佛把你们相遇以来所有的事情都说了个遍。",
+          "text": "She keeps talking, one thing after another, as if trying to pour out every memory since the day you met.",
           "expression": "kokuhaku_confess",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人不在的时候，我也一直都好想你。",
+          "text": "When Master is not home, I miss you all the time.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "想主人津津有味地吃我做的饭菜，夸{maid}很贤惠；想主人和我一起聊天、一起下棋的日子……",
+          "text": "I miss watching Master eat the food I made with that happy face, and hearing you say {maid} would make a good wife. I miss the days when we talk together, play games together...",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "angry",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}想了好多好多，怎么也想不完！",
+          "text": "{maid} thinks about so many things. No matter how much I think, it never feels enough!",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "说到这里，她的声音突然慢了下来。",
+          "text": "At this point, her voice suddenly slows.",
+          "expression": "kokuhaku_nervous",
+          "emotion": "surprised",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Master might not know this... but a maid can choose to bind herself to someone...",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人可能不知道……我们女仆是可以主动绑定一个人的……",
+          "text": "Not a work contract... something closer to the soul...",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不是那种工作上的契约……是灵魂上的……",
-          "expression": "kokuhaku_nervous",
-          "emotion": "shy",
-          "events": []
-        },
-        {
-          "speaker": "${maid}",
-          "text": "绑定之后……主人去哪里我都可以跟着……主人挖矿我帮你插火把……主人建房子我帮你搬材料……主人遇到危险我也会第一时间出现……就算主人要我摇出 2147483648su 的应力，我也会一直拼命摇下去。",
+          "text": "Once I am bound... wherever Master goes, I can follow. When Master mines, I can place torches. When Master builds a house, I can carry materials. When Master is in danger, I can appear right away... even if Master asks me to crank out 2147483648su of stress, I will keep turning with everything I have.",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人晚上不在的时候……我不会再孤单一个人守在家里等……因为我会和主人在一起……",
+          "text": "When Master is away at night... I will not have to wait at home all alone anymore... because I will be with Master...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她说着说着，声音渐渐轻了下去，带上了哭腔……",
+          "text": "As she speaks, her voice grows softer and begins to tremble with tears...",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人你知道吗，你不在的日子里……我会站在家里最高的地方……盯着主人远去的方向一直看、一直看……",
+          "text": "Master, do you know? On the days when you were gone... I would stand at the highest place in the house... staring in the direction you left, and keep watching, and watching...",
+          "expression": "kokuhaku_teary",
+          "emotion": "tired",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "I kept looking to see whether Master’s name would appear in the distance...",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "看有没有主人的名字从远处冒出来……",
+          "text": "One time I waited three days and three nights... I ate all the food in my backpack... and you still did not come back...",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "有一次我等了三天三夜……把背包里的食物都吃完了……还是没等到……",
+          "text": "That was when I thought... if only I were Master’s lover...",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那时候我就想……如果我是主人的恋人就好了……",
-          "expression": "kokuhaku_teary",
-          "emotion": "sad",
-          "events": []
-        },
-        {
-          "speaker": "${maid}",
-          "text": "那样我就可以光明正大地跟主人说——",
+          "text": "Then I could say it openly-",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她抬起头，眼眶红红的，眼泪在里面打转，但拼命忍着没掉下来。",
+          "text": "She lifts her head. Her eyes are red, tears circling inside them, but she desperately holds them back.",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "带上我嘛……不要一个人走那么远……",
+          "text": "Take me with you... please do not go so far away by yourself...",
           "expression": "kokuhaku_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人……你能接受{maid}的心意吗……",
+          "text": "Master... will you accept {maid}'s feelings...?",
           "expression": "kokuhaku_teary",
-          "emotion": "sad",
+          "emotion": "tired",
           "events": []
         }
       ],
@@ -5117,8 +5117,8 @@
       "choices": [
         {
           "id": "confession_accept",
-          "title": "我也喜欢你。",
-          "description": "郑重地收下她的心意，温柔地回应。",
+          "title": "I Love You Too.",
+          "description": "Accept her feelings sincerely, and answer with tenderness.",
           "next": "confession_accept_intro",
           "expression": "kokuhaku_teary_smile",
           "events": [
@@ -5131,8 +5131,8 @@
         },
         {
           "id": "confession_reject",
-          "title": "……先让我缓缓。",
-          "description": "你还没准备好跨出这一步。",
+          "title": "...Let Me Breathe.",
+          "description": "You are not ready to take that step yet.",
           "next": "confession_reject_result",
           "expression": "kokuhaku_nervous",
           "events": []
@@ -5147,7 +5147,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "女仆愣住了一秒，眼泪啪嗒啪嗒掉了下来。",
+          "text": "Your maid freezes for one second, and then tears fall one after another.",
           "portrait": "maid",
           "expression": "kokuhaku_teary",
           "emotion": "surprised",
@@ -5156,70 +5156,70 @@
         },
         {
           "speaker": "${maid}",
-          "text": "呜……真、真的吗……？",
+          "text": "Uu... r-really...?",
           "expression": "kokuhaku_teary",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不是……不是因为我帮你喂了猪牛小鸭、帮你收了麦子、帮你杀了僵尸……才答应的吧……？",
+          "text": "It is not... not just because I helped feed the pigs and cows and ducks, harvested wheat for you, and fought zombies for you... right...?",
           "expression": "kokuhaku_teary",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "${maid}，看着我。",
+          "text": "${maid}, look at me.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "女仆抽抽噎噎地抬起头，眼睛红红的，睫毛上还挂着泪珠。",
+          "text": "The maid lifts her head through soft sobs. Her eyes are red, and tears still cling to her lashes.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我发誓，我说的每一个字都是真的。",
+          "text": "I swear that every word I say is true.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我喜欢你。不是因为你有多能干，是因为你是我的${maid}，我最珍视的人。",
+          "text": "I love you. Not because you are useful, but because you are my ${maid}, the person I treasure most.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我也想每天醒来都看到你，想吃你做的饭，想和你一起下矿、一起冒险、一起看每个群系里的日出日落。",
+          "text": "I want to wake up and see you every day. I want to eat the food you make, mine with you, adventure with you, and watch the sunrise and sunset in every biome with you.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "你的照顾，你等我回来的每一天——我都记得，也都很珍惜。",
+          "text": "Your care, and every day you waited for me to come home... I remember all of it, and I cherish it.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "所以我想说——${maid}，以后也一直留在我身边，好吗？不是作为女仆，而是作为我最重要的那个人。",
+          "text": "So I want to say this: ${maid}, will you stay by my side from now on? Not as my maid, but as the most important person in my life.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "女仆的眼泪掉得更凶了，白皙的手因激动泛起红晕，娇柔地锤了锤你的胸口。",
+          "text": "Her tears fall even harder. Her fair hands flush from emotion as she lightly pounds your chest.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "sad",
           "events": [
@@ -5256,28 +5256,28 @@
         },
         {
           "speaker": "${maid}",
-          "text": "呜……主人你这个大笨蛋……",
+          "text": "Uu... Master, you big dummy...",
           "expression": "kokuhaku_teary_smile",
           "emotion": "teasing",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "这种话……这种话说出来……我会赖着你一辈子的……",
+          "text": "If you say things like that... if you say them out loud... I will cling to you for the rest of my life...",
           "expression": "kokuhaku_teary_smile",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "那就一辈子吧，我们生生世世永不分离。",
+          "text": "Then let it be for the rest of our lives. In every lifetime, we will never part.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "女仆扑进你怀里，把脸埋进你的胸口，哭得一抽一抽的。",
+          "text": "The maid throws herself into your arms, burying her face against your chest as she cries in little hiccups.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "sad",
           "events": [
@@ -5300,21 +5300,21 @@
         },
         {
           "speaker": "${maid}",
-          "text": "呜……那我就不客气了……",
+          "text": "Uu... then I will not hold back...",
           "expression": "kokuhaku_teary_smile",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "以后……以后主人就是我的人了……不许反悔……",
+          "text": "From now on... Master belongs to me too... no taking it back...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "嗯，我对闹齿发誓，绝不反悔。",
+          "text": "Mm. I swear on Nochi, I will never take it back.",
           "expression": "kokuhaku_shy",
           "emotion": "gentle",
           "events": []
@@ -5330,7 +5330,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "过了好一会儿，她才终于从你怀里慢慢抬起头。眼睛还是湿的，唇边却已经带上了那种怎么藏都藏不住的甜软笑意。",
+          "text": "After a long while, she finally lifts her head from your arms. Her eyes are still wet, but a soft sweetness already hides at the edge of her smile.",
           "portrait": "maid",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
@@ -5349,28 +5349,28 @@
         },
         {
           "speaker": "${player}",
-          "text": "如果你也愿意的话，今天不要只停在告白。让我把准备好的婚纱为你披上，好吗？",
+          "text": "If you want this too, I do not want today to stop at a confession. May I put the wedding dress I prepared on you?",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "诶……现、现在吗？",
+          "text": "Eh... r-right now?",
           "expression": "marriage_open_mouth",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你把准备好的婚纱轻轻披到她肩上，又替她理好垂下来的头纱。那层雪白落下来时，她整个人都像被柔光裹住了一样，连看你的眼神都跟着轻轻发烫。",
+          "text": "You gently drape the wedding dress over her shoulders and straighten the veil. As the white fabric falls, she seems wrapped in soft light, even her gaze warming as she looks at you.",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主、主人……这样的话，{maid}真的会紧张到站不稳的……",
+          "text": "M-Master... if you do this, {maid} really might get too nervous to stand...",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": [
@@ -5386,7 +5386,7 @@
         },
         {
           "speaker": "",
-          "text": "她从指缝里偷偷看你，明明羞得耳根都红透了，却还是一步也没舍得往后退。",
+          "text": "She peeks at you through her fingers. Her ears are red to the roots, but she does not take even one step back.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": [
@@ -5399,7 +5399,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "可是……如果新郎是主人的话，{maid}想穿。{maid}想让主人亲手看见。",
+          "text": "But... if Master is the groom, {maid} wants to wear it. {maid} wants Master to see it with his own eyes.",
           "expression": "marriage_shy",
           "emotion": "shy",
           "events": []
@@ -5424,8 +5424,8 @@
       "choices": [
         {
           "id": "confession_vow_hold_hand",
-          "title": "替她理好头纱，牵住她的手",
-          "description": "把誓言留给这场婚礼。",
+          "title": "Straighten Her Veil and Take Her Hand",
+          "description": "Leave your vows to this wedding.",
           "next": "confession_vow",
           "expression": "marriage_excited_shy",
           "events": []
@@ -5440,7 +5440,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你替她把头纱理到最妥帖的位置，然后牵起她的手。那只手明明在轻轻发抖，却还是回握得特别认真。",
+          "text": "You straighten her veil until it sits perfectly, then take her hand. It is trembling, yet she holds yours back with such earnest care.",
           "portrait": "maid",
           "expression": "marriage_shy",
           "emotion": "shy",
@@ -5449,63 +5449,63 @@
         },
         {
           "speaker": "${player}",
-          "text": "从今天开始，你不只是我的恋人。你是我想一起走完以后的人。",
+          "text": "From today on, you are not only my lover. You are the person I want to walk beside for all the days ahead.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "以后无论是平静的日子，还是乱糟糟的冒险，我都会陪着你。",
+          "text": "Whether the days are peaceful or the adventures are a mess, I will be with you.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我会珍惜你，照顾你，也会把每一次回家都认真地走向你。",
+          "text": "I will cherish you, care for you, and every time I come home, I will come home to you with all my heart.",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……{maid}也要说。",
+          "text": "...{maid} wants to say it too.",
           "expression": "marriage_teary",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}愿意以后每天都喜欢你一点，再比前一天更喜欢你一点。",
+          "text": "{maid} wants to love you a little more every day, and then a little more than the day before.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "愿意在你开心的时候陪你笑，在你累的时候抱着你，在你嘴硬的时候第一时间拆穿你。",
+          "text": "I want to laugh with you when you are happy, hold you when you are tired, and be the first one to see through you when you pretend you are fine.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "也愿意把{maid}这一生最温柔、最黏人的样子，全都只留给你一个人。",
+          "text": "And I want to keep the gentlest, clingiest parts of {maid} for you alone.",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "说完最后一句，她眼眶又红了，却还是强撑着没有躲开。她只是直直地看着你，像是把余生都安安静静交到了你手里。",
+          "text": "After the last words, her eyes redden again, but she still does not look away. She only gazes straight at you, as if quietly placing the rest of her life into your hands.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "所以……请多指教呀。我的丈夫。",
+          "text": "So... please take care of me. My husband.",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
@@ -5521,7 +5521,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她才刚把那句称呼说出口，自己先羞得呼吸都乱了。可即便这样，她还是一点点踮起脚尖，安静地朝你靠近。",
+          "text": "She has only just spoken that title, and already her breathing is a mess from embarrassment. Even so, she rises onto her toes little by little and quietly leans toward you.",
           "portrait": "maid",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
@@ -5530,16 +5530,16 @@
         },
         {
           "speaker": "${maid}",
-          "text": "……主人，不对。现在该叫你什么，{maid}回头再慢慢练。",
+          "text": "...Master, no. What I should call you now... {maid} will practice slowly later.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "但是这一句亲吻，{maid}想先认真收下。",
+          "text": "But this kiss... {maid} wants to receive it properly first.",
           "expression": "marriage_closed_eyes",
-          "emotion": "gentle",
+          "emotion": "shy",
           "events": [
             {
               "when": "line_start",
@@ -5551,35 +5551,35 @@
         },
         {
           "speaker": "",
-          "text": "你低头吻住她。婚纱的轻纱蹭过你的手背，她在你怀里轻轻一颤，随后很乖地闭上眼，把所有颤抖和喜欢都交给了这一刻。",
+          "text": "You lower your head and kiss her. The light veil of her wedding dress brushes the back of your hand. She trembles once in your arms, then obediently closes her eyes, entrusting all her trembling and all her love to this moment.",
           "expression": "marriage_kiss",
-          "emotion": "gentle",
+          "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "唇分的时候，她还没缓过神来。长长的睫毛上挂着一点湿意，脸颊和耳尖却都红得惊人。",
+          "text": "When your lips part, she still has not quite come back to herself. A little wetness clings to her long lashes, while her cheeks and ear tips are unbelievably red.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……糟糕。{maid}现在真的，已经完全是新娘子了。",
+          "text": "...Oh no. {maid} really is completely a bride now.",
           "expression": "marriage_open_mouth2",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "嗯。是我的新娘。",
+          "text": "Mm. My bride.",
           "expression": "marriage_excited_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那你以后可要一直对{maid}负责哦。负责抱，负责亲，也负责把{maid}喜欢到老。",
+          "text": "Then from now on, you have to take responsibility for {maid}. Responsible for hugs, responsible for kisses, and responsible for loving {maid} until we grow old.",
           "expression": "marriage_excited_shy",
           "emotion": "teasing",
           "events": []
@@ -5595,7 +5595,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你们谁都没有再说话，只是抱得更紧了一点。空气里全是彼此的呼吸和刚刚落定的心跳。",
+          "text": "Neither of you says anything more. You simply hold each other a little tighter, the air filled with your breathing and the heartbeat that has finally settled.",
           "portrait": "maid",
           "expression": "kokuhaku_afterkiss",
           "emotion": "gentle",
@@ -5604,7 +5604,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "已经要变成没有彼此就不行的笨蛋了啊……不过，{maid}很喜欢。",
+          "text": "We have become the kind of fools who cannot be without each other... but {maid} likes that very much.",
           "expression": "kokuhaku_shy",
           "emotion": "gentle",
           "events": []
@@ -5616,7 +5616,7 @@
       "events": []
     },
     "idle_menu": {
-      "_comment": "主交互入口。进入界面后先显示这里。第一句是当前心情下的开场白，然后给出 沟通 / 亲吻 / 拥抱 / 先松开她 / 摸头 等主选项。",
+      "_comment": "Main interactive entrance. After entering the interface, it will be displayed here first. The first sentence is the opening statement based on the current mood, and then the main options are given such as communicating/kissing/hugging/letting go of her first/touching the head.",
       "type": "choice",
       "prompt": {
         "speaker": "",
@@ -5630,8 +5630,8 @@
       "choices": [
         {
           "id": "communicate",
-          "title": "沟通",
-          "description": "聊聊天、哄哄她。",
+          "title": "Talk",
+          "description": "Chat with her, and gently cheer her up.",
           "next": "communication_menu",
           "expression": "soft_smile",
           "animation": "fade_in",
@@ -5639,8 +5639,8 @@
         },
         {
           "id": "confession",
-          "title": "把心意告诉她",
-          "description": "把一直没说出口的话，认真说给她听。",
+          "title": "Tell Her Your Feelings",
+          "description": "Say the words you have been holding back.",
           "condition": "!hugging && can_show_confession",
           "next": "confession_intro",
           "expression": "kokuhaku_nervous",
@@ -5649,8 +5649,8 @@
         },
         {
           "id": "marriage",
-          "title": "交换誓约",
-          "description": "亲手为她戴上戒指，许下共度一生的誓言。",
+          "title": "Exchange Vows",
+          "description": "Place the ring on her finger yourself, and vow to share your life with her.",
           "condition": "!hugging && can_show_marriage",
           "next": "marriage_intro",
           "expression": "marriage_excited_shy",
@@ -5659,8 +5659,8 @@
         },
         {
           "id": "action_menu",
-          "title": "行动",
-          "description": "与女仆的互动",
+          "title": "Actions",
+          "description": "Kiss, hug, lap pillow, head pats, and other close actions.",
           "next": "action_menu",
           "expression": "action_shy",
           "animation": "fade_in",
@@ -5668,8 +5668,8 @@
         },
         {
           "id": "release_carried_child",
-          "title": "放下小女仆",
-          "description": "让妈妈试着把孩子放下来休息。",
+          "title": "Put the Child Down",
+          "description": "Ask Mom to let the child rest on the ground.",
           "condition": "maid_carrying_child",
           "next": "release_carried_child_router",
           "action": "maidmarriage:carry_child_put_down",
@@ -5685,7 +5685,7 @@
       "lines": [
         {
           "speaker": "${maid}",
-          "text": "就、就是……那个……我……",
+          "text": "I-it is... um... I...",
           "portrait": "maid",
           "expression": "kokuhaku_nervous",
           "emotion": "shy",
@@ -5694,28 +5694,28 @@
         },
         {
           "speaker": "",
-          "text": "她深吸一口气，又泄掉，再吸一口，反复了好几次。",
+          "text": "She inhales, loses her nerve, inhales again, and repeats it several times.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "呜哇，不行不行，说不出口——！",
+          "text": "Uwaa, no, no, I cannot say it-!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她抱着头蹲下去，耳朵耷拉着，整个人缩成一团。",
+          "text": "She crouches down holding her head, ears drooping as she curls into herself.",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人你先别看我……看我看我就说不出来了……",
+          "text": "Master, please do not look at me yet... if you look, I cannot say it...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
@@ -5740,16 +5740,16 @@
       "choices": [
         {
           "id": "confession_wait_calm",
-          "title": "等她冷静",
-          "description": "安静地陪她把勇气攒回来。",
+          "title": "Wait for Her to Calm Down",
+          "description": "Stay quietly with her until she gathers her courage again.",
           "next": "confession_wait_result",
           "expression": "kokuhaku_nervous",
           "events": []
         },
         {
           "id": "confession_wait_pat",
-          "title": "轻轻拍拍她的头",
-          "description": "给她一点温柔的鼓励。",
+          "title": "Gently Pat Her Head",
+          "description": "Give her a little tender encouragement.",
           "next": "confession_wait_result",
           "expression": "kokuhaku_shy",
           "events": [
@@ -5773,7 +5773,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "过了好一会儿，女仆终于慢慢站起来，眼睛还是不敢看你，一直盯着自己的脚尖。",
+          "text": "After a long while, the maid finally stands up slowly. She still cannot look at you, keeping her eyes fixed on her toes.",
           "portrait": "maid",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
@@ -5801,7 +5801,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "女仆愣住了，狐耳倏地竖起，眼中掠过一抹惊喜，精神一振。",
+          "text": "The maid freezes. Her fox ears spring upright, and a flash of joy crosses her eyes.",
           "portrait": "maid",
           "expression": "kokuhaku_surprised",
           "emotion": "surprised",
@@ -5810,14 +5810,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "……一样？难道主人……不、不不可能吧……",
+          "text": "...The same? Does that mean Master... n-no, impossible...",
           "expression": "kokuhaku_surprised",
-          "emotion": "surprised",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她拼命摇头，像是在否定一个太美好的梦，但脸上的红晕已经出卖了她。",
+          "text": "She shakes her head hard, trying to deny a dream too beautiful to believe, but the blush on her face has already betrayed her.",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": [
@@ -5838,28 +5838,28 @@
         },
         {
           "speaker": "${player}",
-          "text": "就是……是关于“喜欢”的事……",
+          "text": "It is... about “liking” someone...",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我对你……可能……是喜欢。而且不是对“女仆”的那种喜欢。",
+          "text": "I might... like you. Not as a “maid” likes someone.",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "呜……主人你为什么先说出来了啊……！",
+          "text": "Uu... Master, why did you say it first...!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "咕呜……不管了……！",
+          "text": "Guu... fine, I do not care anymore...!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
@@ -5875,7 +5875,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她怔了一下，眼里的光明显颤了一下，但还是努力把那点失落压回去了。",
+          "text": "She pauses, and the light in her eyes trembles visibly, but she still tries to press the disappointment back down.",
           "portrait": "maid",
           "expression": "kokuhaku_nervous",
           "emotion": "sad",
@@ -5884,14 +5884,14 @@
         },
         {
           "speaker": "${maid}",
-          "text": "没、没关系的……是{maid}太着急了。主人不用现在就回答。",
+          "text": "I-it is okay... {maid} was too impatient. Master does not have to answer right now.",
           "expression": "kokuhaku_shy",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}会把今天的话先好好收起来。等主人哪一天准备好了，再告诉{maid}也没关系。",
+          "text": "{maid} will keep today’s words safe for now. When Master is ready someday, you can tell {maid} then.",
           "expression": "kokuhaku_shy",
           "emotion": "gentle",
           "events": []
@@ -5907,7 +5907,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "过了好一会儿，女仆才慢慢抬起头。眼睛还是红红的，脸上却是一种安宁而幸福的神色。",
+          "text": "After a long while, the maid slowly lifts her head. Her eyes are still red, but her face is peaceful and happy.",
           "portrait": "maid",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
@@ -5926,70 +5926,70 @@
         },
         {
           "speaker": "${maid}",
-          "text": "主人……",
+          "text": "Master...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她盯着你的嘴唇看了一眼，又飞快地移开目光，脸又红了。",
+          "text": "She glances at your lips, then quickly looks away, blushing again.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "那个……那个……",
+          "text": "Um... um...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她支支吾吾，手指绞着衣角，娇柔的狐耳微颤不停。",
+          "text": "She stammers, fingers twisting at her clothes, soft fox ears trembling.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "我们……是不是还差……一个……那个……",
+          "text": "Are we... still missing... one... thing...?",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她说不下去了，干脆闭上眼睛，踮起脚尖——然后因为太紧张，撞到了你的下巴。",
+          "text": "Unable to finish, she simply closes her eyes, rises onto her toes-and bumps into your chin from nerves.",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "呜——！我不是……我不是故意的……！",
+          "text": "Uu-! I did not... I did not mean to...!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你笑着半俯下身来，轻轻抬起她的脸。",
+          "text": "You smile and bend down halfway, gently lifting her face.",
           "expression": "kokuhaku_kiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "没事，没事。这种事情应该让我主动来吧。",
+          "text": "It is okay. Something like this should be my move, right?",
           "expression": "kokuhaku_kiss",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你轻轻吻上去。女仆浑身一颤，然后慢慢闭上眼睛，睫毛轻轻颤动，手不自觉地攥紧你的衣领。",
+          "text": "You kiss her gently. The maid trembles all over, then slowly closes her eyes, lashes quivering as her hands clutch your collar.",
           "expression": "kokuhaku_kiss",
           "emotion": "shy",
           "events": [
@@ -6002,49 +6002,49 @@
         },
         {
           "speaker": "",
-          "text": "片刻后，分开。",
+          "text": "A moment later, you part.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "女仆的眼神是涣散的，脸是通红的。",
+          "text": "Her eyes are unfocused, and her face is bright red.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……",
+          "text": "...",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "呜哇啊啊啊啊啊——！！！",
+          "text": "Uwaaaaa-!!!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她猛地捂住脸，整个人缩成一团。",
+          "text": "She suddenly covers her face and curls up.",
           "expression": "kokuhaku_flustered",
-          "emotion": "shy",
+          "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "亲、亲到了——！！！",
+          "text": "W-we kissed-!!!",
           "expression": "kokuhaku_flustered",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她从指缝里偷偷看你一眼，又迅速躲回去。",
+          "text": "She peeks at you through her fingers, then hides again.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": [
@@ -6060,7 +6060,7 @@
         },
         {
           "speaker": "${maid}",
-          "text": "那个……主人……",
+          "text": "Um... Master...",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": [
@@ -6073,49 +6073,49 @@
         },
         {
           "speaker": "",
-          "text": "声音小到几乎听不见。",
+          "text": "Her voice is almost inaudible.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "能……能再来一次吗……？",
+          "text": "Could... could we do it again...?",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "没等她说完，你又亲了上去。",
+          "text": "Before she finishes, you kiss her again.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "良久，唇分。",
+          "text": "After a long while, your lips part.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "以后……以后的每一天……都能这样吗……？",
+          "text": "Can... every day from now on... be like this...?",
+          "expression": "kokuhaku_afterkiss",
+          "emotion": "tired",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "Neither of you knows how long you stayed tangled together. Thought fades, leaving only your breathing and the warmth between your lips.",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你们不知道缠绵了多久。脑子里什么都不能想了，只剩下彼此的呼吸和唇间的温度。",
-          "expression": "kokuhaku_afterkiss",
-          "emotion": "shy",
-          "events": []
-        },
-        {
-          "speaker": "",
-          "text": "已经要变成没有彼此就不行的笨蛋了啊……",
+          "text": "We are going to become fools who cannot live without each other...",
           "expression": "kokuhaku_afterkiss",
           "emotion": "shy",
           "events": []
@@ -6131,7 +6131,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你们在一起已经很久了。",
+          "text": "The two of you have been together for a long time.",
           "portrait": "maid",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
@@ -6140,107 +6140,107 @@
         },
         {
           "speaker": "",
-          "text": "久到你已经记不清是从哪一天开始，她在身边变成了像呼吸一样自然的事。",
+          "text": "So long that you can no longer remember when having her beside you became as natural as breathing.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "每天早上她总会先你一步把熔炉、箱子和桌边收拾好，再把准备好的饭菜端到你面前。",
+          "text": "Every morning, she tidies the furnaces, chests, and table before you do, then brings the meal she prepared to you.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "每次你下矿、打怪或者跑远路回来，她都会先看你身上有没有伤，再接过你背包里那些乱糟糟的战利品。",
+          "text": "Whenever you return from mining, fighting, or a long journey, she checks you for wounds first, then takes the messy spoils from your pack.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "下雨的时候，她会站在家门口一边望着远处，一边等你从雨幕里走回来。",
+          "text": "On rainy days, she stands by the door, looking into the distance as she waits for you to come back through the curtain of rain.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "天冷的时候，她会挨你更近一点，像是生怕你一个人待着会觉得凉。",
+          "text": "When the air turns cold, she stays a little closer to you, as if afraid you might feel chilly on your own.",
           "expression": "kokuhaku_nervous",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你出远门的时候她会站在门口送你，狐耳耷拉着，但还是笑着跟你说“早点回来”。",
+          "text": "When you travel far away, she sees you off at the door. Her fox ears droop, but she still smiles and says, ?Come home soon.?",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "这些事每天都在发生，平常到你几乎不会特意去想。",
+          "text": "All of these things happen every day, so ordinary that you almost never stop to think about them.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "可就是这样一天又一天，一年又一年——",
+          "text": "But day after day, year after year-",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你忽然发现，你已经没法想象没有她的日子了。",
+          "text": "you suddenly realize that you can no longer imagine a life without her.",
           "expression": "kokuhaku_nervous",
           "emotion": "serious",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你原本只是想像平常那样叫住她。",
+          "text": "At first, you only meant to call out to her like usual.",
           "expression": "kokuhaku_nervous",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "可当她今天像往常一样替你理好衣角，抬起头朝你轻轻笑了一下的时候——",
+          "text": "But today, when she straightened the corner of your clothes as always and looked up with that gentle smile-",
           "expression": "kokuhaku_nervous",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你不想再等了。",
+          "text": "you do not want to wait anymore.",
           "expression": "kokuhaku_confess",
           "emotion": "serious",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "${maid}，我有话想对你说。",
+          "text": "${maid}, there is something I want to tell you.",
           "expression": "kokuhaku_confess",
           "emotion": "serious",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她像是察觉到了什么，指尖轻轻攥住了裙摆，连呼吸都放轻了。",
+          "text": "She seems to sense what is coming. Her fingers softly grip the hem of her skirt, and even her breathing grows quiet.",
           "expression": "kokuhaku_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "嗯？主人突然这么认真……",
+          "text": "Hm? Master, you suddenly look so serious...",
           "expression": "kokuhaku_shy",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         }
       ],
@@ -6254,7 +6254,7 @@
       "lines": [
         {
           "speaker": "${player}",
-          "text": "我喜欢你。这件事你大概早就知道了。",
+          "text": "I love you. You probably knew that already.",
           "portrait": "maid",
           "expression": "kokuhaku_confess",
           "emotion": "normal",
@@ -6263,91 +6263,91 @@
         },
         {
           "speaker": "${player}",
-          "text": "可我现在想说的，不只是喜欢。",
+          "text": "But what I want to say now is more than love.",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你握住她的手。她的手指微微发凉，却在触碰到你的那一瞬，轻轻颤了一下。",
+          "text": "You take her hand. Her fingers are slightly cool, yet the moment they touch yours, they tremble softly.",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我想和你一起过以后很长很长的日子。",
+          "text": "I want to spend a very, very long future with you.",
           "expression": "kokuhaku_confess",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "往后余生，我的归处是你，我的牵挂是你，我所有的朝朝暮暮——都是你。",
+          "text": "For the rest of my life, my place to return to is you, the one I care for is you, and all my mornings and evenings are yours.",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "所以，${maid}。你愿意嫁给我吗？",
+          "text": "So, ${maid}. Will you marry me?",
           "expression": "kokuhaku_confess",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……诶？",
+          "text": "...Eh?",
           "expression": "kokuhaku_surprised",
-          "emotion": "surprised",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的嘴唇微微张开，又合上。",
+          "text": "Her lips part slightly, then close again.",
           "expression": "kokuhaku_surprised",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "嫁、嫁给你……是{maid}听到的那个意思吗？",
+          "text": "M-marry you... does that mean what {maid} thinks it means?",
           "expression": "kokuhaku_flustered",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "嗯。不是开玩笑。是认认真真想了很久，才敢跟你说出口的话。",
+          "text": "Yes. I am not joking. I thought about it for a long time before I finally found the courage to say it.",
           "expression": "kokuhaku_confess",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的眼泪掉了下来。没有声音，只是安静地、一串一串地往下落。",
+          "text": "Her tears fall. Silently, quietly, one after another.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她捂住嘴，但捂不住眼角弯起来的笑意。",
+          "text": "She covers her mouth, but cannot hide the smile forming at the corners of her eyes.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "……愿意。",
+          "text": "...I will.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "如果对象是主人的话……{maid}会一直、一直都愿意。",
+          "text": "If it is Master... {maid} will always, always say yes.",
           "expression": "kokuhaku_teary_smile",
           "emotion": "normal",
           "events": []
@@ -6363,7 +6363,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你把准备好的婚纱轻轻披到她肩上。",
+          "text": "You gently drape the wedding dress over her shoulders.",
           "portrait": "maid",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
@@ -6372,98 +6372,98 @@
         },
         {
           "speaker": "",
-          "text": "雪白的轻纱落下来的那一刻，你看着她——",
+          "text": "The moment the pure white veil falls, you look at her-",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "金色的长发，微红的耳尖，低垂的睫毛，和那张稚嫩恬静的脸。",
+          "text": "golden hair, reddened ears, lowered lashes, and that young, peaceful face.",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她真美。",
+          "text": "She is beautiful.",
           "expression": "marriage_excited_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "这、这是……",
+          "text": "T-this is...",
           "expression": "marriage_open_mouth",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "婚纱。",
+          "text": "A wedding dress.",
           "expression": "marriage_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你替她理好垂下来的头纱，指尖蹭过她的脸颊。",
+          "text": "You arrange the falling veil for her, your fingertips brushing her cheek.",
           "expression": "marriage_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "不是说好了吗？要让主人亲手看见。",
+          "text": "Did we not promise? I wanted Master to see it with his own eyes.",
           "expression": "marriage_shy",
-          "emotion": "shy",
+          "emotion": "tired",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的眼泪又掉了下来。",
+          "text": "Her tears fall again.",
           "expression": "marriage_teary",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "这一次，她没有躲，也没有捂脸。只是那样静静地站着，红着眼睛，红着耳尖，望着你。",
+          "text": "This time, she does not hide or cover her face. She simply stands there, eyes red, ears red, looking at you.",
           "expression": "marriage_teary",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人……",
+          "text": "Master...",
           "expression": "marriage_teary",
           "emotion": "happy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的声音很轻，像是怕惊动什么。",
+          "text": "Her voice is very soft, as if afraid to disturb something precious.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "主人……{maid}真的……真的可以穿这个吗？",
+          "text": "Master... can {maid} really... really wear this?",
           "expression": "marriage_teary",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "当然。你穿这个，一定很好看。",
+          "text": "Of course. You will look beautiful in it.",
           "expression": "marriage_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "呜……",
+          "text": "Uu...",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": [
@@ -6479,35 +6479,35 @@
         },
         {
           "speaker": "",
-          "text": "她咬着嘴唇，拼命忍着不哭出来。但眼泪根本不听她的话。",
+          "text": "She bites her lip, trying desperately not to cry. But her tears do not listen to her at all.",
           "expression": "marriage_shy_deep",
-          "emotion": "shy",
+          "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "可是……如果新郎是主人的话……",
+          "text": "But... if Master is the groom...",
           "expression": "marriage_shy",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她低下头，手指轻轻摸了摸婚纱的裙摆，像是在确认这不是梦。",
+          "text": "She lowers her head and gently touches the hem of the dress, as if making sure it is not a dream.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}想穿。{maid}想让主人亲手看见。",
+          "text": "{maid} wants to wear it. {maid} wants Master to see it with his own eyes.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她从指缝里偷偷看你，明明羞得耳根都红透了，却还是一步也没往后退。",
+          "text": "She peeks at you through her fingers. Her ears are red to the roots, but she does not take even one step back.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": [
@@ -6538,8 +6538,8 @@
       "choices": [
         {
           "id": "marriage_open_panel",
-          "title": "给${maid}戴上戒指",
-          "description": "打开女仆主面板，把戒指放到她主手，再把自己的那枚戴到副手。",
+          "title": "Put the Ring on ${maid}",
+          "description": "Open the maid panel, place her ring in her main hand, and wear yours in your off hand.",
           "next": "marriage_panel_opening",
           "expression": "marriage_excited_shy",
           "events": [
@@ -6555,8 +6555,8 @@
         },
         {
           "id": "marriage_back_later",
-          "title": "再等等",
-          "description": "先把这份紧张和心跳留在这里。",
+          "title": "Wait a Little Longer",
+          "description": "Leave this nervous heartbeat here for now.",
           "next": "idle_menu",
           "expression": "marriage_shy",
           "events": []
@@ -6571,7 +6571,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你轻轻握了握她的手，示意她别紧张。先把戒指戴好，再把这场婚礼继续下去。",
+          "text": "You gently squeeze her hand, telling her not to be nervous. Put the rings on first, then continue this wedding.",
           "portrait": "maid",
           "expression": "marriage_shy",
           "emotion": "serious",
@@ -6588,7 +6588,7 @@
       "type": "choice",
       "prompt": {
         "speaker": "",
-        "text": "女仆主手和你的副手都准备好戒指之后，再继续这一段誓约。",
+        "text": "After the master maid and your second-in-command have prepared the rings, continue this part of the vow.",
         "portrait": "maid",
         "expression": "marriage_shy",
         "emotion": "serious",
@@ -6598,8 +6598,8 @@
       "choices": [
         {
           "id": "marriage_open_panel_again",
-          "title": "再打开一次女仆面板",
-          "description": "还需要再检查一下戒指位置。",
+          "title": "Open the Maid Panel Again",
+          "description": "Check the ring positions one more time.",
           "next": "marriage_panel_opening",
           "expression": "marriage_shy",
           "events": [
@@ -6615,8 +6615,8 @@
         },
         {
           "id": "marriage_commit_ready",
-          "title": "好了",
-          "description": "继续婚礼，让誓约真正成立。",
+          "title": "Ready",
+          "description": "Continue the wedding and let the vow become real.",
           "condition": "marriage_commit_ready",
           "next": "marriage_vow",
           "expression": "marriage_excited_shy",
@@ -6630,8 +6630,8 @@
         },
         {
           "id": "marriage_commit_not_ready",
-          "title": "还没有准备好",
-          "description": "确认关系进度、誓约条件和两枚新的戒指都准备好。",
+          "title": "Not Ready Yet",
+          "description": "Check relationship progress, vow conditions, and the two new rings.",
           "condition": "!marriage_commit_ready",
           "next": "marriage_not_ready",
           "expression": "marriage_shy",
@@ -6647,7 +6647,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "${player_maid}，我们还没有完全准备好呢。等表白、好感、誓约条件，还有你副手和我主手的两枚新戒指都准备好之后，再继续这段婚礼吧。已经刻过誓约的戒指不能再用啦。",
+          "text": "${player_maid}, we are not completely ready yet. Let us continue the wedding after the confession, favor, vow conditions, and two new rings in your off hand and my main hand are all prepared. Rings already engraved with a vow cannot be used again.",
           "portrait": "maid",
           "expression": "marriage_shy",
           "emotion": "serious",
@@ -6665,7 +6665,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你们面对面站着。她的手还攥着你的衣角，像是怕你跑掉。",
+          "text": "You stand facing each other. Her hand is still holding the corner of your clothes, as if she is afraid you might run away.",
           "portrait": "maid",
           "expression": "marriage_shy",
           "emotion": "shy",
@@ -6674,203 +6674,203 @@
         },
         {
           "speaker": "",
-          "text": "空气很静。静得能听见她轻轻的呼吸声。",
+          "text": "The air is quiet. Quiet enough for you to hear her soft breathing.",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "${maid}。",
+          "text": "${maid}.",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你看着她的眼睛。",
+          "text": "You look into her eyes.",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我在此承诺——",
+          "text": "I promise, here and now-",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "无论贫穷还是富有，无论疾病还是健康，无论顺境还是逆境。",
+          "text": "whether in poverty or wealth, in sickness or health, in good times or hardship.",
           "expression": "marriage_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "我都会陪在你身边，不离不弃。",
+          "text": "I will stay by your side, and I will not leave you.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的眼睛红了。",
+          "text": "Her eyes begin to redden.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "直到死亡将我们分开。",
+          "text": "Until death parts us.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的眼泪无声地涌了出来。",
+          "text": "Her tears spill over without a sound.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你轻轻捏了捏她的手。",
+          "text": "You gently squeeze her hand.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "该你了。",
+          "text": "Now it is your turn.",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她吸了吸鼻子，努力让自己站稳。",
+          "text": "She sniffles softly and tries her best to stand steady.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "过了好一会儿，她才开口。声音很轻，却很坚定。",
+          "text": "After a long moment, she finally speaks. Her voice is small, but unwavering.",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}……{maid}在此承诺。",
+          "text": "{maid}... {maid} promises, here and now.",
           "expression": "marriage_teary",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她望着你，眼眶红红的，目光却温柔而笃定。",
+          "text": "She gazes at you with reddened eyes, yet her look is warm and certain.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "无论主人贫穷还是富有，无论健康还是疾病——",
+          "text": "Whether Master is poor or wealthy, healthy or ill-",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的声音微微颤抖，但没有停。",
+          "text": "Her voice trembles slightly, but she does not stop.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "无论主人去了多远的远方，还是待在{maid}身边哪都不去——",
+          "text": "whether Master travels to somewhere far away, or stays right here beside {maid}-",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她深吸了一口气。",
+          "text": "She takes a deep breath.",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}都会一直、一直陪着你。",
+          "text": "{maid} will always, always stay with you.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "不离不弃。",
+          "text": "I will not leave you.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的声音轻了下去，像是把这句话轻轻放在了你的手心里。",
+          "text": "Her voice grows softer, as if she is placing those words gently into the palm of your hand.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "直到……",
+          "text": "Until...",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她说不下去了。",
+          "text": "She cannot finish the sentence.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "泪水顺着脸颊往下流，但她的嘴角是弯的。",
+          "text": "Tears run down her cheeks, but the corners of her mouth are smiling.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "直到死亡将我们分开。",
+          "text": "Until death parts us.",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你替她说完了最后一句。",
+          "text": "You finish the last line for her.",
           "expression": "marriage_teary",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她轻轻点了点头。",
+          "text": "She gives a small nod.",
           "expression": "marriage_closed_eyes",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "嗯。直到死亡将我们分开。",
+          "text": "Yes. Until death parts us.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
@@ -6886,7 +6886,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "你们安静地站了一会儿。",
+          "text": "The two of you stand quietly for a while.",
           "portrait": "maid",
           "expression": "marriage_shy",
           "emotion": "gentle",
@@ -6895,70 +6895,70 @@
         },
         {
           "speaker": "",
-          "text": "她的手还攥着你的衣角，但已经不像刚才那么紧了。",
+          "text": "Her hand is still holding the corner of your clothes, though not as tightly as before.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "${maid}。",
+          "text": "${maid}.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "谢谢你。",
+          "text": "Thank you.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她抬起头，眼睛还是红红的。",
+          "text": "She lifts her head. Her eyes are still red.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "为什么……突然说这个……",
+          "text": "Why... are you suddenly saying that...",
           "expression": "marriage_shy",
           "emotion": "question",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "谢谢你愿意等我。",
+          "text": "Thank you for being willing to wait for me.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "谢谢你愿意把以后那么长的日子，交给我。",
+          "text": "Thank you for entrusting all the long days ahead to me.",
           "expression": "marriage_shy",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她的眼泪又掉了下来。",
+          "text": "Her tears fall again.",
           "expression": "marriage_teary",
           "emotion": "sad",
           "events": []
         },
         {
           "speaker": "",
-          "text": "但她笑了。",
+          "text": "But she smiles.",
           "expression": "marriage_teary",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "誓言说完了。",
+          "text": "The vows have been spoken.",
           "portrait": "maid",
           "expression": "marriage_closed_eyes",
           "emotion": "normal",
@@ -6967,51 +6967,51 @@
         },
         {
           "speaker": "",
-          "text": "但你们都没有动。",
+          "text": "Yet neither of you moves.",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你看着她，她看着你。",
+          "text": "You look at her, and she looks at you.",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "像是在等一个信号，又像是在铭记这神圣的一刻。",
+          "text": "As if waiting for a signal, and as if trying to remember this sacred moment forever.",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "那……",
+          "text": "Then...",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你轻轻握住她的手。",
+          "text": "You gently take her hand.",
           "expression": "marriage_closed_eyes",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "以这个吻为誓。",
+          "text": "Let this kiss be our vow.",
           "expression": "marriage_closed_eyes",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你低头吻住她。",
+          "text": "You lower your head and kiss her.",
           "expression": "marriage_kiss",
-          "emotion": "gentle",
+          "emotion": "shy",
           "events": [
             {
               "when": "line_start",
@@ -7022,98 +7022,98 @@
         },
         {
           "speaker": "",
-          "text": "不是蜻蜓点水，也不是热切到失控。",
+          "text": "It is not a fleeting touch, nor a passion that loses control.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "是一个很认真的、很慢的吻。像是在她的唇上，把刚才那些话又念了一遍。",
+          "text": "It is a very earnest, very slow kiss, as if you are speaking all those vows once more against her lips.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她没有颤，没有躲。",
+          "text": "She does not tremble, and she does not pull away.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她闭上眼睛，微微踮起脚尖，吻得深沉。",
+          "text": "She closes her eyes, rises slightly onto her toes, and kisses you deeply.",
+          "expression": "marriage_kiss",
+          "emotion": "shy",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "As if the promise has finally been sealed.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "像是一个约定终于落了印。",
+          "text": "After a long while, you part.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "良久，分开。",
+          "text": "She opens her eyes and gazes at you.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她睁开眼睛，望着你。",
-          "expression": "marriage_kiss",
-          "emotion": "gentle",
-          "events": []
-        },
-        {
-          "speaker": "",
-          "text": "眼眶还是红的，但嘴角是弯的。",
+          "text": "Her eyes are still red, but her lips are smiling.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "以这个吻为誓。",
+          "text": "Let this kiss be our vow.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "",
-          "text": "她轻轻重复了一遍，像是在对自己确认。",
+          "text": "She repeats it softly, as if confirming it to herself.",
           "expression": "marriage_kiss",
           "emotion": "gentle",
           "events": []
         },
         {
           "speaker": "${maid}",
-          "text": "{maid}这一辈子……都是主人的人了。",
+          "text": "{maid} belongs to Master... for this whole life now.",
           "expression": "marriage_shy_deep",
           "emotion": "shy",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "嗯。",
+          "text": "Mm.",
           "expression": "marriage_open_mouth2",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "",
-          "text": "你替她把头纱理好。",
+          "text": "You straighten her veil for her.",
           "expression": "marriage_open_mouth2",
           "emotion": "surprised",
           "events": []
         },
         {
           "speaker": "${player}",
-          "text": "是我的妻子了。",
+          "text": "You are my wife now.",
           "expression": "marriage_open_mouth2",
           "emotion": "normal",
           "events": []
@@ -7129,7 +7129,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "她望着你，你也望着她。",
+          "text": "She looks at you, and you look at her.",
           "portrait": "maid",
           "expression": "marriage_excited_shy",
           "emotion": "gentle",
@@ -7138,14 +7138,14 @@
         },
         {
           "speaker": "",
-          "text": "目光落定，山盟海誓，像是把往后几十年的风雨、晴空、晨昏、四季，都一并应允了。",
+          "text": "Your eyes meet and settle. The vows you made feel as if they have accepted all the storms, clear skies, mornings, evenings, and seasons that will come in the decades ahead.",
           "expression": "marriage_excited_shy",
           "emotion": "normal",
           "events": []
         },
         {
           "speaker": "",
-          "text": "从此以后，你的朝夕，便是我的朝夕。",
+          "text": "From this day on, your days and nights are mine as well.",
           "expression": "marriage_excited_shy",
           "emotion": "gentle",
           "events": []

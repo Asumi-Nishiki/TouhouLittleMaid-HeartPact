@@ -8,6 +8,7 @@ import com.example.maidmarriage.network.payload.UpdatePlayerSettingsPayload;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -16,16 +17,19 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 public class MaidMarriageConfigScreen extends Screen {
     private final Screen parent;
 
     private final List<AbstractWidget> generalWidgets = new ArrayList<>();
+    private final List<AbstractWidget> voiceWidgets = new ArrayList<>();
     private final List<AbstractWidget> rhythmWidgets = new ArrayList<>();
     private final List<AbstractWidget> actionWidgets = new ArrayList<>();
     private final List<AbstractWidget> debugWidgets = new ArrayList<>();
 
     private Button tabGeneral;
+    private Button tabVoice;
     private Button tabRhythm;
     private Button tabAction;
     private Button tabDebug;
@@ -33,6 +37,10 @@ public class MaidMarriageConfigScreen extends Screen {
     private Button resetButton;
     private EditBox maidAddressingBox;
     private EditBox childMaidAddressingBox;
+    private EditBox voiceScriptNameBox;
+    private EditBox heartPactTtsChildNameBox;
+    private EditBox heartPactTtsPlayerNameBox;
+    private EditBox heartPactTtsPlayerMaidNameBox;
 
     private Page activePage = Page.GENERAL;
 
@@ -44,6 +52,7 @@ public class MaidMarriageConfigScreen extends Screen {
     @Override
     protected void init() {
         this.generalWidgets.clear();
+        this.voiceWidgets.clear();
         this.rhythmWidgets.clear();
         this.actionWidgets.clear();
         this.debugWidgets.clear();
@@ -53,17 +62,19 @@ public class MaidMarriageConfigScreen extends Screen {
         int panelTop = this.height / 6;
 
         int tabY = panelTop + 24;
-        int tabW = 78;
-        int tabGap = 8;
+        int tabW = 62;
+        int tabGap = 6;
 
         tabGeneral = this.addRenderableWidget(Button.builder(Component.translatable("config.maidmarriage.general"),
                 b -> setActivePage(Page.GENERAL)).bounds(panelLeft + 10, tabY, tabW, 20).build());
+        tabVoice = this.addRenderableWidget(Button.builder(Component.translatable("config.maidmarriage.voice"),
+                b -> setActivePage(Page.VOICE)).bounds(panelLeft + 10 + tabW + tabGap, tabY, tabW, 20).build());
         tabRhythm = this.addRenderableWidget(Button.builder(Component.translatable("config.maidmarriage.rhythm_game"),
-                b -> setActivePage(Page.RHYTHM)).bounds(panelLeft + 10 + tabW + tabGap, tabY, tabW, 20).build());
+                b -> setActivePage(Page.RHYTHM)).bounds(panelLeft + 10 + (tabW + tabGap) * 2, tabY, tabW, 20).build());
         tabAction = this.addRenderableWidget(Button.builder(Component.translatable("config.maidmarriage.action_keys"),
-                b -> setActivePage(Page.ACTION)).bounds(panelLeft + 10 + (tabW + tabGap) * 2, tabY, tabW, 20).build());
+                b -> setActivePage(Page.ACTION)).bounds(panelLeft + 10 + (tabW + tabGap) * 3, tabY, tabW, 20).build());
         tabDebug = this.addRenderableWidget(Button.builder(Component.translatable("config.maidmarriage.debug"),
-                b -> setActivePage(Page.DEBUG)).bounds(panelLeft + 10 + (tabW + tabGap) * 3, tabY, tabW, 20).build());
+                b -> setActivePage(Page.DEBUG)).bounds(panelLeft + 10 + (tabW + tabGap) * 4, tabY, tabW, 20).build());
 
         int left = panelLeft + 16;
         int right = panelLeft + panelWidth / 2 + 4;
@@ -104,6 +115,54 @@ public class MaidMarriageConfigScreen extends Screen {
                         b -> this.minecraft.setScreen(new MaidMarriageGuideScreen(this)))
                 .bounds(left, y, 320, 20)
                 .build());
+
+        // VOICE PAGE
+        y = tabY + 28;
+        addToPage(Page.VOICE, CycleButton.booleanBuilder(Component.translatable("options.on"), Component.translatable("options.off"))
+                .withInitialValue(ModConfigs.heartPactVoiceEnabled())
+                .create(left, y, 156, 20, Component.translatable("config.maidmarriage.voice_enabled"),
+                        (btn, v) -> ModConfigs.setHeartPactVoiceEnabled(v)));
+
+        addToPage(Page.VOICE, new DoubleSlider(right, y, 156, 20,
+                Component.translatable("config.maidmarriage.voice_volume"),
+                0.0D, 2.0D, ModConfigs.heartPactVoiceVolume(), ModConfigs::setHeartPactVoiceVolume));
+
+        y += 34;
+        voiceScriptNameBox = addToPage(Page.VOICE, new EditBox(this.font, left, y, 156, 20,
+                Component.translatable("config.maidmarriage.voice_script_name")));
+        voiceScriptNameBox.setMaxLength(64);
+        voiceScriptNameBox.setValue(ModConfigs.heartPactVoiceScriptName());
+        voiceScriptNameBox.setHint(Component.literal("ja_jp / zh_cn / en_us"));
+        voiceScriptNameBox.setResponder(ModConfigs::setHeartPactVoiceScriptName);
+
+        addToPage(Page.VOICE, Button.builder(Component.translatable("config.maidmarriage.voice_open_directory"),
+                        b -> Util.getPlatform().openFile(voiceDirectory().toFile()))
+                .bounds(right, y, 156, 20)
+                .build());
+
+        y += 32;
+        heartPactTtsChildNameBox = addToPage(Page.VOICE, new EditBox(this.font, left, y, 156, 20,
+                Component.translatable("config.maidmarriage.heart_pact_tts_child_name")));
+        heartPactTtsChildNameBox.setMaxLength(64);
+        heartPactTtsChildNameBox.setValue(ModConfigs.heartPactTtsChildName());
+        heartPactTtsChildNameBox.setHint(Component.literal("Little Maid / 小女仆 / 小さなメイド"));
+        heartPactTtsChildNameBox.setResponder(ModConfigs::setHeartPactTtsChildName);
+
+        heartPactTtsPlayerNameBox = addToPage(Page.VOICE, new EditBox(this.font, right, y, 156, 20,
+                Component.translatable("config.maidmarriage.heart_pact_tts_player_name")));
+        heartPactTtsPlayerNameBox.setMaxLength(64);
+        heartPactTtsPlayerNameBox.setValue(ModConfigs.heartPactTtsPlayerName());
+        heartPactTtsPlayerNameBox.setHint(Component.literal("Empty = current username/addressing"));
+        heartPactTtsPlayerNameBox.setResponder(ModConfigs::setHeartPactTtsPlayerName);
+
+        y += 32;
+        heartPactTtsPlayerMaidNameBox = addToPage(Page.VOICE, new EditBox(this.font, left, y, 156, 20,
+                Component.translatable("config.maidmarriage.heart_pact_tts_player_maid_name")));
+        heartPactTtsPlayerMaidNameBox.setMaxLength(64);
+        heartPactTtsPlayerMaidNameBox.setValue(ModConfigs.heartPactTtsPlayerMaidName());
+        heartPactTtsPlayerMaidNameBox.setHint(Component.literal("Empty = current maid addressing"));
+        heartPactTtsPlayerMaidNameBox.setResponder(ModConfigs::setHeartPactTtsPlayerMaidName);
+        refreshVoiceTtsHints();
 
         // RHYTHM PAGE
         y = tabY + 28;
@@ -156,6 +215,7 @@ public class MaidMarriageConfigScreen extends Screen {
         this.addRenderableWidget(widget);
         switch (page) {
             case GENERAL -> generalWidgets.add(widget);
+            case VOICE -> voiceWidgets.add(widget);
             case RHYTHM -> rhythmWidgets.add(widget);
             case ACTION -> actionWidgets.add(widget);
             case DEBUG -> debugWidgets.add(widget);
@@ -166,11 +226,13 @@ public class MaidMarriageConfigScreen extends Screen {
     private void setActivePage(Page page) {
         this.activePage = page;
         togglePage(generalWidgets, page == Page.GENERAL);
+        togglePage(voiceWidgets, page == Page.VOICE);
         togglePage(rhythmWidgets, page == Page.RHYTHM);
         togglePage(actionWidgets, page == Page.ACTION);
         togglePage(debugWidgets, page == Page.DEBUG);
 
         tabGeneral.active = page != Page.GENERAL;
+        tabVoice.active = page != Page.VOICE;
         tabRhythm.active = page != Page.RHYTHM;
         tabAction.active = page != Page.ACTION;
         tabDebug.active = page != Page.DEBUG;
@@ -178,6 +240,9 @@ public class MaidMarriageConfigScreen extends Screen {
         tabGeneral.setMessage(page == Page.GENERAL
                 ? Component.literal("> " + Component.translatable("config.maidmarriage.general").getString())
                 : Component.translatable("config.maidmarriage.general"));
+        tabVoice.setMessage(page == Page.VOICE
+                ? Component.literal("> " + Component.translatable("config.maidmarriage.voice").getString())
+                : Component.translatable("config.maidmarriage.voice"));
         tabRhythm.setMessage(page == Page.RHYTHM
                 ? Component.literal("> " + Component.translatable("config.maidmarriage.rhythm_game").getString())
                 : Component.translatable("config.maidmarriage.rhythm_game"));
@@ -216,6 +281,31 @@ public class MaidMarriageConfigScreen extends Screen {
             graphics.drawString(this.font, Component.translatable("config.maidmarriage.child_maid_addressing"),
                     childMaidAddressingBox.getX(), childMaidAddressingBox.getY() - 10, 0xFFD8D0EB, false);
         }
+        if (activePage == Page.VOICE) {
+            if (voiceScriptNameBox != null && voiceScriptNameBox.visible) {
+                graphics.drawString(this.font, Component.translatable("config.maidmarriage.voice_script_name"),
+                        voiceScriptNameBox.getX(), voiceScriptNameBox.getY() - 10, 0xFFD8D0EB, false);
+            }
+            if (heartPactTtsChildNameBox != null && heartPactTtsChildNameBox.visible) {
+                graphics.drawString(this.font, Component.translatable("config.maidmarriage.heart_pact_tts_child_name"),
+                        heartPactTtsChildNameBox.getX(), heartPactTtsChildNameBox.getY() - 10, 0xFFD8D0EB, false);
+            }
+            if (heartPactTtsPlayerNameBox != null && heartPactTtsPlayerNameBox.visible) {
+                graphics.drawString(this.font, Component.translatable("config.maidmarriage.heart_pact_tts_player_name"),
+                        heartPactTtsPlayerNameBox.getX(), heartPactTtsPlayerNameBox.getY() - 10, 0xFFD8D0EB, false);
+            }
+            if (heartPactTtsPlayerMaidNameBox != null && heartPactTtsPlayerMaidNameBox.visible) {
+                graphics.drawString(this.font, Component.translatable("config.maidmarriage.heart_pact_tts_player_maid_name"),
+                        heartPactTtsPlayerMaidNameBox.getX(), heartPactTtsPlayerMaidNameBox.getY() - 10, 0xFFD8D0EB, false);
+            }
+            graphics.drawWordWrap(this.font, Component.translatable("config.maidmarriage.voice.hint"),
+                    panelLeft + 188, panelTop + 150, 148, 0xFFB7ADCF);
+            graphics.drawWordWrap(this.font, Component.translatable("config.maidmarriage.voice.directory",
+                            voiceDirectory().toString()),
+                    panelLeft + 16, panelTop + 190, 320, 0xFFFFD38B);
+            graphics.drawWordWrap(this.font, Component.translatable("config.maidmarriage.voice.addon_hint"),
+                    panelLeft + 16, panelTop + 218, 320, 0xFFD8D0EB);
+        }
         if (activePage == Page.DEBUG) {
             graphics.drawWordWrap(this.font, Component.translatable("config.maidmarriage.debug.hint"),
                     panelLeft + 16, panelTop + 96, 320, 0xFFB7ADCF);
@@ -248,6 +338,12 @@ public class MaidMarriageConfigScreen extends Screen {
         ModConfigs.setMaidAddressing("");
         ModConfigs.setChildMaidAddressing("爸爸");
         ModConfigs.setDialogueScriptPath("maidmarriage/custom-dialogues.json");
+        ModConfigs.setHeartPactVoiceEnabled(false);
+        ModConfigs.setHeartPactVoiceScriptName("ja_jp");
+        ModConfigs.setHeartPactTtsChildName("");
+        ModConfigs.setHeartPactTtsPlayerName("");
+        ModConfigs.setHeartPactTtsPlayerMaidName("");
+        ModConfigs.setHeartPactVoiceVolume(1.0D);
         ModConfigs.setRhythmAlwaysSkip(false);
         ModConfigs.setPregnancyChance(0.6D);
         ModConfigs.setLiftHeight(0.10D);
@@ -260,6 +356,12 @@ public class MaidMarriageConfigScreen extends Screen {
         if (this.minecraft != null) {
             this.minecraft.setScreen(new MaidMarriageConfigScreen(parent));
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        refreshVoiceTtsHints();
     }
 
     @Override
@@ -283,11 +385,31 @@ public class MaidMarriageConfigScreen extends Screen {
         return Component.translatable(enabled ? "options.on" : "options.off");
     }
 
+    private void refreshVoiceTtsHints() {
+        if (heartPactTtsChildNameBox != null) {
+            heartPactTtsChildNameBox.setHint(Component.translatable("config.maidmarriage.heart_pact_tts_child_name.hint.ja"));
+        }
+        if (heartPactTtsPlayerNameBox != null) {
+            heartPactTtsPlayerNameBox.setHint(Component.translatable("config.maidmarriage.heart_pact_tts_player_name.hint.ja"));
+        }
+        if (heartPactTtsPlayerMaidNameBox != null) {
+            heartPactTtsPlayerMaidNameBox.setHint(Component.translatable("config.maidmarriage.heart_pact_tts_player_maid_name.hint.ja"));
+        }
+    }
+
     private enum Page {
         GENERAL,
+        VOICE,
         RHYTHM,
         ACTION,
         DEBUG
+    }
+
+    private static java.nio.file.Path voiceDirectory() {
+        return FMLPaths.CONFIGDIR.get()
+                .resolve("easyttstlm")
+                .resolve("heart_pact_voice")
+                .resolve(ModConfigs.heartPactVoiceScriptName());
     }
 
     private static final class IntSlider extends AbstractSliderButton {

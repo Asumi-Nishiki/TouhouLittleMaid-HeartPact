@@ -112,6 +112,22 @@ public class DialogueTheme {
         public int hoverColor = 0x44000000;
         public int inset = 4;
         public float gapX = 0.8F;
+        public Float hideX;
+        public Float hideY;
+        public Float hideWidth;
+        public Float hideHeight;
+        public Float voiceX;
+        public Float voiceY;
+        public Float voiceWidth;
+        public Float voiceHeight;
+        public Float exitX;
+        public Float exitY;
+        public Float exitWidth;
+        public Float exitHeight;
+        public Float cameraX;
+        public Float cameraY;
+        public Float cameraWidth;
+        public Float cameraHeight;
     }
 
     public static class ZoomLabel extends LayoutBlock {

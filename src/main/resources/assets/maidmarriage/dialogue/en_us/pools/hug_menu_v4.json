@@ -1,0 +1,205 @@
+{
+  "entry": {
+    "initial": {
+      "depressed": [
+        "I am sorry, {player}. I am not at my best today, but I will try not to trouble you.\nHer hands are folded before her, held a little too tightly.",
+        "If I answer slowly today, please just remind me.\nShe does not raise her head. Her voice is calm, but too flat."
+      ],
+      "general": [
+        "If you are not busy today, would you talk with me for a while?\nHer tone is softer than usual, fingers idly worrying at her skirt.",
+        "It is nothing special. Today just feels quiet, and I wanted to say a few words to you.\nShe lowers her eyes and studies the tips of her shoes."
+      ],
+      "normal": [
+        "Good morning, {player}. Do you have any orders for today?\nShe stands neatly, lets her gaze rest on your face, then politely looks away.",
+        "You are up early. Then today... would you like me to come with you?\nShe keeps her eyes near your shoulder, speaking more softly than usual."
+      ],
+      "happy": [
+        "The weather is lovely today. If you like, I can stay with you a little longer.\nAfter saying it, the corner of her mouth lifts just a little.",
+        "You look energetic today. That makes me feel relieved.\nShe says \"relieved\" very softly, then straightens an already tidy cuff."
+      ],
+      "love": [
+        "{player}, if you are not busy today... may I ask you to talk with me a little more?\nShe stands properly, but her eyes do not leave you.",
+        "When you come over, my heart settles down.\nShe blinks twice, fingers tightening gently at her skirt."
+      ]
+    },
+    "warm": {
+      "depressed": [
+        "I may look a little tired today. Please do not worry too much.\nShe speaks like usual, though her blinks are slower.",
+        "I can keep you company. I just... need a moment first.\nThe last words are almost a whisper."
+      ],
+      "general": [
+        "Today feels quieter than usual. Would you like to chat with me?\nShe drops her gaze, fingertips circling the edge of her skirt.",
+        "If there is nothing urgent, I can sit with you for a while. Just today.\nShe adds the last words too quickly, ears faintly red."
+      ],
+      "normal": [
+        "Good morning, {player}. If you want, maybe stay with me for a little while first?\nShe tests the words carefully, as if wondering whether she is allowed to say them.",
+        "Do you need me with you today too?\nThe question is formal, but her gaze lingers longer than before."
+      ],
+      "happy": [
+        "The weather is so nice today. If there is nothing urgent, I will stay with you longer.\nHer steps are light, and she looks back at you with bright eyes.",
+        "You came. Good timing. I was just thinking of checking whether you needed help.\nShe says it quickly, as if she had prepared the line."
+      ],
+      "love": [
+        "There is no rush today. Stay as long as you want. I will be with you.\nHer voice softens, and she exhales like something inside her has finally loosened.",
+        "If you have not decided what to say yet, I can just stand here with you. It is okay.\nHer mouth curves gently, perhaps without her noticing."
+      ]
+    },
+    "close": {
+      "depressed": [
+        "{player}... {maid} does not really want to be alone today.\nShe presses her lips together. The words are softer than what she usually allows herself to say.",
+        "Just stand a little closer. You do not need to do anything. Really.\nHer voice is low, the ending barely trembling."
+      ],
+      "general": [
+        "I feel only so-so today. So you are responsible for cheering {maid} up, okay?\nShe realizes how much it sounds like asking to be spoiled, and her ears redden at once.",
+        "Tell me something interesting. Or... you can just stand closer. N-not like that!\nHer hands flutter in front of her as she panics first."
+      ],
+      "normal": [
+        "Morning, {player}. You came earlier than {maid} expected.\nThe towel in her hands stops halfway folded. When she starts again, it is folded wrong.",
+        "Where are you going today? If it is not far... {maid} can come too.\nShe pretends to fix her sleeve, and the words \"can come too\" are very small."
+      ],
+      "happy": [
+        "If you praise {maid} today... maybe {maid} will have even more energy.\nShe regrets saying it immediately, fingers twisting in her skirt.",
+        "Your timing is perfect. {maid} was just wondering whether you would come by...\nShe stops halfway. \"I just happened to think of it,\" she adds too quickly."
+      ],
+      "love": [
+        "No need to hurry. {maid} today... um, does not miss you that much. I just have nothing else to do.\nShe turns her face away first. Even she does not believe that lie.",
+        "If you have not decided what to do, {maid} can sit with you first. As long as you like, anyway...\nShe swallows the rest, but her toes tap lightly on the floor."
+      ]
+    },
+    "dating": {
+      "depressed": [
+        "{player}, please do not ask what is wrong today. Okay?\nShe comes a little closer, lashes trembling as she speaks.",
+        "I thought I could handle it alone. But when I saw you...\nShe bites her lower lip, fingers gripping her sleeve until pale."
+      ],
+      "general": [
+        "I feel kind of average today. You... want to take responsibility and cheer {maid} up?\nShe looks away at once, ears turning red.",
+        "I am not slacking off. I just... want to stay with you a little longer.\nShe finally says it all, then remembers to blush."
+      ],
+      "normal": [
+        "Morning, {player}. The moment you came, {maid} felt ready for the day.\nShe realizes what she said and looks down to fuss with her skirt.",
+        "Do you want {maid} with you today? As your maid... and as your lover.\nHer face reddens to her neck, but she does not look away.",
+        "{maid} will be free after noon. During that time, would you...\nShe leaves the rest unsaid, gaze waiting near your hand.",
+        "{maid} is yours now. So... I want to stay with you more. Is that not allowed?\nShe regrets it at once and peeks at you through her fingers."
+      ],
+      "happy": [
+        "I am in such a good mood today. The reason... you should know, right?\nShe glances up, then looks away before you can answer.",
+        "You came. {maid} was just wondering when you would come find {maid}...\nThis time, she does not add that it was only for work.",
+        "Today is perfect for something happy. Like... you staying with {maid} a little longer. Is that okay?\nShe turns aside, leaving only one red ear facing you."
+      ],
+      "love": [
+        "Let us take today slowly. Anyway... {maid} only favors you.\nShe covers her face, then peeks through her fingers.",
+        "Even if we do nothing today, just staying with you would make {maid} very happy.\nTwo quiet seconds pass before her blush reaches her neck.",
+        "You can talk slowly. {maid} likes listening to you. And likes...\nThe words \"when you speak only to {maid}\" stay caught in her throat."
+      ]
+    },
+    "marriage": {
+      "depressed": [
+        "{player}... hug {maid}, please.\nShe walks over and buries her face in your chest, holding your clothes tightly.",
+        "{maid} is not doing well today... but when you are here, {maid} already feels like she is getting better.\nHer voice is muffled in your arms. \"Hold me a little longer. Just a little.\""
+      ],
+      "general": [
+        "I feel so-so today. Spoil {maid} a little.\nShe rests her forehead on your shoulder and simply leans there.",
+        "There is nothing I especially want to do... so {maid} will follow you. Whatever you do, {maid} will watch beside you.\nShe laughs quietly at how clingy it sounds, but still catches your sleeve."
+      ],
+      "normal": [
+        "Morning. {maid} was just thinking about you when you came over.\nShe laughs first, probably because she says it so often and still wants to every time.",
+        "Going out today? Then {maid} will come with you. Wait just a second.\nShe hurries to get ready, then looks back halfway to make sure you are still there.",
+        "We just woke up... but seeing you still makes me want to say welcome home.\nShe tilts her head by the door, then grows shy at her own words."
+      ],
+      "happy": [
+        "I feel especially happy today! Maybe because I thought of you before I even got up.\nShe covers her mouth, ears red. Even after marriage, she still blushes at such words.",
+        "What do you want to do today? {maid} wants to do all of it with you. Even lazing around... should we be lazy together?\nHer eyes shine as if proposing something very important."
+      ],
+      "love": [
+        "{player}... {maid} has been thinking of you since waking up. You are right beside me, and I still miss you.\nShe hides her face in your shoulder. \"Do not laugh.\"",
+        "Let us spend today slowly. {maid} is not going anywhere. {maid} is here, beside you.\nEven after all this time, saying it still makes her heart race.",
+        "Every morning when {maid} opens her eyes and sees you, she gets secretly happy for a moment before getting up.\nHer fingers draw circles in your palm, voice shrinking smaller and smaller."
+      ]
+    }
+  },
+  "longing_entry": {
+    "dating": [
+      "You finally came... {maid} thought she would have to wait alone until night again.\nHer tone is light, but her fingers have already caught her hem.",
+      "{player} seems so busy lately. {maid} knows she should not be selfish, but... I still want to see you.\nShe glances up, then lowers her eyes again.",
+      "I am not blaming you. It is just that when I see you come over, {maid} suddenly feels... safe again.\nShe exhales softly, as if letting go of words held too long."
+    ],
+    "marriage": [
+      "Welcome home, {player}. {maid} waited for you a long time... I am not blaming you. I just wanted to say it once.\nShe smiles gently, eyes clingier than usual.",
+      "Please do not hurry away today, okay? {maid} wants to slowly make up for all the words we missed.\nShe takes your hand lightly, but does not let go.",
+      "The house gets a little too quiet without you.\nShe says it plainly, yet comes closer faster than usual."
+    ],
+    "low_mood": [
+      "...So {player} still remembers to come find {maid}.\nShe is not truly angry; her voice is just lower than usual.",
+      "Do not cover it with jokes today, okay? {maid} wants to hear you say something seriously.\nThere is no blame in her eyes, only a little hurt she cannot hide.",
+      "{maid} is a little sad today. Could you... stay with me first?\nShe falls quiet after saying it, as if waiting for you to come closer."
+    ]
+  },
+  "action": {
+    "pet": {
+      "warm": [
+        "Eh? What does this... mean?\nShe stiffens for a moment. She does not dodge, but her ears are already red.",
+        "I am not a child. But... if you think this is appropriate...\nHer voice grows smaller as her fingers tighten and loosen at her skirt."
+      ],
+      "close": [
+        "Y-you are doing it again... {maid} cannot stay calm like this.\nHer shoulders shrink, but she does not move away.",
+        "It is not that I dislike it. {maid} just does not know where to look.\nHer eyes land on your sleeve, ears burning."
+      ],
+      "dating": [
+        "You want to pat me again, don’t you? Honestly...\nShe says that, but her head is already lowered.",
+        "{maid} likes it. So... be gentle, okay?\nOnly after saying it does she realize how honest she was."
+      ],
+      "marriage": [
+        "Mm... head pats again today? {maid} is ready.\nShe obediently lowers her head, eyes narrowing under your hand.",
+        "A little longer. You are the one who made {maid} this spoiled.\nShe smiles with her eyes closed and rubs lightly against your palm."
+      ]
+    },
+    "hug": {
+      "close": [
+        "Eh? W-wait... {maid} is not ready yet.\nHer hands freeze in the air. She stiffens, but does not step back.",
+        "Isn’t this too close... no, {maid} does not mean it like that. Do not misunderstand.\nHer breathing has already gone unsteady."
+      ],
+      "dating": [
+        "Can you hold me a little longer today? Just...\nThe rest never comes out. She hides her face in your arms.",
+        "When you hold {maid}, {maid} really wants to be lazy.\nHer forehead leans in, her voice softening word by word."
+      ],
+      "marriage": [
+        "Mm... this is the best.\nShe nestles into you, finds a comfortable spot, and stays there.",
+        "Do not move yet. {maid} has not had enough.\nHer arms tighten behind your back, face rubbing lightly against your chest."
+      ]
+    },
+    "kiss": {
+      "dating": [
+        "...{maid} almost could not stand just now.\nShe hides her face in her hands, ears red through the gaps.",
+        "Y-you could have warned me first...\nHer lips move, but she still cannot quite speak properly."
+      ],
+      "marriage": [
+        "...Every time. {maid} is already married, and her heart still races like this.\nShe touches her chest, glances up, then looks away with a smile.",
+        "After kissing me, you are not allowed to run. Hold me a little longer.\nShe is already tugging your sleeve and leaning softly into you.",
+        "...Do not keep looking at {maid} right after that.\nShe turns her face aside at once, but her fingers still stubbornly cling to your sleeve.",
+        "Even now, a kiss like that still leaves {maid} flustered.\nShe tries to act composed, yet the blush has already climbed all the way to the tips of her ears."
+      ]
+    },
+    "release_hug": [
+      "Eh... already letting go?\nHer hand remains on your arm for a moment, eyes a little reluctant.",
+      "Fine. Then you have to make it up next time. {maid} will remember.\nHer fingers slide from your clothes and tap the back of your hand like a mark."
+    ],
+    "low_comfort": [
+      "Please do not ask why yet.\nHer hands are folded before her, voice much lower than usual.",
+      "It is enough that you are here.\nShe does not look up, but her breathing slowly steadies."
+    ]
+  },
+  "branch": {
+    "flatter_praise": [
+      "Wait, wait. Why are you so good at praising me today... stop already!\nShe fans her face with both hands, ears red, eyes shining.",
+      "If you keep praising me, {maid} will really believe it. Will you take responsibility?\nShe tries to stop you, but cannot hide her smile."
+    ],
+    "flatter_gift": [
+      "That face says, ‘next time for sure,’ doesn’t it?\nShe tilts her head, holding back a laugh.",
+      "It is okay. Gifts can wait. As long as you remember {maid}.\nHer voice is soft; she lowers her head and smiles."
+    ],
+    "communication_crank": [
+      "Eh? Turn the crank? W-what do you take {maid} for...\nShe puffs her cheeks at you, but her eyes are full of laughter.",
+      "I can go, but when I come back, you must cheer {maid} up properly.\nShe tries to look stern, but her mouth curves first."
+    ]
+  }
+}

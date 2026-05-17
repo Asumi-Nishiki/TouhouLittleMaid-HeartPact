@@ -18,6 +18,8 @@ import com.example.maidmarriage.client.dialoguesystem.runtime.DialogueFrameView;
 import com.example.maidmarriage.client.dialoguesystem.runtime.HugDialogueRuntimeBridge;
 import com.example.maidmarriage.client.dialoguesystem.runtime.HugStoryResumeState;
 import com.example.maidmarriage.client.dialoguesystem.runtime.HugDialogueStageFlavorComposer;
+import com.example.maidmarriage.client.voice.HeartPactVoicePlayback;
+import com.example.maidmarriage.client.voice.HeartPactVoiceManagerLauncher;
 import com.example.maidmarriage.compat.MaidMoodManager;
 import com.example.maidmarriage.compat.MaidRelationshipManager;
 import com.example.maidmarriage.compat.RelationStage;
@@ -64,7 +66,7 @@ import org.lwjgl.glfw.GLFW;
  */
 @Mod.EventBusSubscriber(modid = MaidMarriageMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class HugActionScreen extends Screen {
-    private static final Pattern STRUCTURED_DIALOGUE_LINE = Pattern.compile("^(女仆|旁白|玩家)\\s*[：:]\\s*(.+)$");
+    private static final Pattern STRUCTURED_DIALOGUE_LINE = Pattern.compile("^(女仆|小女仆|旁白|玩家|Maid|Little Maid|Narration|Player|メイド|小さなメイド|地の文|プレイヤー)\\s*[：:]\\s*(.+)$");
     /**
      * 旧拥抱 UI 的默认主题。
      *
@@ -72,6 +74,7 @@ public class HugActionScreen extends Screen {
      * 或者声明的主题资源写错了，就自动回退到这里。
      */
     private static final ResourceLocation DEFAULT_THEME_ID = new ResourceLocation(MaidMarriageMod.MOD_ID, "hug_default");
+    private static final Pattern SINGLE_TEMPLATE_VARIABLE = Pattern.compile("^\\$?\\{([A-Za-z0-9_]+)}$");
 
     /**
      * 当前接入旧拥抱 UI 的新剧情场景。
@@ -91,6 +94,8 @@ public class HugActionScreen extends Screen {
      * 旧界面右上角的“退出拥抱”按钮图标。
      */
     private static final ResourceLocation EXIT_ICON = new ResourceLocation(MaidMarriageMod.MOD_ID, "textures/gui/hug_exit_icon.png");
+    private static final ResourceLocation VOICE_ICON = new ResourceLocation(MaidMarriageMod.MOD_ID, "textures/gui/hug_voice_icon.png");
+    private static final ResourceLocation VOICE_DISABLED_ICON = new ResourceLocation(MaidMarriageMod.MOD_ID, "textures/gui/hug_voice_icon_disabled.png");
 
     /**
      * 当剧情没有提供可解析的表情贴图时使用的兜底贴图。
@@ -160,6 +165,11 @@ public class HugActionScreen extends Screen {
     private final DialogueIconButtonComponent hideButton = new DialogueIconButtonComponent();
 
     /**
+     * 当前台词语音重播按钮。
+     */
+    private final DialogueIconButtonComponent voiceReplayButton = new DialogueIconButtonComponent();
+
+    /**
      * 退出按钮组件。
      */
     private final DialogueIconButtonComponent exitButton = new DialogueIconButtonComponent();
@@ -212,6 +222,7 @@ public class HugActionScreen extends Screen {
      * 旧调试开关。
      */
     private boolean debugLayout;
+    private boolean cornerControlsDebug;
 
     /**
      * 右下角镜头微调面板是否展开。
@@ -258,7 +269,9 @@ public class HugActionScreen extends Screen {
     private int structuredDialogueIndex;
     private String structuredDialogueKey = "";
     private String currentHintText = "";
+    private boolean currentLineHasVoice;
     private boolean giftResultDialogueActive;
+    private long lastVoiceReplayClickAt;
 
     public HugActionScreen() {
         this(HUG_SCENARIO_ID, null, false, text("ui.maidmarriage.hug_action.title"));
@@ -422,6 +435,7 @@ public class HugActionScreen extends Screen {
             option.render(graphics, this.width, this.height, mouseX, mouseY);
         }
         hideButton.render(graphics, this.width, this.height, mouseX, mouseY);
+        renderVoiceReplayButton(graphics, mouseX, mouseY);
         exitButton.render(graphics, this.width, this.height, mouseX, mouseY);
         renderTopRightStatus(graphics);
         renderZoomLabel(graphics);
@@ -450,6 +464,21 @@ public class HugActionScreen extends Screen {
         // 点击隐藏按钮：只隐藏 UI，不改变剧情状态。
         if (hideButton.contains(mouseX, mouseY, this.width, this.height)) {
             setCompactMode(true);
+            return true;
+        }
+
+        // 点击麦克风按钮：如果当前女仆台词已有预生成语音，就重新播放一次。
+        if (voiceReplayButton.contains(mouseX, mouseY, this.width, this.height)) {
+            long now = System.currentTimeMillis();
+            if (now - lastVoiceReplayClickAt <= 250L) {
+                lastVoiceReplayClickAt = 0L;
+                if (!openVoiceManagerForCurrentLine()) {
+                    showDebugMessage(Component.translatable("message.maidmarriage.voice_manager.need_addon").getString());
+                }
+                return true;
+            }
+            lastVoiceReplayClickAt = now;
+            replayCurrentVoiceLine();
             return true;
         }
 
@@ -521,7 +550,17 @@ public class HugActionScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_F8) {
             debugLayout = !debugLayout;
+            cornerControlsDebug = false;
             showDebugMessage(debugLayout ? "Hug UI Debug: ON" : "Hug UI Debug: OFF");
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_F10) {
+            cornerControlsDebug = !cornerControlsDebug;
+            debugLayout = cornerControlsDebug;
+            debugTarget = DebugTarget.HIDE_BUTTON;
+            showDebugMessage(cornerControlsDebug
+                    ? "Corner Controls Debug: ON"
+                    : "Corner Controls Debug: OFF");
             return true;
         }
         if (debugLayout && handleDebugKey(keyCode, modifiers)) {
@@ -624,14 +663,9 @@ public class HugActionScreen extends Screen {
         portrait.hidden = !theme.portrait.visible;
 
         hideButton.applyTheme(theme.controlIcon).setIconTexture(HIDE_ICON).setChromeEnabled(false);
+        voiceReplayButton.applyTheme(theme.controlIcon).setIconTexture(VOICE_ICON).setChromeEnabled(false);
         exitButton.applyTheme(theme.controlIcon).setIconTexture(EXIT_ICON).setChromeEnabled(false);
-        hideButton.setBounds(theme.controlIcon.x, theme.controlIcon.y, theme.controlIcon.width, theme.controlIcon.height);
-        exitButton.setBounds(
-                theme.controlIcon.x + theme.controlIcon.width,
-                theme.controlIcon.y,
-                theme.controlIcon.width,
-                theme.controlIcon.height
-        );
+        applyCornerButtonBounds();
 
         // 选项列表根据当前剧情帧动态生成，不再在这里写死。
         rebuildOptionComponents(dialogueRuntime.currentFrame());
@@ -649,6 +683,37 @@ public class HugActionScreen extends Screen {
         int width = Math.round(this.width * (theme.background.lineWidth / 100.0F));
         DialogueUiRender.fillHorizontalGradient(graphics, x, y, width, 2,
                 0x00FFFFFF, 0x58FFEAF2, 0xDDFCEFF4, 0x58FFEAF2, 0x00FFFFFF);
+    }
+
+    private void renderVoiceReplayButton(GuiGraphics graphics, int mouseX, int mouseY) {
+        voiceReplayButton.setIconTexture(currentLineHasVoice ? VOICE_ICON : VOICE_DISABLED_ICON);
+        voiceReplayButton.render(graphics, this.width, this.height, mouseX, mouseY);
+    }
+
+    private void applyCornerButtonBounds() {
+        float step = theme.controlIcon.width + theme.controlIcon.gapX;
+        hideButton.setBounds(
+                valueOr(theme.controlIcon.hideX, theme.controlIcon.x),
+                valueOr(theme.controlIcon.hideY, theme.controlIcon.y),
+                valueOr(theme.controlIcon.hideWidth, theme.controlIcon.width),
+                valueOr(theme.controlIcon.hideHeight, theme.controlIcon.height)
+        );
+        voiceReplayButton.setBounds(
+                valueOr(theme.controlIcon.voiceX, theme.controlIcon.x + step),
+                valueOr(theme.controlIcon.voiceY, theme.controlIcon.y),
+                valueOr(theme.controlIcon.voiceWidth, theme.controlIcon.width),
+                valueOr(theme.controlIcon.voiceHeight, theme.controlIcon.height)
+        );
+        exitButton.setBounds(
+                valueOr(theme.controlIcon.exitX, theme.controlIcon.x + step * 2.0F),
+                valueOr(theme.controlIcon.exitY, theme.controlIcon.y),
+                valueOr(theme.controlIcon.exitWidth, theme.controlIcon.width),
+                valueOr(theme.controlIcon.exitHeight, theme.controlIcon.height)
+        );
+    }
+
+    private static float valueOr(@Nullable Float value, float fallback) {
+        return value == null ? fallback : value;
     }
 
     /**
@@ -882,18 +947,30 @@ public class HugActionScreen extends Screen {
     }
 
     private int cameraPanelIconX() {
+        if (theme.controlIcon.cameraX != null) {
+            return Math.round(this.width * (theme.controlIcon.cameraX / 100.0F));
+        }
         return exitButton.x1(this.width) + exitButton.widthPx(this.width);
     }
 
     private int cameraPanelIconY() {
+        if (theme.controlIcon.cameraY != null) {
+            return Math.round(this.height * (theme.controlIcon.cameraY / 100.0F));
+        }
         return exitButton.y1(this.height) + Math.max(0, (exitButton.heightPx(this.height) - cameraPanelIconHeight()) / 2);
     }
 
     private int cameraPanelIconWidth() {
+        if (theme.controlIcon.cameraWidth != null) {
+            return Math.round(this.width * (theme.controlIcon.cameraWidth / 100.0F));
+        }
         return Math.max(10, Math.round(exitButton.widthPx(this.width) * 0.72F));
     }
 
     private int cameraPanelIconHeight() {
+        if (theme.controlIcon.cameraHeight != null) {
+            return Math.round(this.height * (theme.controlIcon.cameraHeight / 100.0F));
+        }
         return Math.max(10, Math.round(exitButton.heightPx(this.height) * 0.72F));
     }
 
@@ -993,6 +1070,12 @@ public class HugActionScreen extends Screen {
                 .setSpeaker(dialogueState.speaker())
                 .setFullText(dialogueState.text(), effectiveResetTypewriter)
                 .setHint(dialogueState.hint());
+        if (effectiveResetTypewriter && structuredDialogueLines.isEmpty()) {
+            String voiceSourceKey = resolveVoiceSourceKey(frame, 0, dialogueState.speaker());
+            updateCurrentVoiceAvailability(frame, 0, dialogueState.speaker(), dialogueState.text(), voiceSourceKey);
+            HeartPactVoicePlayback.playFrame(frame, dialogueState.speaker(),
+                    dialogueState.text(), voiceSourceKey, resolveTargetMaid());
+        }
     }
 
     /**
@@ -1101,6 +1184,7 @@ public class HugActionScreen extends Screen {
             structuredDialogueLines = List.of();
             structuredDialogueIndex = 0;
             structuredDialogueKey = "";
+            updateCurrentVoiceAvailability(null, 0, speaker, bodyText, "");
             dialogueState
                     .setSpeaker(speaker)
                     .setText(Component.literal(bodyText))
@@ -1113,6 +1197,7 @@ public class HugActionScreen extends Screen {
             structuredDialogueIndex = 0;
             structuredDialogueKey = frame.nodeId() + "|blank_choice";
             if (dialogueState.text() == null || dialogueState.text().isBlank()) {
+                currentLineHasVoice = false;
                 dialogueState
                         .setSpeaker(speaker)
                         .setText(Component.literal(""))
@@ -1139,6 +1224,7 @@ public class HugActionScreen extends Screen {
         }
 
         if (structuredDialogueLines.isEmpty()) {
+            updateCurrentVoiceAvailability(frame, 0, speaker, bodyText, resolveVoiceSourceKey(frame, 0, speaker));
             dialogueState
                     .setSpeaker(speaker)
                     .setText(Component.literal(bodyText))
@@ -1152,6 +1238,9 @@ public class HugActionScreen extends Screen {
     }
 
     private void applyStructuredDialogueDisplay(StructuredDialogueLine line, boolean resetTypewriter) {
+        DialogueFrameView frame = dialogueRuntime.currentFrame();
+        String voiceSourceKey = resolveVoiceSourceKey(frame, structuredDialogueIndex, line.speaker());
+        updateCurrentVoiceAvailability(frame, structuredDialogueIndex, line.speaker(), line.text(), voiceSourceKey);
         dialogueState
                 .setSpeaker(line.speaker())
                 .setText(Component.literal(line.text()))
@@ -1160,6 +1249,77 @@ public class HugActionScreen extends Screen {
                 .setSpeaker(dialogueState.speaker())
                 .setFullText(dialogueState.text(), resetTypewriter)
                 .setHint(dialogueState.hint());
+        if (resetTypewriter && currentLineHasVoice) {
+            HeartPactVoicePlayback.playStructuredLine(frame, structuredDialogueIndex,
+                    line.speaker(), line.text(), voiceSourceKey, resolveTargetMaid());
+        }
+    }
+
+    private void updateCurrentVoiceAvailability(@Nullable DialogueFrameView frame,
+                                                int structuredIndex,
+                                                String speaker,
+                                                String text,
+                                                @Nullable String sourceKey) {
+        currentLineHasVoice = text != null
+                && !text.isBlank()
+                && HeartPactVoicePlayback.hasStructuredVoice(frame, structuredIndex, speaker, text, sourceKey);
+    }
+
+    private void replayCurrentVoiceLine() {
+        if (!currentLineHasVoice) {
+            showDebugMessage("当前句没有预生成语音");
+            return;
+        }
+        DialogueFrameView frame = dialogueRuntime.currentFrame();
+        HeartPactVoicePlayback.replayStructuredLine(
+                frame,
+                structuredDialogueLines.isEmpty() ? 0 : structuredDialogueIndex,
+                dialogueState.speaker(),
+                dialogueState.text(),
+                resolveVoiceSourceKey(frame, structuredDialogueLines.isEmpty() ? 0 : structuredDialogueIndex, dialogueState.speaker()),
+                resolveTargetMaid()
+        );
+    }
+
+    private String resolveVoiceSourceKey(@Nullable DialogueFrameView frame, int structuredIndex, String speaker) {
+        if (frame == null) {
+            return "";
+        }
+        String variableName = extractSingleTemplateVariable(frame.text());
+        if (variableName.isBlank()) {
+            return "";
+        }
+        String sourceKey = dialogueRuntime.renderTemplate("${" + variableName + "_source}");
+        if (sourceKey == null || sourceKey.isBlank()) {
+            return "";
+        }
+        if (structuredIndex > 0 && (speaker == null || speaker.isBlank())) {
+            return "";
+        }
+        return sourceKey.trim();
+    }
+
+    private String extractSingleTemplateVariable(String raw) {
+        if (raw == null) {
+            return "";
+        }
+        Matcher matcher = SINGLE_TEMPLATE_VARIABLE.matcher(raw.trim());
+        return matcher.matches() ? matcher.group(1) : "";
+    }
+
+    private boolean openVoiceManagerForCurrentLine() {
+        String text = dialogueState.text();
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        DialogueFrameView frame = dialogueRuntime.currentFrame();
+        String sourceKey = resolveVoiceSourceKey(frame, structuredDialogueLines.isEmpty() ? 0 : structuredDialogueIndex, dialogueState.speaker());
+        return HeartPactVoiceManagerLauncher.open(
+                this,
+                ModConfigs.heartPactVoiceScriptName(),
+                HeartPactVoicePlayback.textOnlyId(text),
+                sourceKey == null || sourceKey.isBlank() ? null : HeartPactVoicePlayback.sourceOnlyId(sourceKey)
+        );
     }
 
     private List<StructuredDialogueLine> parseStructuredDialogueLines(String fallbackSpeaker, String bodyText) {
@@ -1169,6 +1329,7 @@ public class HugActionScreen extends Screen {
 
         List<StructuredDialogueLine> result = new ArrayList<>();
         String[] rawLines = bodyText.split("\\R");
+        boolean allLinesHadExplicitRole = true;
         for (String rawLine : rawLines) {
             String trimmed = rawLine == null ? "" : rawLine.trim();
             if (trimmed.isEmpty()) {
@@ -1176,18 +1337,45 @@ public class HugActionScreen extends Screen {
             }
             Matcher matcher = STRUCTURED_DIALOGUE_LINE.matcher(trimmed);
             if (!matcher.matches()) {
-                return List.of();
+                allLinesHadExplicitRole = false;
+                break;
             }
 
             String role = matcher.group(1);
             String content = stripDialogueQuotes(matcher.group(2));
             String resolvedSpeaker = switch (role) {
-                case "女仆" -> safeMaidName();
-                case "玩家" -> resolvePlayerName();
-                case "旁白" -> "";
+                case "女仆", "小女仆", "Maid", "Little Maid", "メイド", "小さなメイド" -> safeMaidName();
+                case "玩家", "Player", "プレイヤー" -> resolvePlayerName();
+                case "旁白", "Narration", "地の文" -> "";
                 default -> fallbackSpeaker;
             };
-            result.add(new StructuredDialogueLine(resolvedSpeaker, content));
+            boolean voiceLine = !role.equals("旁白") && !role.equals("Narration") && !role.equals("地の文");
+            result.add(new StructuredDialogueLine(resolvedSpeaker, content, voiceLine));
+        }
+
+        if (allLinesHadExplicitRole && !result.isEmpty()) {
+            return result;
+        }
+
+        /*
+         * 当前正式台本已经清掉了“女仆：/旁白：”标签。
+         * 因此多行文本按 Galgame 常见格式解释：
+         * - 第一行是角色台词，显示女仆名并参与语音；
+         * - 后续行是旁白描写，单独翻页显示，不参与语音。
+         */
+        result.clear();
+        int visibleLineIndex = 0;
+        for (String rawLine : rawLines) {
+            String trimmed = rawLine == null ? "" : rawLine.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            boolean maidSpeechLine = visibleLineIndex == 0;
+            String resolvedSpeaker = maidSpeechLine
+                    ? (!fallbackSpeaker.isBlank() ? fallbackSpeaker : safeMaidName())
+                    : "";
+            result.add(new StructuredDialogueLine(resolvedSpeaker, stripDialogueQuotes(trimmed), maidSpeechLine));
+            visibleLineIndex++;
         }
         return result;
     }
@@ -1414,7 +1602,9 @@ public class HugActionScreen extends Screen {
         float step = control ? 0.1F : 0.5F;
 
         if (keyCode == GLFW.GLFW_KEY_TAB) {
-            debugTarget = debugTarget.next(shift ? -1 : 1);
+            debugTarget = cornerControlsDebug
+                    ? nextCornerDebugTarget(debugTarget, shift ? -1 : 1)
+                    : debugTarget.next(shift ? -1 : 1);
             showDebugMessage("Current target: " + debugTarget.label);
             return true;
         }
@@ -1469,7 +1659,11 @@ public class HugActionScreen extends Screen {
             case DIALOG_BOX -> adjustBlock(theme.dialogBox, dx, dy, resize);
             case PORTRAIT -> adjustBlock(theme.portrait, dx, dy, resize);
             case OPTION_GROUP -> adjustBlock(theme.option, dx, dy, resize);
-            case CONTROL_BUTTONS -> adjustBlock(theme.controlIcon, dx, dy, resize);
+            case CONTROL_BUTTONS -> adjustControlButtons(dx, dy, resize, alternate);
+            case HIDE_BUTTON -> adjustCornerButton(DebugTarget.HIDE_BUTTON, dx, dy, resize);
+            case VOICE_BUTTON -> adjustCornerButton(DebugTarget.VOICE_BUTTON, dx, dy, resize);
+            case EXIT_BUTTON -> adjustCornerButton(DebugTarget.EXIT_BUTTON, dx, dy, resize);
+            case CAMERA_BUTTON -> adjustCornerButton(DebugTarget.CAMERA_BUTTON, dx, dy, resize);
             case ZOOM_LABEL -> adjustBlock(theme.zoomLabel, dx, dy, resize);
             case DIALOG_NAME -> adjustDialogName(dx, dy, resize, alternate);
             case DIALOG_BODY -> adjustDialogBody(dx, dy, resize, alternate);
@@ -1488,6 +1682,145 @@ public class HugActionScreen extends Screen {
             block.x += dx;
             block.y += dy;
             showDebugMessage(debugTarget.label + " move -> x=" + fmt(block.x) + ", y=" + fmt(block.y));
+        }
+    }
+
+    private void adjustControlButtons(float dx, float dy, boolean resize, boolean alternate) {
+        if (alternate) {
+            theme.controlIcon.gapX = Math.max(0.0F, theme.controlIcon.gapX + dx);
+            showDebugMessage("Corner buttons gapX=" + fmt(theme.controlIcon.gapX));
+            return;
+        }
+        adjustBlock(theme.controlIcon, dx, dy, resize);
+    }
+
+    private void adjustCornerButton(DebugTarget target, float dx, float dy, boolean resize) {
+        ensureCornerButtonOverride(target);
+        if (resize) {
+            setCornerButtonWidth(target, Math.max(0.5F, cornerButtonWidth(target) + dx));
+            setCornerButtonHeight(target, Math.max(0.5F, cornerButtonHeight(target) + dy));
+            showDebugMessage(target.label + " resize -> width=" + fmt(cornerButtonWidth(target))
+                    + ", height=" + fmt(cornerButtonHeight(target)));
+            return;
+        }
+        setCornerButtonX(target, cornerButtonX(target) + dx);
+        setCornerButtonY(target, cornerButtonY(target) + dy);
+        showDebugMessage(target.label + " move -> x=" + fmt(cornerButtonX(target))
+                + ", y=" + fmt(cornerButtonY(target)));
+    }
+
+    private void ensureCornerButtonOverride(DebugTarget target) {
+        switch (target) {
+            case HIDE_BUTTON -> {
+                theme.controlIcon.hideX = valueOr(theme.controlIcon.hideX, hideButton.x);
+                theme.controlIcon.hideY = valueOr(theme.controlIcon.hideY, hideButton.y);
+                theme.controlIcon.hideWidth = valueOr(theme.controlIcon.hideWidth, hideButton.width);
+                theme.controlIcon.hideHeight = valueOr(theme.controlIcon.hideHeight, hideButton.height);
+            }
+            case VOICE_BUTTON -> {
+                theme.controlIcon.voiceX = valueOr(theme.controlIcon.voiceX, voiceReplayButton.x);
+                theme.controlIcon.voiceY = valueOr(theme.controlIcon.voiceY, voiceReplayButton.y);
+                theme.controlIcon.voiceWidth = valueOr(theme.controlIcon.voiceWidth, voiceReplayButton.width);
+                theme.controlIcon.voiceHeight = valueOr(theme.controlIcon.voiceHeight, voiceReplayButton.height);
+            }
+            case EXIT_BUTTON -> {
+                theme.controlIcon.exitX = valueOr(theme.controlIcon.exitX, exitButton.x);
+                theme.controlIcon.exitY = valueOr(theme.controlIcon.exitY, exitButton.y);
+                theme.controlIcon.exitWidth = valueOr(theme.controlIcon.exitWidth, exitButton.width);
+                theme.controlIcon.exitHeight = valueOr(theme.controlIcon.exitHeight, exitButton.height);
+            }
+            case CAMERA_BUTTON -> {
+                theme.controlIcon.cameraX = valueOr(theme.controlIcon.cameraX, cameraPanelIconX() * 100.0F / Math.max(1, this.width));
+                theme.controlIcon.cameraY = valueOr(theme.controlIcon.cameraY, cameraPanelIconY() * 100.0F / Math.max(1, this.height));
+                theme.controlIcon.cameraWidth = valueOr(theme.controlIcon.cameraWidth, cameraPanelIconWidth() * 100.0F / Math.max(1, this.width));
+                theme.controlIcon.cameraHeight = valueOr(theme.controlIcon.cameraHeight, cameraPanelIconHeight() * 100.0F / Math.max(1, this.height));
+            }
+            default -> {
+            }
+        }
+    }
+
+    private float cornerButtonX(DebugTarget target) {
+        return switch (target) {
+            case HIDE_BUTTON -> valueOr(theme.controlIcon.hideX, hideButton.x);
+            case VOICE_BUTTON -> valueOr(theme.controlIcon.voiceX, voiceReplayButton.x);
+            case EXIT_BUTTON -> valueOr(theme.controlIcon.exitX, exitButton.x);
+            case CAMERA_BUTTON -> valueOr(theme.controlIcon.cameraX, cameraPanelIconX() * 100.0F / Math.max(1, this.width));
+            default -> theme.controlIcon.x;
+        };
+    }
+
+    private float cornerButtonY(DebugTarget target) {
+        return switch (target) {
+            case HIDE_BUTTON -> valueOr(theme.controlIcon.hideY, hideButton.y);
+            case VOICE_BUTTON -> valueOr(theme.controlIcon.voiceY, voiceReplayButton.y);
+            case EXIT_BUTTON -> valueOr(theme.controlIcon.exitY, exitButton.y);
+            case CAMERA_BUTTON -> valueOr(theme.controlIcon.cameraY, cameraPanelIconY() * 100.0F / Math.max(1, this.height));
+            default -> theme.controlIcon.y;
+        };
+    }
+
+    private float cornerButtonWidth(DebugTarget target) {
+        return switch (target) {
+            case HIDE_BUTTON -> valueOr(theme.controlIcon.hideWidth, hideButton.width);
+            case VOICE_BUTTON -> valueOr(theme.controlIcon.voiceWidth, voiceReplayButton.width);
+            case EXIT_BUTTON -> valueOr(theme.controlIcon.exitWidth, exitButton.width);
+            case CAMERA_BUTTON -> valueOr(theme.controlIcon.cameraWidth, cameraPanelIconWidth() * 100.0F / Math.max(1, this.width));
+            default -> theme.controlIcon.width;
+        };
+    }
+
+    private float cornerButtonHeight(DebugTarget target) {
+        return switch (target) {
+            case HIDE_BUTTON -> valueOr(theme.controlIcon.hideHeight, hideButton.height);
+            case VOICE_BUTTON -> valueOr(theme.controlIcon.voiceHeight, voiceReplayButton.height);
+            case EXIT_BUTTON -> valueOr(theme.controlIcon.exitHeight, exitButton.height);
+            case CAMERA_BUTTON -> valueOr(theme.controlIcon.cameraHeight, cameraPanelIconHeight() * 100.0F / Math.max(1, this.height));
+            default -> theme.controlIcon.height;
+        };
+    }
+
+    private void setCornerButtonX(DebugTarget target, float value) {
+        switch (target) {
+            case HIDE_BUTTON -> theme.controlIcon.hideX = value;
+            case VOICE_BUTTON -> theme.controlIcon.voiceX = value;
+            case EXIT_BUTTON -> theme.controlIcon.exitX = value;
+            case CAMERA_BUTTON -> theme.controlIcon.cameraX = value;
+            default -> {
+            }
+        }
+    }
+
+    private void setCornerButtonY(DebugTarget target, float value) {
+        switch (target) {
+            case HIDE_BUTTON -> theme.controlIcon.hideY = value;
+            case VOICE_BUTTON -> theme.controlIcon.voiceY = value;
+            case EXIT_BUTTON -> theme.controlIcon.exitY = value;
+            case CAMERA_BUTTON -> theme.controlIcon.cameraY = value;
+            default -> {
+            }
+        }
+    }
+
+    private void setCornerButtonWidth(DebugTarget target, float value) {
+        switch (target) {
+            case HIDE_BUTTON -> theme.controlIcon.hideWidth = value;
+            case VOICE_BUTTON -> theme.controlIcon.voiceWidth = value;
+            case EXIT_BUTTON -> theme.controlIcon.exitWidth = value;
+            case CAMERA_BUTTON -> theme.controlIcon.cameraWidth = value;
+            default -> {
+            }
+        }
+    }
+
+    private void setCornerButtonHeight(DebugTarget target, float value) {
+        switch (target) {
+            case HIDE_BUTTON -> theme.controlIcon.hideHeight = value;
+            case VOICE_BUTTON -> theme.controlIcon.voiceHeight = value;
+            case EXIT_BUTTON -> theme.controlIcon.exitHeight = value;
+            case CAMERA_BUTTON -> theme.controlIcon.cameraHeight = value;
+            default -> {
+            }
         }
     }
 
@@ -1576,9 +1909,13 @@ public class HugActionScreen extends Screen {
 
         int x = 8;
         int y = 8;
-        drawDebugLine(graphics, x, y, "Hug UI Debug  F8 toggle / F9 save / Ctrl+R reload", 0xFFFFE08A);
+        drawDebugLine(graphics, x, y, cornerControlsDebug
+                ? "Corner Controls Debug  F10 toggle / F9 save / Ctrl+R reload"
+                : "Hug UI Debug  F8 toggle / F10 corner / F9 save / Ctrl+R reload", 0xFFFFE08A);
         y += 11;
-        drawDebugLine(graphics, x, y, "Tab target; arrows move; Shift resize/scale; Alt extra; Ctrl fine; Ctrl+C copy; Ctrl+Shift+C copy all", 0xFFEFCFDE);
+        drawDebugLine(graphics, x, y, cornerControlsDebug
+                ? "Tab: hide/voice/exit/camera/zoom; arrows move; Shift resize; Ctrl fine; Ctrl+C copy"
+                : "Tab target; arrows move; Shift resize/scale; Alt extra; Ctrl fine; Ctrl+C copy; Ctrl+Shift+C copy all", 0xFFEFCFDE);
         y += 11;
         drawDebugLine(graphics, x, y, "Current: " + debugTarget.label, 0xFF8BFF98);
         y += 11;
@@ -1600,9 +1937,18 @@ public class HugActionScreen extends Screen {
                     debugTarget == DebugTarget.OPTION_GROUP ? 0xFFFF88CC : 0x88FF88CC);
         }
         drawBox(graphics, hideButton.x1(width), hideButton.y1(height), hideButton.widthPx(width), hideButton.heightPx(height),
-                debugTarget == DebugTarget.CONTROL_BUTTONS ? 0xFF88D7FF : 0x8888D7FF);
+                debugTarget == DebugTarget.CONTROL_BUTTONS || debugTarget == DebugTarget.HIDE_BUTTON ? 0xFF88D7FF : 0x8888D7FF);
+        drawBox(graphics, voiceReplayButton.x1(width), voiceReplayButton.y1(height), voiceReplayButton.widthPx(width), voiceReplayButton.heightPx(height),
+                debugTarget == DebugTarget.CONTROL_BUTTONS || debugTarget == DebugTarget.VOICE_BUTTON ? 0xFF88D7FF : 0x8888D7FF);
         drawBox(graphics, exitButton.x1(width), exitButton.y1(height), exitButton.widthPx(width), exitButton.heightPx(height),
-                debugTarget == DebugTarget.CONTROL_BUTTONS ? 0xFF88D7FF : 0x8888D7FF);
+                debugTarget == DebugTarget.CONTROL_BUTTONS || debugTarget == DebugTarget.EXIT_BUTTON ? 0xFF88D7FF : 0x8888D7FF);
+        drawBox(graphics, cameraPanelIconX(), cameraPanelIconY(), cameraPanelIconWidth(), cameraPanelIconHeight(),
+                debugTarget == DebugTarget.CONTROL_BUTTONS || debugTarget == DebugTarget.CAMERA_BUTTON ? 0xFF88D7FF : 0x8888D7FF);
+        drawBox(graphics, Math.round(this.width * (theme.zoomLabel.x / 100.0F)),
+                Math.round(this.height * (theme.zoomLabel.y / 100.0F)),
+                Math.round(this.width * (theme.zoomLabel.width / 100.0F)),
+                Math.round(this.height * (theme.zoomLabel.height / 100.0F)),
+                debugTarget == DebugTarget.ZOOM_LABEL || debugTarget == DebugTarget.ZOOM_TEXT ? 0xFFFFD166 : 0x88FFD166);
     }
 
     private void drawBox(GuiGraphics graphics, int x, int y, int w, int h, int color) {
@@ -1617,12 +1963,37 @@ public class HugActionScreen extends Screen {
         graphics.drawString(this.font, line, x, y, color, false);
     }
 
+    private DebugTarget nextCornerDebugTarget(DebugTarget current, int delta) {
+        DebugTarget[] targets = {
+                DebugTarget.HIDE_BUTTON,
+                DebugTarget.VOICE_BUTTON,
+                DebugTarget.EXIT_BUTTON,
+                DebugTarget.CAMERA_BUTTON,
+                DebugTarget.ZOOM_LABEL,
+                DebugTarget.ZOOM_TEXT
+        };
+        int index = 0;
+        for (int i = 0; i < targets.length; i++) {
+            if (targets[i] == current) {
+                index = i;
+                break;
+            }
+        }
+        index = (index + delta) % targets.length;
+        if (index < 0) {
+            index += targets.length;
+        }
+        return targets[index];
+    }
+
     private String debugTargetValue() {
         return switch (debugTarget) {
             case DIALOG_BOX -> blockValue(theme.dialogBox);
             case PORTRAIT -> blockValue(theme.portrait);
             case OPTION_GROUP -> blockValue(theme.option) + ", gapY=" + fmt(theme.option.gapY);
-            case CONTROL_BUTTONS -> blockValue(theme.controlIcon) + ", gapX=" + fmt(theme.controlIcon.gapX);
+            case CONTROL_BUTTONS -> blockValue(theme.controlIcon) + ", gapX=" + fmt(theme.controlIcon.gapX)
+                    + ", ends=" + cornerControlsCsv();
+            case HIDE_BUTTON, VOICE_BUTTON, EXIT_BUTTON, CAMERA_BUTTON -> cornerButtonValue(debugTarget);
             case ZOOM_LABEL -> blockValue(theme.zoomLabel);
             case DIALOG_NAME -> "name=(" + fmt(theme.dialogBox.nameX) + "," + fmt(theme.dialogBox.nameY)
                     + "), speakerScale=" + fmt(theme.dialogBox.speakerScale)
@@ -1645,6 +2016,34 @@ public class HugActionScreen extends Screen {
         return "x=" + fmt(block.x) + ", y=" + fmt(block.y)
                 + ", width=" + fmt(block.width) + ", height=" + fmt(block.height)
                 + ", align=" + block.alignX + "/" + block.alignY;
+    }
+
+    private String cornerControlsCsv() {
+        float step = theme.controlIcon.width + theme.controlIcon.gapX;
+        float hideEnd = theme.controlIcon.x + theme.controlIcon.width;
+        float voiceX = theme.controlIcon.x + step;
+        float voiceEnd = voiceX + theme.controlIcon.width;
+        float exitX = theme.controlIcon.x + step * 2.0F;
+        float exitEnd = exitX + theme.controlIcon.width;
+        return "hide " + fmt(theme.controlIcon.x) + "-" + fmt(hideEnd)
+                + ", voice " + fmt(voiceX) + "-" + fmt(voiceEnd)
+                + ", exit " + fmt(exitX) + "-" + fmt(exitEnd)
+                + ", camera starts at exit end";
+    }
+
+    private String cornerButtonValue(DebugTarget target) {
+        return "x=" + fmt(cornerButtonX(target))
+                + ", y=" + fmt(cornerButtonY(target))
+                + ", width=" + fmt(cornerButtonWidth(target))
+                + ", height=" + fmt(cornerButtonHeight(target));
+    }
+
+    private String cornerButtonDump(String name, DebugTarget target) {
+        return name + "{x=" + fmt(cornerButtonX(target))
+                + ", y=" + fmt(cornerButtonY(target))
+                + ", width=" + fmt(cornerButtonWidth(target))
+                + ", height=" + fmt(cornerButtonHeight(target))
+                + "}";
     }
 
     private String debugTargetDump() {
@@ -1677,6 +2076,10 @@ public class HugActionScreen extends Screen {
                     + ", height=" + fmt(theme.controlIcon.height)
                     + ", gapX=" + fmt(theme.controlIcon.gapX)
                     + "}";
+            case HIDE_BUTTON -> cornerButtonDump("hideButton", DebugTarget.HIDE_BUTTON);
+            case VOICE_BUTTON -> cornerButtonDump("voiceButton", DebugTarget.VOICE_BUTTON);
+            case EXIT_BUTTON -> cornerButtonDump("exitButton", DebugTarget.EXIT_BUTTON);
+            case CAMERA_BUTTON -> cornerButtonDump("cameraButton", DebugTarget.CAMERA_BUTTON);
             case ZOOM_LABEL -> "zoomLabel{x=" + fmt(theme.zoomLabel.x)
                     + ", y=" + fmt(theme.zoomLabel.y)
                     + ", width=" + fmt(theme.zoomLabel.width)
@@ -1729,6 +2132,10 @@ public class HugActionScreen extends Screen {
                         + ", height=" + fmt(theme.controlIcon.height)
                         + ", gapX=" + fmt(theme.controlIcon.gapX)
                         + "}",
+                cornerButtonDump("hideButton", DebugTarget.HIDE_BUTTON),
+                cornerButtonDump("voiceButton", DebugTarget.VOICE_BUTTON),
+                cornerButtonDump("exitButton", DebugTarget.EXIT_BUTTON),
+                cornerButtonDump("cameraButton", DebugTarget.CAMERA_BUTTON),
                 "zoomLabel{x=" + fmt(theme.zoomLabel.x)
                         + ", y=" + fmt(theme.zoomLabel.y)
                         + ", width=" + fmt(theme.zoomLabel.width)
@@ -1827,7 +2234,7 @@ public class HugActionScreen extends Screen {
         };
     }
 
-    private record StructuredDialogueLine(String speaker, String text) {
+    private record StructuredDialogueLine(String speaker, String text, boolean voiceEnabled) {
     }
 
     /**
@@ -1837,7 +2244,11 @@ public class HugActionScreen extends Screen {
         DIALOG_BOX("Dialog Box"),
         PORTRAIT("Portrait"),
         OPTION_GROUP("Options"),
-        CONTROL_BUTTONS("Hide/Exit Buttons"),
+        CONTROL_BUTTONS("Corner Button Group"),
+        HIDE_BUTTON("Hide Button"),
+        VOICE_BUTTON("Voice Button"),
+        EXIT_BUTTON("Exit Button"),
+        CAMERA_BUTTON("Camera Button"),
         ZOOM_LABEL("Zoom Area"),
         DIALOG_NAME("Name"),
         DIALOG_BODY("Body"),

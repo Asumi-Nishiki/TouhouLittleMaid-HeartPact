@@ -42,14 +42,6 @@ public abstract class LivingEntityLapPillowSleepMixin {
         }
     }
 
-    @Inject(method = "isSwimming", at = @At("HEAD"), cancellable = true, require = 0)
-    private void maidmarriage$disableSwimmingForLapPillow(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof AbstractClientPlayer player
-                && LapPillowClientState.shouldUseSleepPoseBridge(player)) {
-            cir.setReturnValue(false);
-        }
-    }
-
     @Inject(method = "isVisuallySwimming()Z", at = @At("HEAD"), cancellable = true)
     private void maidmarriage$disableVisualSwimmingForLapPillow(CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof AbstractClientPlayer player

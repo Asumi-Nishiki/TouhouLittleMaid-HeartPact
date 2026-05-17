@@ -20,6 +20,12 @@ public final class ModConfigs {
     private static final ForgeConfigSpec.ConfigValue<String> MAID_ADDRESSING;
     private static final ForgeConfigSpec.ConfigValue<String> CHILD_MAID_ADDRESSING;
     private static final ForgeConfigSpec.ConfigValue<String> DIALOGUE_SCRIPT_PATH;
+    private static final ForgeConfigSpec.BooleanValue HEART_PACT_VOICE_ENABLED;
+    private static final ForgeConfigSpec.ConfigValue<String> HEART_PACT_VOICE_SCRIPT_NAME;
+    private static final ForgeConfigSpec.ConfigValue<String> HEART_PACT_TTS_CHILD_NAME;
+    private static final ForgeConfigSpec.ConfigValue<String> HEART_PACT_TTS_PLAYER_NAME;
+    private static final ForgeConfigSpec.ConfigValue<String> HEART_PACT_TTS_PLAYER_MAID_NAME;
+    private static final ForgeConfigSpec.DoubleValue HEART_PACT_VOICE_VOLUME;
     private static final ForgeConfigSpec.EnumValue<RhythmHitKey> RHYTHM_HIT_KEY;
     private static final ForgeConfigSpec.EnumValue<ActionKey> PET_HEAD_KEY;
     private static final ForgeConfigSpec.EnumValue<ActionKey> INTERACTION_KEY;
@@ -90,6 +96,42 @@ public final class ModConfigs {
                 .comment("External dialogue script path. Relative paths are resolved under the config folder.")
                 .translation("config.maidmarriage.dialogue_script_path")
                 .define("dialogueScriptPath", "maidmarriage/custom-dialogues.json");
+
+        builder.pop();
+
+        builder.comment("Heart Pact voice settings.")
+                .translation("config.maidmarriage.voice")
+                .push("voice");
+
+        HEART_PACT_VOICE_ENABLED = builder
+                .comment("Enable Heart Pact dialogue voice playback when prepared voice files are available.")
+                .translation("config.maidmarriage.voice_enabled")
+                .define("heartPactVoiceEnabled", false);
+
+        HEART_PACT_VOICE_SCRIPT_NAME = builder
+                .comment("Dialogue locale/script name used by Heart Pact voice files, for example ja_jp, zh_cn or en_us.")
+                .translation("config.maidmarriage.voice_script_name")
+                .define("heartPactVoiceScriptName", "ja_jp");
+
+        HEART_PACT_TTS_CHILD_NAME = builder
+                .comment("TTS-only replacement for {child} in Heart Pact voice text. Empty means use locale default.")
+                .translation("config.maidmarriage.heart_pact_tts_child_name")
+                .define("heartPactTtsChildName", "");
+
+        HEART_PACT_TTS_PLAYER_NAME = builder
+                .comment("TTS-only replacement for {player} in Heart Pact voice text. Empty means use current addressing / player username.")
+                .translation("config.maidmarriage.heart_pact_tts_player_name")
+                .define("heartPactTtsPlayerName", "");
+
+        HEART_PACT_TTS_PLAYER_MAID_NAME = builder
+                .comment("TTS-only replacement for {player_maid} in Heart Pact voice text. Empty means use current maid addressing / player username.")
+                .translation("config.maidmarriage.heart_pact_tts_player_maid_name")
+                .define("heartPactTtsPlayerMaidName", "");
+
+        HEART_PACT_VOICE_VOLUME = builder
+                .comment("Heart Pact dialogue voice volume.")
+                .translation("config.maidmarriage.voice_volume")
+                .defineInRange("heartPactVoiceVolume", 1.0D, 0.0D, 2.0D);
 
         builder.pop();
 
@@ -269,6 +311,77 @@ public final class ModConfigs {
         DIALOGUE_SCRIPT_PATH.set(sanitized);
     }
 
+    public static boolean heartPactVoiceEnabled() {
+        return HEART_PACT_VOICE_ENABLED.get();
+    }
+
+    public static void setHeartPactVoiceEnabled(boolean enabled) {
+        HEART_PACT_VOICE_ENABLED.set(enabled);
+    }
+
+    public static String heartPactVoiceScriptName() {
+        return HEART_PACT_VOICE_SCRIPT_NAME.get();
+    }
+
+    public static void setHeartPactVoiceScriptName(String value) {
+        String sanitized = value == null ? "" : value.trim().toLowerCase(java.util.Locale.ROOT)
+                .replace('\\', '_').replace('/', '_');
+        HEART_PACT_VOICE_SCRIPT_NAME.set(sanitized.isBlank() ? "ja_jp" : sanitized);
+    }
+
+    public static String heartPactTtsChildName() {
+        return HEART_PACT_TTS_CHILD_NAME.get();
+    }
+
+    public static void setHeartPactTtsChildName(String value) {
+        HEART_PACT_TTS_CHILD_NAME.set(sanitizeTtsName(value));
+    }
+
+    public static String heartPactTtsPlayerName() {
+        return HEART_PACT_TTS_PLAYER_NAME.get();
+    }
+
+    public static void setHeartPactTtsPlayerName(String value) {
+        HEART_PACT_TTS_PLAYER_NAME.set(sanitizeTtsName(value));
+    }
+
+    public static String heartPactTtsPlayerMaidName() {
+        return HEART_PACT_TTS_PLAYER_MAID_NAME.get();
+    }
+
+    public static void setHeartPactTtsPlayerMaidName(String value) {
+        HEART_PACT_TTS_PLAYER_MAID_NAME.set(sanitizeTtsName(value));
+    }
+
+    public static String resolveHeartPactTtsChildName(String scriptName) {
+        String custom = heartPactTtsChildName();
+        return custom == null || custom.isBlank() ? "小さなメイド" : custom;
+    }
+
+    public static String resolveHeartPactTtsPlayerName(String scriptName, String fallbackPlayerName) {
+        String custom = heartPactTtsPlayerName();
+        if (custom == null || custom.isBlank()) {
+            return "ご主人様";
+        }
+        return custom;
+    }
+
+    public static String resolveHeartPactTtsPlayerMaidName(String scriptName, String fallbackPlayerName) {
+        String custom = heartPactTtsPlayerMaidName();
+        if (custom == null || custom.isBlank()) {
+            return "ご主人様";
+        }
+        return custom;
+    }
+
+    public static double heartPactVoiceVolume() {
+        return HEART_PACT_VOICE_VOLUME.get();
+    }
+
+    public static void setHeartPactVoiceVolume(double value) {
+        HEART_PACT_VOICE_VOLUME.set(Math.max(0.0D, Math.min(2.0D, value)));
+    }
+
     public static RhythmHitKey rhythmHitKey() {
         return RHYTHM_HIT_KEY.get();
     }
@@ -346,6 +459,53 @@ public final class ModConfigs {
 
     public static void setShowUiActionDebug(boolean show) {
         SHOW_UI_ACTION_DEBUG.set(show);
+    }
+
+    private static String sanitizeTtsName(String value) {
+        String sanitized = value == null ? "" : value.trim();
+        if (sanitized.length() > 64) {
+            sanitized = sanitized.substring(0, 64);
+        }
+        return sanitized;
+    }
+
+    private static String defaultHeartPactChildName(String scriptName) {
+        return switch (normalizeHeartPactLanguage(scriptName)) {
+            case "zh" -> "小女仆";
+            case "en" -> "Little Maid";
+            default -> "小さなメイド";
+        };
+    }
+
+    private static String defaultPlayerFallback(String scriptName, String fallbackPlayerName) {
+        String fallback = fallbackPlayerName == null ? "" : fallbackPlayerName.trim();
+        if (!fallback.isBlank()) {
+            return fallback;
+        }
+        return switch (normalizeHeartPactLanguage(scriptName)) {
+            case "zh" -> "主人";
+            case "en" -> "Master";
+            default -> "ご主人様";
+        };
+    }
+
+    private static String defaultHeartPactPlayerTitle(String scriptName) {
+        return switch (normalizeHeartPactLanguage(scriptName)) {
+            case "zh" -> "主人";
+            case "en" -> "Master";
+            default -> "ご主人様";
+        };
+    }
+
+    private static String normalizeHeartPactLanguage(String scriptName) {
+        String normalized = scriptName == null ? "" : scriptName.trim().toLowerCase(java.util.Locale.ROOT);
+        if (normalized.startsWith("zh")) {
+            return "zh";
+        }
+        if (normalized.startsWith("en")) {
+            return "en";
+        }
+        return "ja";
     }
 
     public enum RhythmHitKey {

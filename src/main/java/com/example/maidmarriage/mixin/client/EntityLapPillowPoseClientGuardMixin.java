@@ -17,11 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(Entity.class)
 public abstract class EntityLapPillowPoseClientGuardMixin {
-    @Inject(method = "setForcedPose", at = @At("HEAD"), cancellable = true, require = 0)
-    private void maidmarriage$guardClientForcedPose(Pose pose, CallbackInfo ci) {
-        guardPoseWrite(pose, ci);
-    }
-
     @Inject(method = "setPose(Lnet/minecraft/world/entity/Pose;)V", at = @At("HEAD"), cancellable = true, require = 0)
     private void maidmarriage$guardClientPose(Pose pose, CallbackInfo ci) {
         guardPoseWrite(pose, ci);
@@ -54,6 +49,14 @@ public abstract class EntityLapPillowPoseClientGuardMixin {
         if ((Object) this instanceof AbstractClientPlayer player
                 && LapPillowClientState.shouldUseSleepPoseBridge(player)) {
             cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "isSwimming()Z", at = @At("HEAD"), cancellable = true, require = 0)
+    private void maidmarriage$disableSwimmingForLapPillow(CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof AbstractClientPlayer player
+                && LapPillowClientState.shouldUseSleepPoseBridge(player)) {
+            cir.setReturnValue(false);
         }
     }
 
