@@ -1,0 +1,175 @@
+{
+  "id": "maidmarriage:child_interaction_v1",
+  "theme": "maidmarriage:hug_default",
+  "start": "idle",
+  "animationLibrary": "maidmarriage:default",
+  "portraits": {
+    "maid": {
+      "texture": "maidmarriage:textures/gui/emotion/soft_smile.png",
+      "defaultExpression": "soft_smile",
+      "expressions": {
+        "soft_smile": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "happy": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "shy": "maidmarriage:textures/gui/emotion/hot_smile.png"
+      }
+    }
+  },
+  "nodes": {
+    "idle": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${child_entry_speaker}",
+        "text": "${child_entry_text}",
+        "portrait": "maid",
+        "expression": "soft_smile",
+        "emotion": "normal",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "pet_head",
+          "title": "Погладить по голове",
+          "description": "Нежно погладить её по голове и помочь успокоиться.",
+          "next": "pet_head_intro",
+          "action": "maidmarriage:pet_head",
+          "events": []
+        },
+        {
+          "id": "lift",
+          "title": "Поднять её",
+          "description": "Высоко поднимите маленькую горничную; если она уже наверху, аккуратно опустите.",
+          "next": "lift_intro",
+          "action": "maidmarriage:lift_child",
+          "events": []
+        },
+        {
+          "id": "carry_child",
+          "title": "Попросить маму подержать",
+          "description": "Попросите её маму взять её на руки; если она уже на руках, попробуйте аккуратно спустить.",
+          "next": "carry_intro",
+          "action": "maidmarriage:carry_child",
+          "events": []
+        },
+        {
+          "id": "comfort",
+          "title": "Поговорить с ней",
+          "description": "Присядьте на корточки и побудьте рядом немного.",
+          "next": "comfort_intro",
+          "events": []
+        },
+        {
+          "id": "child_gift",
+          "title": "Сделать подарок",
+          "description": "Выберите маленький подарок и посмотрите, понравится ли он ей.",
+          "next": "idle",
+          "action": "maidmarriage:open_gift_screen",
+          "events": []
+        }
+      ],
+      "lines": [],
+      "branches": [],
+      "events": []
+    },
+    "pet_head_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "Твоя ладонь мягко ложится на её волосы, и она щурится, словно от этого прикосновения ей стало совсем спокойно и безопасно.",
+          "portrait": "maid",
+          "expression": "happy",
+          "emotion": "angry",
+          "animation": "soft_bounce",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Хе-хе... можешь погладить меня ещё немножко, хорошо?",
+          "expression": "happy",
+          "emotion": "tired",
+          "events": []
+        }
+      ],
+      "next": "idle",
+      "choices": [],
+      "branches": [],
+      "events": []
+    },
+    "lift_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "Она невольно цепляется за твой рукав, а затем радостно болтает ножками в воздухе.",
+          "portrait": "maid",
+          "expression": "happy",
+          "emotion": "happy",
+          "animation": "slide_up",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Ого, как высоко! Отсюда видно так-так далеко!",
+          "expression": "happy",
+          "emotion": "happy",
+          "events": []
+        }
+      ],
+      "next": "idle",
+      "choices": [],
+      "branches": [],
+      "events": []
+    },
+    "carry_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "Её мама подходит ближе и бережно берёт её на руки, окутывая тёплыми и надёжными объятиями.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "emotion": "gentle",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Когда мама держит меня, всё вокруг становится таким тёплым и уютным.",
+          "expression": "happy",
+          "emotion": "happy",
+          "events": []
+        }
+      ],
+      "next": "idle",
+      "choices": [],
+      "branches": [],
+      "events": []
+    },
+    "comfort_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "Ты присаживаешься на корточки, чтобы смотреть ей прямо в глаза, а она отвечает тебе предельно серьёзным и внимательным взглядом.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "emotion": "serious",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Когда ты рядом, мне кажется, что сегодня вообще ничего страшного не случится.",
+          "expression": "shy",
+          "emotion": "gentle",
+          "events": []
+        }
+      ],
+      "next": "idle",
+      "choices": [],
+      "branches": [],
+      "events": []
+    }
+  }
+}

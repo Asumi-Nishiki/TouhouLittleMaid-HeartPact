@@ -1,0 +1,715 @@
+{
+  "id": "maidmarriage:spirit_interaction_v1",
+  "theme": "maidmarriage:hug_default",
+  "start": "idle",
+  "animationLibrary": "maidmarriage:default",
+  "portraits": {
+    "maid": {
+      "texture": "maidmarriage:textures/gui/emotion/teary.png",
+      "defaultExpression": "teary",
+      "expressions": {
+        "teary": "maidmarriage:textures/gui/emotion/teary.png",
+        "soft_smile": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "sad": "maidmarriage:textures/gui/emotion/sad.png",
+        "surprised": "maidmarriage:textures/gui/emotion/surprised.png"
+      }
+    }
+  },
+  "nodes": {
+    "idle": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}.soul",
+        "text": "Душа ${maid} всё ещё витает здесь. Кажется, она слышит тебя с того берега глубокой воды, но пока не знает, как откликнуться.",
+        "portrait": "maid",
+        "expression": "teary",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "soothe",
+          "title": "Успокоить",
+          "description": "Тихо позвать её. В первые пять раз её прерывистое эхо постепенно станет яснее.",
+          "condition": "!spirit_soothe_max",
+          "next": "soothe_branch",
+          "action": "maidmarriage:spirit_soothe",
+          "events": []
+        },
+        {
+          "id": "remember",
+          "title": "Вспомнить",
+          "description": "Помочь ей вспомнить дом, своё имя, маму и тебя.",
+          "condition": "spirit_soothe_max && !spirit_memory_max",
+          "next": "memory_branch",
+          "action": "maidmarriage:spirit_remember",
+          "events": []
+        },
+        {
+          "id": "reunion",
+          "title": "Отвести к Маме",
+          "description": "Она и её мать находятся в пределах десяти блоков. Слова, которые пришли слишком поздно, наконец могут достичь её.",
+          "condition": "spirit_reunion_ready && spirit_recognized_father && !spirit_staying && !spirit_farewell",
+          "next": "mother_reunion",
+          "events": []
+        },
+        {
+          "id": "stay",
+          "title": "Сохранить её эхо",
+          "description": "Не называй это прощанием. Позволь ей остаться в этом доме в виде духа.",
+          "condition": "spirit_recognized_father && spirit_mother_nearby && !spirit_staying && !spirit_farewell",
+          "next": "stay_result",
+          "action": "maidmarriage:spirit_stay",
+          "events": []
+        },
+        {
+          "id": "stay_need_mother",
+          "title": "Сохранить её эхо",
+          "description": "Пожалуй, стоит сначала отвести её к Маме и решить вместе.",
+          "condition": "spirit_recognized_father && !spirit_mother_nearby && !spirit_staying && !spirit_farewell",
+          "next": "stay_need_mother",
+          "events": []
+        },
+        {
+          "id": "farewell",
+          "title": "Попрощаться",
+          "description": "Останься с ней и Мамой до самого последнего прощания.",
+          "condition": "spirit_recognized_father && spirit_mother_nearby && !spirit_staying && !spirit_farewell",
+          "next": "farewell_result",
+          "events": []
+        },
+        {
+          "id": "daily_soothe",
+          "title": "Успокоить её эхо",
+          "description": "Побудь рядом и дай этой ноющей боли немного утихнуть.",
+          "condition": "spirit_staying && !spirit_farewell",
+          "next": "daily_soothe_branch",
+          "action": "maidmarriage:spirit_daily_soothe",
+          "events": []
+        },
+        {
+          "id": "offering",
+          "title": "Поднести цветы",
+          "description": "Оставь ей что-нибудь нежное.",
+          "condition": "spirit_staying && !spirit_farewell",
+          "next": "offering_intro",
+          "events": []
+        },
+        {
+          "id": "resurrection_ready",
+          "title": "Кажется, она хочет кое-что сказать",
+          "description": "Её силуэт стал гораздо чётче, и она смотрит на тебя с тихим волнением.",
+          "condition": "spirit_resurrection_ready",
+          "next": "resurrection_ready",
+          "events": []
+        },
+        {
+          "id": "leave",
+          "title": "Уйти",
+          "description": "Позволь этому месту пока стать тихим.",
+          "next": "end",
+          "action": "maidmarriage:close_interaction",
+          "events": []
+        }
+      ],
+      "lines": [],
+      "branches": [],
+      "events": []
+    },
+    "soothe_branch": {
+      "type": "branch",
+      "branches": [
+        { "condition": "spirit_soothe_0", "next": "soothe_1" },
+        { "condition": "spirit_soothe_1", "next": "soothe_2" },
+        { "condition": "spirit_soothe_2", "next": "soothe_3" },
+        { "condition": "spirit_soothe_3", "next": "soothe_4" }
+      ],
+      "next": "soothe_5"
+    },
+    "soothe_1": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "■■……■■■……。",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Ты тихо зовёшь её по имени. В ответ лишь рваные слоги, словно буквы на промокшем под дождём письме, которые больше невозможно разобрать."
+        }
+      ],
+      "next": "idle"
+    },
+    "soothe_2": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "……、……？■■……！",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Кажется, она хочет обернуться, но лишь прозрачные пальцы проходят сквозь складки её юбки. В этом шуме впервые слышится пауза, похожая на вопрос."
+        }
+      ],
+      "next": "idle"
+    },
+    "soothe_3": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "……Не… уходи……?",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Голос всё ещё прерывается. Но вы слышите. Это не проклятие и не обида — просто ребёнок в темноте на ощупь ищет край вашего рукава."
+        }
+      ],
+      "next": "idle"
+    },
+    "soothe_4": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "Здесь… так холодно… Я, наверное… слишком долго спала…?",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Она говорит с трудом, её взгляд расфокусирован. Вы протягиваете руку, но касаетесь лишь ледяного, мерцающего света."
+        }
+      ],
+      "next": "idle"
+    },
+    "soothe_5": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "Я… кажется, забыла что-то очень важное. Кто-то всё время звал меня, но я не могу вспомнить, кто.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Наконец-то она может говорить связно. Но в её глазах всё ещё стоит туман; она смотрит на вас, словно видит сон, который никак не может вспомнить."
+        }
+      ],
+      "next": "idle"
+    },
+    "memory_branch": {
+      "type": "branch",
+      "branches": [
+        { "condition": "spirit_memory_0", "next": "memory_1" },
+        { "condition": "spirit_memory_1", "next": "memory_2" },
+        { "condition": "spirit_memory_2", "next": "memory_3" },
+        { "condition": "spirit_memory_3", "next": "memory_4" }
+      ],
+      "next": "memory_5"
+    },
+    "memory_1": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы рассказываете ей, что когда-то у неё было имя. Это имя не высечено на камне, а соткано из чьих-то повторений, из страха произнести его неправильно и из нетерпеливого желания скорее его выкрикнуть."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Имя… это то, что заставляет оборачиваться? Но почему… когда я оборачиваюсь, позади ничего нет?",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "memory_2": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы вспоминаете, как её впервые взяли на руки. Мама склонила голову, словно держа в ладонях маленькую лампаду, которую страшно задуть даже дыханием, и дышала так осторожно."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Мама… её руки ведь такие тёплые? Мне кажется, я помню… как кто-то всё время оберегал меня в своих объятиях.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "memory_3": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы рассказываете о том, как она, ещё не научившись толком ходить, падала, но не плакала, а лишь поднимала на вас взгляд, словно спрашивая, заметили ли вы, как сильно она старалась."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Я ведь старалась? Если бы я старалась ещё немного… вам бы не было так больно?",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "memory_4": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы не говорите «это не твоя вина». Потому что эти слова слишком легки, они не смогут удержать тяжесть этого дня. Вы лишь говорите ей: сама встреча с ней уже стала самой нежной и самой болезненной страницей в вашей жизни."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Значит… меня правда любили? Не просто потому, что я ребёнок, не потому что так положено, а по-настоящему… хотели, чтобы я осталась?",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "memory_5": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "Я вспомнила. Ты не чужой… ты тот, кто всё время звал меня по имени и ждал, когда я вернусь домой.",
+          "portrait": "maid",
+          "expression": "surprised",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Папа… можно мне так тебя называть? Если мой голос скоро исчезнет, позволь мне хотя бы это слово произнести до конца.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "mother_reunion": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы ведёте её к маме. Десять блоков — казалось бы, пустяк, но это похоже на переход через сезон, у которого больше никогда не будет утра."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Мама… я дома. Но я больше не могу тебя обнять.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Мама не отвечает сразу. Она просто стоит, словно наконец услышала запоздавшее «я вернулась», и даже не смеет всхлипнуть, боясь спугнуть это хрупкое чудо."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Прости. Я ведь обещала, что вырасту. Я хотела так многому научиться. Я ведь так и не успела… чтобы ты погладила меня по голове и сказала: «Ты сегодня была очень хорошей».",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Ветер проходит сквозь её прозрачные плечи. В этот миг вы вдруг понимаете: разлука — это не когда кто-то уходит далеко. Это когда отныне в каждом счастливом дне навсегда остаётся пустое место, предназначенное только для неё."
+        }
+      ],
+      "next": "idle"
+    },
+    "stay_result": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "Если можно… я бы хотела ещё немного посмотреть на этот дом. Даже если мне суждено стоять там, куда не достаёт свет лампы. Это неважно.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы не называете это привязанностью. Вы лишь опускаете маленькую лампу чуть ниже, чтобы её тень тоже падала на дорогу, ведущую домой."
+        }
+      ],
+      "next": "idle"
+    },
+    "stay_need_mother": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы смотрите на её прозрачный силуэт и понимаете, что это не то, что один человек должен решать за неё. Пожалуй, стоит сначала привести её к Маме, чтобы этот дом услышал её ответ вместе."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Мама… тоже услышит меня? Если она здесь, я хочу сначала увидеть её.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "offering_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "${spirit_offering_flower_text}",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "offering_action"
+    },
+    "resurrection_ready": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "Папа, Мама… У меня есть кое-что очень важное и очень радостное, чем я хочу поделиться.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Вы всё время оставались со мной, звали меня по имени, приносили цветы и рассказывали о доме.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Теперь я это чувствую. Я уже не такая лёгкая и размытая, как в самом начале. Даже когда дует ветер, я не боюсь, что внезапно исчезну.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Мне кажется… я правда могу вернуться к вам.",
+          "portrait": "maid",
+          "expression": "surprised",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Вернуться… ты хочешь сказать, что Мама сможет снова тебя обнять?",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Угу! Я хочу снова стоять на земле, подбегать к тебе, чтобы Мама брала меня на руки, и держать Папу за руку.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Я хочу есть сладости, сидеть на солнышке и слышать, как меня зовут домой спать, когда я начинаю клевать носом.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Конечно. Я буду будить тебя по утрам, говорить, чтобы ты правильно сидела за столом, и укрывать тебя одеялом на ночь.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Хе-хе… а можно сделать вид, что я не расслышала?",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Нет. Тогда Мама возьмёт тебя на руки и нежно ущипнёт за щёчку.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Тогда я спрячусь за Папу! Папа ведь меня защитит, да?",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Но, кажется, мне всё ещё нужен Тотем бессмертия. Если Папа использует его на мне, я смогу снова получить своё тело.",
+          "portrait": "maid",
+          "expression": "surprised",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Когда я вернусь, первое, что я сделаю — обниму Маму, потом Папу. Никого не забуду!",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Использование Тотема бессмертия на маленькой горничной сейчас может вернуть её к вам."
+        }
+      ],
+      "next": "idle"
+    },
+    "offering_action": {
+      "type": "action",
+      "action": "maidmarriage:open_spirit_offering",
+      "next": "idle",
+      "lines": [],
+      "choices": [],
+      "branches": [],
+      "events": []
+    },
+    "farewell_result": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Подожди… дай мне посмотреть на неё ещё раз. Только ещё один раз.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Мама тянется к ней. Её пальцы проходят сквозь прозрачный силуэт. Она не чувствует ничего, но всё равно дрожит, словно от ожога."
+        },
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Прости… Мама не смогла удержать тебя здесь. Но быть твоей мамой было… настоящим, настоящим счастьем.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Мама, не извиняйся. Меня держали на руках, Папа звал меня по имени. Я больше не потерянный ребёнок.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Тогда… мне пора. Пожалуйста, не плачь слишком долго там, где я не вижу, хорошо? Я буду так волноваться, что не смогу войти в следующий сон.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${spirit_mother}",
+          "text": "Хорошо… иди. Если мы когда-нибудь встретимся снова, дай Маме подержать тебя ещё раз.",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "",
+          "text": "",
+          "portrait": "maid",
+          "expression": "sad",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Она оставляет в ваших руках очень, очень лёгкое письмо. Бумага не весит ничего, но кажется, будто на ней лежит тяжесть всего заката."
+        }
+      ],
+      "next": "farewell_action"
+    },
+    "end": {
+      "type": "end",
+      "lines": [],
+      "choices": [],
+      "branches": [],
+      "events": []
+    },
+    "daily_soothe_branch": {
+      "type": "branch",
+      "branches": [
+        { "condition": "spirit_longing_high", "next": "daily_soothe_high" },
+        { "condition": "spirit_longing_mid", "next": "daily_soothe_mid" }
+      ],
+      "next": "daily_soothe_low"
+    },
+    "daily_soothe_low": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "${spirit_soothe_text}",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы садитесь рядом и рассказываете ей о мелочах, случившихся сегодня. Её прозрачные пальцы лежат на коленях, словно храня маленький огонёк, который не погаснет."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Если я иногда буду забывать кое-что, это ведь ничего, правда? Главное, чтобы я помнила, что здесь тепло.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "daily_soothe_mid": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "${spirit_soothe_text}",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Вы негромко называете ей звуки дома: треск огня, шаги, тихий скрип двери. Она бережно запоминает их, словно собирая дом заново из каждого маленького звука."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Если я когда-нибудь снова стану размытой, ты всё равно будешь звать меня так? Я хочу унести этот голос с собой.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "daily_soothe_high": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}.soul",
+          "text": "${spirit_soothe_text}",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": [],
+          "narration": "Её силуэт всё ещё прозрачен, но уже не кажется, что ветер может развеять его в любую секунду. Вы сидите бок о бок, и никто из вас не торопится прощаться."
+        },
+        {
+          "speaker": "${maid}.soul",
+          "text": "Спасибо, что никогда не оставляли меня вчерашней. Я сегодняшняя тоже здесь.",
+          "portrait": "maid",
+          "expression": "teary",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "idle"
+    },
+    "farewell_action": {
+      "type": "action",
+      "action": "maidmarriage:spirit_farewell",
+      "next": "end",
+      "lines": [],
+      "choices": [],
+      "branches": [],
+      "events": []
+    }
+  }
+}

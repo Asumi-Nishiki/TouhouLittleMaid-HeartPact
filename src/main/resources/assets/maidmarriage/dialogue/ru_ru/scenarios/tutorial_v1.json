@@ -1,0 +1,711 @@
+{
+  "id": "maidmarriage:tutorial_v1",
+  "theme": "maidmarriage:hug_default",
+  "start": "start",
+  "animationLibrary": "maidmarriage:default",
+  "portraits": {
+    "maid": {
+      "texture": "maidmarriage:textures/gui/emotion/soft_smile.png",
+      "defaultExpression": "soft_smile",
+      "expressions": {
+        "soft_smile": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "happy": "maidmarriage:textures/gui/emotion/soft_smile.png",
+        "shy": "maidmarriage:textures/gui/emotion/shy.png",
+        "embarrassed_smile": "maidmarriage:textures/gui/emotion/embarrassed_smile.png",
+        "serious": "maidmarriage:textures/gui/emotion/serious.png",
+        "sad": "maidmarriage:textures/gui/emotion/sad.png",
+        "action_shy": "maidmarriage:textures/gui/action/action_shy.png",
+        "action_touched": "maidmarriage:textures/gui/action/action_touched.png",
+        "action_flustered": "maidmarriage:textures/gui/action/action_flustered.png"
+      }
+    }
+  },
+  "nodes": {
+    "start": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "",
+        "text": "Вы нежно касаетесь ${maid}, используя Путеводитель «Сердечный пакт».",
+        "narration": "Обнаружена сцена обучения. Хотите, чтобы ваша горничная провела вас по основам «Сердечного пакта»?",
+        "portrait": "maid",
+        "expression": "soft_smile",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "enter",
+          "title": "Начать обучение",
+          "description": "Проверить клавиши, камеру, действия, настроение и систему отношений.",
+          "next": "intro"
+        },
+        {
+          "id": "menu",
+          "title": "Открыть меню",
+          "description": "Выбрать конкретную главу обучения.",
+          "next": "menu"
+        },
+        {
+          "id": "later",
+          "title": "Позже",
+          "description": "Покинуть обучение.",
+          "next": "end"
+        }
+      ],
+      "events": []
+    },
+    "intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Доверьтесь мне, Хозяин. Я объясню всё мягко и просто, без скучных инструкций.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Сначала проверим привязку клавиш, затем камеру и дистанцию действий, а в конце поговорим о настроении, стадиях отношений и повседневной жизни.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "key_check",
+      "events": []
+    },
+    "key_check": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Пожалуйста, откройте настройки управления Minecraft и убедитесь, что клавиши «Сердечного пакта» не конфликтуют с другими модами.",
+        "narration": "Проверьте клавиши взаимодействия, поглаживания/поднятия, перемотки, скрытия интерфейса и выхода из отдыха на коленях.",
+        "portrait": "maid",
+        "expression": "serious",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "keys_ok",
+          "title": "Клавиши проверены",
+          "description": "Перейти к проверке камеры и действий.",
+          "next": "camera_intro"
+        },
+        {
+          "id": "key_help",
+          "title": "Рассказать о клавишах",
+          "description": "Узнать, за что отвечает каждая клавиша.",
+          "next": "key_help"
+        },
+        {
+          "id": "button_help",
+          "title": "Кнопки в углах",
+          "description": "Объяснить назначение кнопок скрытия, голоса, выхода и камеры.",
+          "next": "button_help"
+        },
+        {
+          "id": "menu",
+          "title": "Меню обучения",
+          "description": "Вернуться в меню обучения.",
+          "next": "menu"
+        }
+      ],
+      "events": []
+    },
+    "key_help": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Клавиша взаимодействия открывает или закрывает главный экран общения.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Клавиша поглаживания/поднятия имеет два применения: она гладит сидящую взрослую горничную или поднимает стоящую маленькую. Нажмите её ещё раз во время поднятия, чтобы опустить меня.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Перемотка очень полезна, но, пожалуйста, не нажимайте её слишком часто. Голосу и действиям нужно немного времени, чтобы поспеть.",
+          "portrait": "maid",
+          "expression": "embarrassed_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "key_check",
+      "events": []
+    },
+    "button_help": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Четыре кнопки в правом нижнем углу — это быстрое управление. Кнопка скрытия временно убирает интерфейс, чтобы ничего не мешало наблюдать за действиями или делать скриншоты.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Кнопка микрофона воспроизводит заранее записанный голос для текущей фразы, а двойной клик может перенести к нужной записи в менеджере. Это работает только если установлен аддон для голоса/TTS «Сердечного пакта».",
+          "portrait": "maid",
+          "expression": "serious",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Кнопка выхода завершает текущее взаимодействие. А кнопка камеры открывает быструю настройку масштаба, угла обзора, камеры для отдыха на коленях и дистанции объятий.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "key_check",
+      "events": []
+    },
+    "camera_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Теперь давайте проверим камеру и дистанцию. Объятия, поглаживания, поцелуи и отдых на коленях — всё это ощущается по-разному.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Если кажется, что что-то слишком близко или слишком далеко, используйте кнопку камеры в правом нижнем углу, чтобы настроить масштаб, угол, камеру для отдыха на коленях или дистанцию объятий, а затем проверьте снова.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "camera_menu",
+      "events": []
+    },
+    "camera_menu": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Какое действие проверим первым?",
+        "narration": "Обратите внимание на дистанцию, угол камеры, не перекрывает ли интерфейс обзор и удобно ли выходить клавишей.",
+        "portrait": "maid",
+        "expression": "soft_smile",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "hug",
+          "title": "Тест объятий",
+          "description": "Проверить дистанцию объятий и перекрытие интерфейса.",
+          "next": "test_hug"
+        },
+        {
+          "id": "pet",
+          "title": "Тест поглаживания",
+          "description": "Проверить движения руки и видимость мимики.",
+          "next": "test_pet"
+        },
+        {
+          "id": "kiss",
+          "title": "Тест поцелуя",
+          "description": "Проверить камеру и мимику при поцелуе.",
+          "next": "test_kiss"
+        },
+        {
+          "id": "lap",
+          "title": "Тест отдыха на коленях",
+          "description": "Проверить камеру лёжа и клавишу выхода.",
+          "next": "test_lap"
+        },
+        {
+          "id": "done",
+          "title": "Всё отлично",
+          "description": "Перейти к настроению и отношениям.",
+          "next": "mood_intro"
+        },
+        {
+          "id": "menu",
+          "title": "Меню обучения",
+          "description": "Вернуться в меню обучения.",
+          "next": "menu"
+        }
+      ],
+      "events": []
+    },
+    "test_hug": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Начнём с объятий. Пожалуйста, обратите внимание на дистанцию и не перекрывает ли диалоговое окно меня.",
+          "portrait": "maid",
+          "expression": "action_shy",
+          "animation": "fade_in",
+          "events": [
+            {
+              "when": "line_start",
+              "type": "emit_action",
+              "value": "maidmarriage:hug_toggle"
+            }
+          ]
+        }
+      ],
+      "next": "test_hug_result",
+      "events": []
+    },
+    "test_hug_result": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Как это ощущается?",
+        "portrait": "maid",
+        "expression": "embarrassed_smile",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "ok",
+          "title": "Хорошо",
+          "description": "Вернуться к тестам действий.",
+          "next": "camera_menu"
+        },
+        {
+          "id": "again",
+          "title": "Ещё раз",
+          "description": "Повторить тест объятий.",
+          "next": "test_hug"
+        },
+        {
+          "id": "hint",
+          "title": "Неудобно",
+          "description": "Посмотреть советы по настройке.",
+          "next": "camera_adjust_hint"
+        }
+      ],
+      "events": []
+    },
+    "test_pet": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "При поглаживании, пожалуйста, проверьте, видите ли вы моё лицо.",
+          "portrait": "maid",
+          "expression": "shy",
+          "animation": "fade_in",
+          "events": [
+            {
+              "when": "line_start",
+              "type": "emit_action",
+              "value": "maidmarriage:pet_head"
+            }
+          ]
+        }
+      ],
+      "next": "test_pet_result",
+      "events": []
+    },
+    "test_pet_result": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Вы чётко видите мою мимику?",
+        "portrait": "maid",
+        "expression": "happy",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "ok",
+          "title": "Чётко",
+          "description": "Вернуться к тестам действий.",
+          "next": "camera_menu"
+        },
+        {
+          "id": "again",
+          "title": "Ещё раз",
+          "description": "Повторить тест поглаживания.",
+          "next": "test_pet"
+        },
+        {
+          "id": "hint",
+          "title": "Закрыто",
+          "description": "Посмотреть советы по настройке.",
+          "next": "camera_adjust_hint"
+        }
+      ],
+      "events": []
+    },
+    "test_kiss": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Тест на поцелуй тоже...? Кхм. Это просто для проверки камеры, хорошо?",
+          "portrait": "maid",
+          "expression": "action_flustered",
+          "animation": "fade_in",
+          "events": [
+            {
+              "when": "line_start",
+              "type": "emit_action",
+              "value": "maidmarriage:interaction_kiss"
+            }
+          ]
+        }
+      ],
+      "next": "test_kiss_result",
+      "events": []
+    },
+    "test_kiss_result": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Тот ракурс был нормальным?",
+        "portrait": "maid",
+        "expression": "shy",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "ok",
+          "title": "В самый раз",
+          "description": "Вернуться к тестам действий.",
+          "next": "camera_menu"
+        },
+        {
+          "id": "again",
+          "title": "Ещё раз",
+          "description": "Повторить тест поцелуя.",
+          "next": "test_kiss"
+        },
+        {
+          "id": "hint",
+          "title": "Плохо видно",
+          "description": "Посмотреть советы по настройке.",
+          "next": "camera_adjust_hint"
+        }
+      ],
+      "events": []
+    },
+    "test_lap": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "И наконец, отдых на коленях. Пожалуйста, проверьте камеру лёжа, моё положение и работает ли клавиша выхода.",
+          "portrait": "maid",
+          "expression": "action_touched",
+          "animation": "fade_in",
+          "events": [
+            {
+              "when": "line_start",
+              "type": "emit_action",
+              "value": "maidmarriage:lap_pillow_start"
+            }
+          ]
+        }
+      ],
+      "next": "test_lap_result",
+      "events": []
+    },
+    "test_lap_result": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Этот вид кажется комфортным?",
+        "portrait": "maid",
+        "expression": "soft_smile",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "ok",
+          "title": "Комфортно",
+          "description": "Выйти из отдыха на коленях и вернуться.",
+          "next": "exit_lap_then_camera_menu"
+        },
+        {
+          "id": "again",
+          "title": "Ещё раз",
+          "description": "Выйти и повторить тест.",
+          "next": "exit_lap_then_test_lap"
+        },
+        {
+          "id": "hint",
+          "title": "Проблема",
+          "description": "Выйти и посмотреть советы по настройке.",
+          "next": "exit_lap_then_hint"
+        }
+      ],
+      "events": []
+    },
+    "exit_lap_then_camera_menu": {
+      "type": "action",
+      "action": "maidmarriage:lap_pillow_exit",
+      "next": "camera_menu",
+      "events": []
+    },
+    "exit_lap_then_test_lap": {
+      "type": "action",
+      "action": "maidmarriage:lap_pillow_exit",
+      "next": "test_lap",
+      "events": []
+    },
+    "exit_lap_then_hint": {
+      "type": "action",
+      "action": "maidmarriage:lap_pillow_exit",
+      "next": "camera_adjust_hint",
+      "events": []
+    },
+    "camera_adjust_hint": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Пожалуйста, используйте кнопку камеры в правом нижнем углу, чтобы настроить камеру, масштаб или дистанцию объятий. Изменяйте понемногу за раз, а затем проверяйте снова.",
+          "portrait": "maid",
+          "expression": "serious",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "camera_menu",
+      "events": []
+    },
+    "mood_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Настроение — это не просто цифра. Счастье, спокойствие, грусть и особые состояния могут изменить то, как я отвечаю.",
+          "portrait": "maid",
+          "expression": "serious",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Стадии отношений тоже важны. От повседневной близости до признания, любви и брака — пожалуйста, идите шаг за шагом.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "systems_intro",
+      "events": []
+    },
+    "systems_intro": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Начнём с повседневного общения: разговоры, поглаживания и объятия. Позже вы сможете открыть признания, брак, сцены сна, детей, восстановление на коленях и поддержку голоса.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "После брака сцены сна могут происходить, когда я сплю в кровати горничной, а Хозяин находится рядом с подходящей ванильной кроватью. Дни беременности, роста ребёнка и восстановления после родов регулируются настройками сервера.",
+          "portrait": "maid",
+          "expression": "embarrassed_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Новорождённая маленькая горничная очень крошечная. В первый день её нельзя положить на землю, поэтому мама сначала держит её на руках. Если её ещё не переименовали, Хозяин может дать ей имя.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "До взросления маленькая горничная может выполнять такие задания, как зачарование, алхимия, тактика и исследования. Задания продвигаются только во время РАБОЧЕГО графика горничной и приостанавливаются, пока она спит, сидит или отдыхает.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Но дети тоже устают. Учёба и задания расходуют настроение. Если она слишком устала, награды ухудшаются, исследования могут остановиться, а принуждение к учёбе при очень плохом настроении может снизить привязанность.",
+          "portrait": "maid",
+          "expression": "tired",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Для воспроизведения голоса нужен аддон для голоса/TTS «Сердечного пакта». TTS в настоящее время в основном тестируется в китайском сообществе, более подробные руководства появятся позже.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "finish",
+      "events": []
+    },
+    "item_help": {
+      "type": "sequence",
+      "lines": [
+        {
+          "speaker": "${maid}",
+          "text": "Что касается предметов, запомни для начала самое главное. Кольца для предложения используются для брака, и во время предложения у тебя в каждой руке должно быть по одному несвязанному кольцу.",
+          "portrait": "maid",
+          "expression": "soft_smile",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Утка в соусе может сократить время роста маленькой горничной или время восстановления после родов для горничной, которая восстанавливается.",
+          "portrait": "maid",
+          "expression": "happy",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Инструмент генеалогического древа проверяет семейные связи. Форма согласия на брак передаёт опеку над взрослой дочерью-горничной; это не предмет для прямого брака.",
+          "portrait": "maid",
+          "expression": "serious",
+          "animation": "fade_in",
+          "events": []
+        },
+        {
+          "speaker": "${maid}",
+          "text": "Подушка «ДА» предназначена для послесвадебных снов. Противозачаточное зелье варится из неловкого зелья с васильком или синей орхидеей. Защита длится 5 минут, и если она есть у кого-то из нас, беременность не наступит.",
+          "portrait": "maid",
+          "expression": "embarrassed_smile",
+          "animation": "fade_in",
+          "events": []
+        }
+      ],
+      "next": "menu",
+      "events": []
+    },
+    "menu": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "Что бы ты хотел проверить?",
+        "portrait": "maid",
+        "expression": "happy",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "keys",
+          "title": "Клавиши",
+          "description": "Проверить привязку клавиш.",
+          "next": "key_check"
+        },
+        {
+          "id": "buttons",
+          "title": "Кнопки в углах",
+          "description": "Объяснить назначение кнопок скрытия, голоса, выхода и камеры.",
+          "next": "button_help"
+        },
+        {
+          "id": "camera",
+          "title": "Тесты камеры",
+          "description": "Проверить объятия, поглаживания, поцелуи и отдых на коленях.",
+          "next": "camera_intro"
+        },
+        {
+          "id": "mood",
+          "title": "Настроение",
+          "description": "Узнать о настроении и стадиях отношений.",
+          "next": "mood_intro"
+        },
+        {
+          "id": "systems",
+          "title": "Системы",
+          "description": "Узнать о повседневных игровых системах.",
+          "next": "systems_intro"
+        },
+        {
+          "id": "items",
+          "title": "Предметы",
+          "description": "Узнать о кольцах, Утке в соусе, книгах и противозачаточном зелье.",
+          "next": "item_help"
+        },
+        {
+          "id": "finish",
+          "title": "Завершить",
+          "description": "Покинуть обучение.",
+          "next": "finish"
+        }
+      ],
+      "events": []
+    },
+    "finish": {
+      "type": "choice",
+      "prompt": {
+        "speaker": "${maid}",
+        "text": "На этом пока всё. Если что-то забудешь, просто используй на мне путеводитель снова.",
+        "narration": "Вы можете вернуться к этому обучению в любое время.",
+        "portrait": "maid",
+        "expression": "happy",
+        "animation": "fade_in",
+        "events": []
+      },
+      "choices": [
+        {
+          "id": "menu",
+          "title": "Вернуться в меню",
+          "description": "Проверить другую главу.",
+          "next": "menu"
+        },
+        {
+          "id": "end",
+          "title": "Завершить обучение",
+          "description": "Покинуть обучение.",
+          "next": "end"
+        }
+      ],
+      "events": []
+    },
+    "end": {
+      "type": "end",
+      "events": [
+        {
+          "when": "enter",
+          "type": "emit_action",
+          "value": "maidmarriage:close_tutorial_interaction"
+        }
+      ]
+    }
+  }
+}
